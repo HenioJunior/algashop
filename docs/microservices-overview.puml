@@ -1,0 +1,41 @@
+@startuml
+
+skinparam componentStyle rectangle
+
+package "AlgaShop" {
+
+component "Ordering" as ordering
+database "Ordering DB" as odb
+
+component "Product Catalog" as catalog
+database "Catalog DB" as cdb
+
+component "Billing" as billing
+database "Billing DB" as bdb
+
+component "Authorization" as auth
+database "Auth DB" as adb
+
+queue "Message Broker" as broker
+
+ordering --> odb
+catalog --> cdb
+billing --> bdb
+auth --> adb
+
+ordering --> auth : REST
+ordering --> catalog : REST
+
+ordering ..> broker : OrderCreated
+catalog ..> broker : ProductUpdated
+broker ..> billing : consume
+
+}
+
+cloud "Payment Gateway" as payment
+cloud "Shipping Gateway" as shipping
+
+billing --> payment
+ordering --> shipping
+
+@enduml
