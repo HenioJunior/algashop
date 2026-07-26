@@ -57,7 +57,13 @@ public class Customer {
     }
 
     public void archive() {
-
+        this.setArchived(true);
+        this.setArchivedAt(OffsetDateTime.now());
+        this.setFullName("Anonymous");
+        this.setEmail(UUID.randomUUID() + "@email.invalid");
+        this.setPhone("0");
+        this.setDocument("0");
+        this.birthDate = null;
     }
 
     public void enablePromotionNotifications() {

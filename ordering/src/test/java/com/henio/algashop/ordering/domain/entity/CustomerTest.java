@@ -22,7 +22,7 @@ class CustomerTest {
                         "041.365.698-99",
                         false,
                         OffsetDateTime.now()
-                        )
+                )
         );
     }
 
@@ -43,5 +43,27 @@ class CustomerTest {
                         customer.changeEmail("invalid")
                 );
 
+    }
+
+    @Test
+    void given_unarchivedCustomer_whenActive_shouldAnonymize(){
+        Customer customer = new Customer(
+                IdGenerator.generateTimeBasedUUID(),
+                "Bob Green",
+                LocalDate.of(1975, 7, 21),
+                "bobgreen@email.com",
+                "222-2692",
+                "041.365.698-99",
+                false,
+                OffsetDateTime.now());
+
+        customer.archive();
+
+        Assertions.assertThat(customer.isArchived()).isTrue();
+        Assertions.assertThat(customer.fullName()).isEqualTo("Anonymous");
+        Assertions.assertThat(customer.email()).isNotEqualTo("bobgreen@email.com");
+        Assertions.assertThat(customer.birthDate()).isNull();
+        Assertions.assertThat(customer.phone()).isEqualTo("0");
+        Assertions.assertThat(customer.document()).isEqualTo("0");
     }
 }
