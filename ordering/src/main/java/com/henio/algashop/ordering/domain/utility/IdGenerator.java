@@ -1,4 +1,4 @@
-package com.henio.algashop.ordering.domain.entity.utility;
+package com.henio.algashop.ordering.domain.utility;
 
 import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.TimeBasedEpochRandomGenerator;
