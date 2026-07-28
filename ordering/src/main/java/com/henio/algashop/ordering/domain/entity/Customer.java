@@ -1,15 +1,25 @@
 package com.henio.algashop.ordering.domain.entity;
 
+import com.henio.algashop.ordering.domain.exception.CustomerArchivedException;
+import com.henio.algashop.ordering.domain.exception.DomainException;
 import com.henio.algashop.ordering.domain.validation.EmailValidator;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 
 import static com.henio.algashop.ordering.domain.exception.CustomerMessages.*;
 
 public class Customer {
+
+    private static final String ANONYMIZED_CUSTOMER_NAME =
+            "Anonymized Customer";
+
+    private static final String ANONYMIZED_EMAIL_DOMAIN =
+            "@anonymous.invalid";
+
     private UUID id;
     private String fullName;
     private LocalDate birthDate;
@@ -22,68 +32,156 @@ public class Customer {
     private OffsetDateTime archivedAt;
     private Integer loyaltyPoints;
 
-    public Customer(UUID id, String fullName, LocalDate birthDate, String email, String phone, String document,
-                    Boolean promotionNotificationsAllowed, Boolean archived, OffsetDateTime registeredAt,
-                    OffsetDateTime archivedAt, Integer loyaltyPoints) {
-        this.setId(id);
-        this.setFullName(fullName);
-        this.setBirthDate(birthDate);
-        this.setEmail(email);
-        this.setPhone(phone);
-        this.setDocument(document);
-        this.setPromotionNotificationsAllowed(promotionNotificationsAllowed);
-        this.setArchived(archived);
-        this.setRegisteredAt(registeredAt);
-        this.setArchivedAt(archivedAt);
-        this.setLoyaltyPoints(loyaltyPoints);
+    public Customer(
+            UUID id,
+            String fullName,
+            LocalDate birthDate,
+            String email,
+            String phone,
+            String document,
+            boolean promotionNotificationsAllowed,
+            OffsetDateTime registeredAt
+    ) {
+        this.id = Objects.requireNonNull(
+                id,
+                "Customer id is required"
+        );
+
+        this.fullName = requireValidFullName(fullName);
+        this.birthDate = requireValidBirthDate(birthDate);
+        this.email = requireValidEmail(email);
+        this.phone = requireValidPhone(phone);
+        this.document = requireValidDocument(document);
+
+        this.promotionNotificationsAllowed =
+                promotionNotificationsAllowed;
+
+        this.registeredAt = Objects.requireNonNull(
+                registeredAt,
+                "Registration date is required"
+        );
+
+        this.archived = false;
+        this.archivedAt = null;
+        this.loyaltyPoints = 0;
     }
 
-    public Customer(UUID id, String fullName, LocalDate birthDate, String email, String phone, String document,
-                    Boolean promotionNotificationsAllowed, OffsetDateTime registeredAt) {
-        this.setId(id);
-        this.setFullName(fullName);
-        this.setBirthDate(birthDate);
-        this.setEmail(email);
-        this.setPhone(phone);
-        this.setDocument(document);
-        this.setPromotionNotificationsAllowed(promotionNotificationsAllowed);
-        this.setRegisteredAt(registeredAt);
-        this.setArchived(false);
-        this.setLoyaltyPoints(0);
-    }
+    public void addLoyaltyPoints(int points) {
+        ensureNotArchived();
 
-    public void addLoayltyPoints(Integer points) {
+        if (points <= 0) {
+            throw new IllegalArgumentException(LOYALTY_POINTS_MUST_BE_GREATER_THAN_ZERO);
+        }
 
+        this.loyaltyPoints = Math.addExact(this.loyaltyPoints, points);
     }
 
     public void archive() {
-        this.setArchived(true);
-        this.setArchivedAt(OffsetDateTime.now());
-        this.setFullName("Anonymous");
-        this.setEmail(UUID.randomUUID() + "@email.invalid");
-        this.setPhone("0");
-        this.setDocument("0");
+        ensureNotArchived();
+
+        this.archived = true;
+        this.archivedAt = OffsetDateTime.now();
+        this.fullName = ANONYMIZED_CUSTOMER_NAME;
         this.birthDate = null;
+        this.email = UUID.randomUUID() + ANONYMIZED_EMAIL_DOMAIN;
+        this.phone = null;
+        this.document = null;
+        this.promotionNotificationsAllowed = false;
     }
 
     public void enablePromotionNotifications() {
-        this.setPromotionNotificationsAllowed(true);
+        ensureNotArchived();
+        this.promotionNotificationsAllowed = true;
     }
 
     public void disablePromotionNotifications() {
-        this.setPromotionNotificationsAllowed(false);
+        ensureNotArchived();
+        this.promotionNotificationsAllowed = false;
     }
 
     public void changeName(String fullName) {
-        this.setFullName(fullName);
+        ensureNotArchived();
+        this.fullName = requireValidFullName(fullName);
     }
 
     public void changeEmail(String email) {
-        this.setEmail(email);
+        ensureNotArchived();
+        this.email = requireValidEmail(email);
     }
 
     public void changePhone(String phone) {
-        this.setPhone(phone);
+        ensureNotArchived();
+        this.phone = requireValidPhone(phone);
+    }
+
+    private static String requireValidFullName(String fullName) {
+        Objects.requireNonNull(fullName, FULL_NAME_IS_REQUIRED);
+
+        String normalizedFullName = fullName.trim();
+
+        if (normalizedFullName.isBlank()) {
+            throw new DomainException(FULL_NAME_CANNOT_BE_BLANK);
+        }
+
+        return normalizedFullName;
+    }
+
+    private static LocalDate requireValidBirthDate(
+            LocalDate birthDate
+    ) {
+        if (birthDate != null && birthDate.isAfter(LocalDate.now())) {
+            throw new DomainException(BIRTH_DATE_MUST_BE_IN_PAST);
+        }
+
+        return birthDate;
+    }
+
+    private static String requireValidEmail(String email) {
+        Objects.requireNonNull(email, EMAIL_IS_REQUIRED);
+
+        String normalizedEmail = email
+                .trim()
+                .toLowerCase(Locale.ROOT);
+
+        if (normalizedEmail.isBlank()) {
+            throw new DomainException(EMAIL_CANNOT_BE_BLANK);
+        }
+
+        if (!EmailValidator.isValid(normalizedEmail)) {
+            throw new DomainException(EMAIL_IS_INVALID);
+        }
+
+        return normalizedEmail;
+    }
+
+    private static String requireValidPhone(String phone) {
+        Objects.requireNonNull(phone, PHONE_IS_REQUIRED);
+
+        String normalizedPhone = phone.trim();
+
+        if (normalizedPhone.isBlank()) {
+            throw new DomainException(PHONE_CANNOT_BE_BLANK);
+        }
+
+        return normalizedPhone;
+    }
+
+    private static String requireValidDocument(String document) {
+        Objects.requireNonNull(document,DOCUMENT_IS_REQUIRED);
+
+        String normalizedDocument = document.trim();
+
+        if (normalizedDocument.isBlank()) {
+            throw new IllegalArgumentException(DOCUMENT_CANNOT_BE_BLANK);
+        }
+
+        return normalizedDocument;
+    }
+
+    private void ensureNotArchived() {
+        if (this.archived) {
+            throw new CustomerArchivedException();
+        }
     }
 
     public UUID id() {
@@ -110,11 +208,11 @@ public class Customer {
         return document;
     }
 
-    public Boolean isPromotionNotificationsAllowed() {
+    public boolean isPromotionNotificationsAllowed() {
         return promotionNotificationsAllowed;
     }
 
-    public Boolean isArchived() {
+    public boolean isArchived() {
         return archived;
     }
 
@@ -126,92 +224,26 @@ public class Customer {
         return archivedAt;
     }
 
-    public Integer loyaltyPoints() {
+    public int loyaltyPoints() {
         return loyaltyPoints;
     }
 
-    private void setId(UUID id) {
-        Objects.requireNonNull(id);
-        this.id = id;
-    }
-
-    private void setFullName(String fullName) {
-        Objects.requireNonNull(fullName, FULL_NAME_IS_REQUIRED);
-
-        if(fullName.isBlank()) {
-            throw new IllegalArgumentException(FULL_NAME_CANNOT_BE_BLANK);
-        }
-
-        this.fullName = fullName;
-    }
-
-    private void setBirthDate(LocalDate birthDate) {
-        if (birthDate != null && birthDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException(BIRTH_DATE_MUST_BE_IN_PAST);
-        }
-
-        this.birthDate = birthDate;
-    }
-
-    private void setEmail(String email) {
-        Objects.requireNonNull(email, EMAIL_IS_REQUIRED);
-
-        if(fullName.isBlank()) {
-            throw new IllegalArgumentException();
-        }
-
-        String normalizedEmail = email.trim().toLowerCase();
-
-        if(!EmailValidator.isValid(normalizedEmail)) {
-            throw new IllegalArgumentException(EMAIL_IS_INVALID);
-        }
-
-        this.email = normalizedEmail;
-    }
-
-    private void setPhone(String phone) {
-        Objects.requireNonNull(phone);
-        this.phone = phone;
-    }
-
-    private void setDocument(String document) {
-        Objects.requireNonNull(document);
-        this.document = document;
-    }
-
-    private void setPromotionNotificationsAllowed(Boolean promotionNotificationsAllowed) {
-        Objects.requireNonNull(promotionNotificationsAllowed);
-        this.promotionNotificationsAllowed = promotionNotificationsAllowed;
-    }
-
-    private void setArchived(Boolean archived) {
-        Objects.requireNonNull(archived);
-        this.archived = archived;
-    }
-
-    private void setRegisteredAt(OffsetDateTime registeredAt) {
-        Objects.requireNonNull(registeredAt);
-        this.registeredAt = registeredAt;
-    }
-
-    private void setArchivedAt(OffsetDateTime archivedAt) {
-        this.archivedAt = archivedAt;
-    }
-
-    private void setLoyaltyPoints(Integer loyaltyPoints) {
-        Objects.requireNonNull(loyaltyPoints);
-        this.loyaltyPoints = loyaltyPoints;
-    }
-
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Customer customer = (Customer) o;
-        return Objects.equals(id, customer.id);
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+
+        if (!(other instanceof Customer customer)) {
+            return false;
+        }
+
+        return id != null && id.equals(customer.id);
     }
 
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
 }
