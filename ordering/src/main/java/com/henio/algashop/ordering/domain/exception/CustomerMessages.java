@@ -9,8 +9,11 @@ public class CustomerMessages {
     public static final String EMAIL_CANNOT_BE_BLANK = "Email name cannot be blank";
 
     public static final String FULL_NAME_IS_REQUIRED = "Full name is required";
+    public static final String FIRST_NAME_IS_REQUIRED = "First name is required";
+    public static final String LAST_NAME_IS_REQUIRED = "Last name is required";
 
     public static final String FULL_NAME_CANNOT_BE_BLANK = "Full name cannot be blank";
+    public static final String FIRST_NAME_AND_LAST_NAME_CANNOT_BE_BLANK = "First name and Last name cannot be blank";
 
     public static final String BIRTH_DATE_MUST_BE_IN_PAST = "Birth date must be in the past";
 
@@ -24,7 +27,8 @@ public class CustomerMessages {
 
     public static final String ERROR_CUSTOMER_ARCHIVED = "Customer is archived it cannot be changed";
 
-    public static final String LOYALTY_POINTS_MUST_BE_GREATER_THAN_ZERO = "Loyalty points must be greater than zero";
+    public static final String LOYALTY_POINTS_CANNOT_BE_NEGATIVE = "Loyalty points cannot be negative";
+    public static final String LOYALTY_POINTS_TO_ADD_MUST_BE_GREATER_THAN_ZERO = "Loyalty points to add must be greater than zero";
 
     private CustomerMessages() {
     }

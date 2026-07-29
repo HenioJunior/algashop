@@ -3,6 +3,9 @@ package com.henio.algashop.ordering.domain.entity;
 import com.henio.algashop.ordering.domain.exception.CustomerArchivedException;
 import com.henio.algashop.ordering.domain.exception.DomainException;
 import com.henio.algashop.ordering.domain.validation.EmailValidator;
+import com.henio.algashop.ordering.domain.valueobject.CustomerId;
+import com.henio.algashop.ordering.domain.valueobject.FullName;
+import com.henio.algashop.ordering.domain.valueobject.LoyaltyPoints;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -14,14 +17,13 @@ import static com.henio.algashop.ordering.domain.exception.CustomerMessages.*;
 
 public class Customer {
 
-    private static final String ANONYMIZED_CUSTOMER_NAME =
-            "Anonymized Customer";
+    private static final FullName ANONYMIZED_CUSTOMER_NAME = new FullName("Anonymous", "Customer");
 
     private static final String ANONYMIZED_EMAIL_DOMAIN =
             "@anonymous.invalid";
 
-    private UUID id;
-    private String fullName;
+    private CustomerId id;
+    private FullName fullName;
     private LocalDate birthDate;
     private String email;
     private String phone;
@@ -30,11 +32,11 @@ public class Customer {
     private Boolean archived;
     private OffsetDateTime registeredAt;
     private OffsetDateTime archivedAt;
-    private Integer loyaltyPoints;
+    private LoyaltyPoints loyaltyPoints;
 
     public Customer(
-            UUID id,
-            String fullName,
+            CustomerId id,
+            FullName fullName,
             LocalDate birthDate,
             String email,
             String phone,
@@ -47,7 +49,7 @@ public class Customer {
                 "Customer id is required"
         );
 
-        this.fullName = requireValidFullName(fullName);
+        this.fullName = fullName;
         this.birthDate = requireValidBirthDate(birthDate);
         this.email = requireValidEmail(email);
         this.phone = requireValidPhone(phone);
@@ -63,17 +65,13 @@ public class Customer {
 
         this.archived = false;
         this.archivedAt = null;
-        this.loyaltyPoints = 0;
+        this.loyaltyPoints = new LoyaltyPoints();
     }
 
     public void addLoyaltyPoints(int points) {
         ensureNotArchived();
 
-        if (points <= 0) {
-            throw new IllegalArgumentException(LOYALTY_POINTS_MUST_BE_GREATER_THAN_ZERO);
-        }
-
-        this.loyaltyPoints = Math.addExact(this.loyaltyPoints, points);
+        this.loyaltyPoints = this.loyaltyPoints.add(points);
     }
 
     public void archive() {
@@ -99,9 +97,9 @@ public class Customer {
         this.promotionNotificationsAllowed = false;
     }
 
-    public void changeName(String fullName) {
+    public void changeName(FullName fullName) {
         ensureNotArchived();
-        this.fullName = requireValidFullName(fullName);
+        this.fullName = fullName;
     }
 
     public void changeEmail(String email) {
@@ -112,18 +110,6 @@ public class Customer {
     public void changePhone(String phone) {
         ensureNotArchived();
         this.phone = requireValidPhone(phone);
-    }
-
-    private static String requireValidFullName(String fullName) {
-        Objects.requireNonNull(fullName, FULL_NAME_IS_REQUIRED);
-
-        String normalizedFullName = fullName.trim();
-
-        if (normalizedFullName.isBlank()) {
-            throw new DomainException(FULL_NAME_CANNOT_BE_BLANK);
-        }
-
-        return normalizedFullName;
     }
 
     private static LocalDate requireValidBirthDate(
@@ -184,11 +170,11 @@ public class Customer {
         }
     }
 
-    public UUID id() {
+    public CustomerId id() {
         return id;
     }
 
-    public String fullName() {
+    public FullName fullName() {
         return fullName;
     }
 
@@ -224,7 +210,7 @@ public class Customer {
         return archivedAt;
     }
 
-    public int loyaltyPoints() {
+    public LoyaltyPoints loyaltyPoints() {
         return loyaltyPoints;
     }
 
