@@ -16,10 +16,11 @@ public class CustomerMessages {
     public static final String FIRST_NAME_AND_LAST_NAME_CANNOT_BE_BLANK = "First name and Last name cannot be blank";
 
     public static final String BIRTH_DATE_MUST_BE_IN_PAST = "Birth date must be in the past";
+    public static final String BIRTH_DATE_IS_REQUIRED = "Birthdate is required";
 
-    public static final String PHONE_IS_REQUIRED = "Phone is required";
+    public static final String PHONE_NUMBER_IS_REQUIRED = "Phone number is required";
 
-    public static final String PHONE_CANNOT_BE_BLANK = "Phone name cannot be blank";
+    public static final String PHONE_NUMBER_CANNOT_BE_BLANK = "Phone number cannot be blank";
 
     public static final String DOCUMENT_IS_REQUIRED = "Document is required";
 

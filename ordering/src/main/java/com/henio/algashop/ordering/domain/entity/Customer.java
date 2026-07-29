@@ -1,19 +1,11 @@
 package com.henio.algashop.ordering.domain.entity;
 
 import com.henio.algashop.ordering.domain.exception.CustomerArchivedException;
-import com.henio.algashop.ordering.domain.exception.DomainException;
-import com.henio.algashop.ordering.domain.validation.EmailValidator;
-import com.henio.algashop.ordering.domain.valueobject.CustomerId;
-import com.henio.algashop.ordering.domain.valueobject.FullName;
-import com.henio.algashop.ordering.domain.valueobject.LoyaltyPoints;
+import com.henio.algashop.ordering.domain.valueobject.*;
 
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
-
-import static com.henio.algashop.ordering.domain.exception.CustomerMessages.*;
 
 public class Customer {
 
@@ -24,10 +16,10 @@ public class Customer {
 
     private CustomerId id;
     private FullName fullName;
-    private LocalDate birthDate;
-    private String email;
-    private String phone;
-    private String document;
+    private BirthDate birthDate;
+    private Email email;
+    private Phone phone;
+    private Document document;
     private Boolean promotionNotificationsAllowed;
     private Boolean archived;
     private OffsetDateTime registeredAt;
@@ -37,10 +29,10 @@ public class Customer {
     public Customer(
             CustomerId id,
             FullName fullName,
-            LocalDate birthDate,
-            String email,
-            String phone,
-            String document,
+            BirthDate birthDate,
+            Email email,
+            Phone phone,
+            Document document,
             boolean promotionNotificationsAllowed,
             OffsetDateTime registeredAt
     ) {
@@ -50,10 +42,10 @@ public class Customer {
         );
 
         this.fullName = fullName;
-        this.birthDate = requireValidBirthDate(birthDate);
-        this.email = requireValidEmail(email);
-        this.phone = requireValidPhone(phone);
-        this.document = requireValidDocument(document);
+        this.birthDate = birthDate;
+        this.email = email;
+        this.phone = phone;
+        this.document = document;
 
         this.promotionNotificationsAllowed =
                 promotionNotificationsAllowed;
@@ -81,7 +73,7 @@ public class Customer {
         this.archivedAt = OffsetDateTime.now();
         this.fullName = ANONYMIZED_CUSTOMER_NAME;
         this.birthDate = null;
-        this.email = UUID.randomUUID() + ANONYMIZED_EMAIL_DOMAIN;
+        this.email = new Email(UUID.randomUUID() + ANONYMIZED_EMAIL_DOMAIN);
         this.phone = null;
         this.document = null;
         this.promotionNotificationsAllowed = false;
@@ -102,66 +94,14 @@ public class Customer {
         this.fullName = fullName;
     }
 
-    public void changeEmail(String email) {
+    public void changeEmail(Email email) {
         ensureNotArchived();
-        this.email = requireValidEmail(email);
+        this.email = email;
     }
 
-    public void changePhone(String phone) {
+    public void changePhone(Phone phone) {
         ensureNotArchived();
-        this.phone = requireValidPhone(phone);
-    }
-
-    private static LocalDate requireValidBirthDate(
-            LocalDate birthDate
-    ) {
-        if (birthDate != null && birthDate.isAfter(LocalDate.now())) {
-            throw new DomainException(BIRTH_DATE_MUST_BE_IN_PAST);
-        }
-
-        return birthDate;
-    }
-
-    private static String requireValidEmail(String email) {
-        Objects.requireNonNull(email, EMAIL_IS_REQUIRED);
-
-        String normalizedEmail = email
-                .trim()
-                .toLowerCase(Locale.ROOT);
-
-        if (normalizedEmail.isBlank()) {
-            throw new DomainException(EMAIL_CANNOT_BE_BLANK);
-        }
-
-        if (!EmailValidator.isValid(normalizedEmail)) {
-            throw new DomainException(EMAIL_IS_INVALID);
-        }
-
-        return normalizedEmail;
-    }
-
-    private static String requireValidPhone(String phone) {
-        Objects.requireNonNull(phone, PHONE_IS_REQUIRED);
-
-        String normalizedPhone = phone.trim();
-
-        if (normalizedPhone.isBlank()) {
-            throw new DomainException(PHONE_CANNOT_BE_BLANK);
-        }
-
-        return normalizedPhone;
-    }
-
-    private static String requireValidDocument(String document) {
-        Objects.requireNonNull(document,DOCUMENT_IS_REQUIRED);
-
-        String normalizedDocument = document.trim();
-
-        if (normalizedDocument.isBlank()) {
-            throw new IllegalArgumentException(DOCUMENT_CANNOT_BE_BLANK);
-        }
-
-        return normalizedDocument;
+        this.phone = phone;
     }
 
     private void ensureNotArchived() {
@@ -178,19 +118,19 @@ public class Customer {
         return fullName;
     }
 
-    public LocalDate birthDate() {
+    public BirthDate birthDate() {
         return birthDate;
     }
 
-    public String email() {
+    public Email email() {
         return email;
     }
 
-    public String phone() {
+    public Phone phone() {
         return phone;
     }
 
-    public String document() {
+    public Document document() {
         return document;
     }
 
