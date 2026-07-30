@@ -27,7 +27,20 @@ public class Customer {
     private LoyaltyPoints loyaltyPoints;
     private Address address;
 
-    public Customer(
+    public static Customer createCustomer(
+            FullName fullName,
+            BirthDate birthDate,
+            Email email,
+            Phone phone,
+            Document document,
+            boolean promotionNotificationsAllowed,
+            Address address) {
+
+        return new Customer(new CustomerId(), fullName, birthDate, email, phone, document, promotionNotificationsAllowed,
+                false, OffsetDateTime.now(), null, new LoyaltyPoints(), address);
+    }
+
+    public static Customer existing(
             CustomerId id,
             FullName fullName,
             BirthDate birthDate,
@@ -35,7 +48,40 @@ public class Customer {
             Phone phone,
             Document document,
             boolean promotionNotificationsAllowed,
+            boolean archived,
             OffsetDateTime registeredAt,
+            OffsetDateTime archivedAt,
+            LoyaltyPoints loyaltyPoints,
+            Address address
+    ) {
+        return new Customer(
+                id,
+                fullName,
+                birthDate,
+                email,
+                phone,
+                document,
+                promotionNotificationsAllowed,
+                archived,
+                registeredAt,
+                archivedAt,
+                loyaltyPoints,
+                address
+        );
+    }
+
+    private Customer(
+            CustomerId id,
+            FullName fullName,
+            BirthDate birthDate,
+            Email email,
+            Phone phone,
+            Document document,
+            boolean promotionNotificationsAllowed,
+            boolean archived,
+            OffsetDateTime registeredAt,
+            OffsetDateTime archivedAt,
+            LoyaltyPoints loyaltyPoints,
             Address address
     ) {
         this.id = Objects.requireNonNull(
@@ -57,8 +103,8 @@ public class Customer {
                 "Registration date is required"
         );
 
-        this.archived = false;
-        this.archivedAt = null;
+        this.archived = archived;
+        this.archivedAt = archivedAt;
         this.loyaltyPoints = new LoyaltyPoints();
         this.address = Objects.requireNonNull(
                 address,
