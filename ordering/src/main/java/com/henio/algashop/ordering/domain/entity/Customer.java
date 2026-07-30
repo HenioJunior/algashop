@@ -25,6 +25,7 @@ public class Customer {
     private OffsetDateTime registeredAt;
     private OffsetDateTime archivedAt;
     private LoyaltyPoints loyaltyPoints;
+    private Address address;
 
     public Customer(
             CustomerId id,
@@ -34,7 +35,8 @@ public class Customer {
             Phone phone,
             Document document,
             boolean promotionNotificationsAllowed,
-            OffsetDateTime registeredAt
+            OffsetDateTime registeredAt,
+            Address address
     ) {
         this.id = Objects.requireNonNull(
                 id,
@@ -58,6 +60,10 @@ public class Customer {
         this.archived = false;
         this.archivedAt = null;
         this.loyaltyPoints = new LoyaltyPoints();
+        this.address = Objects.requireNonNull(
+                address,
+                "Address is required"
+        );;
     }
 
     public void addLoyaltyPoints(int points) {
@@ -77,6 +83,9 @@ public class Customer {
         this.phone = null;
         this.document = null;
         this.promotionNotificationsAllowed = false;
+        this.address = this.address().toBuilder()
+                .number("Anonymized")
+                .complement(null).build();
     }
 
     public void enablePromotionNotifications() {
@@ -102,6 +111,11 @@ public class Customer {
     public void changePhone(Phone phone) {
         ensureNotArchived();
         this.phone = phone;
+    }
+
+    public void changeAddress(Address address) {
+        ensureNotArchived();
+        this.address = address;
     }
 
     private void ensureNotArchived() {
@@ -152,6 +166,10 @@ public class Customer {
 
     public LoyaltyPoints loyaltyPoints() {
         return loyaltyPoints;
+    }
+
+    public Address address() {
+        return address;
     }
 
     @Override

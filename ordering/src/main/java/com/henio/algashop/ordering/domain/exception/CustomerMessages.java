@@ -31,6 +31,9 @@ public class CustomerMessages {
     public static final String LOYALTY_POINTS_CANNOT_BE_NEGATIVE = "Loyalty points cannot be negative";
     public static final String LOYALTY_POINTS_TO_ADD_MUST_BE_GREATER_THAN_ZERO = "Loyalty points to add must be greater than zero";
 
+    public static final String FIELD_CANNOT_BE_BLANK = "Field cannot be blank";
+    public static final String FIELD_IS_REQUIRED = "Field is required";
+
     private CustomerMessages() {
     }
 

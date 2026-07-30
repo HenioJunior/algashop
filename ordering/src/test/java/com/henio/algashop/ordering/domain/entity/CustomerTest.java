@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 class CustomerTest {
 
     @Test
@@ -24,7 +26,16 @@ class CustomerTest {
                         new Phone("222-2692"),
                         new Document("041.365.698-99"),
                         false,
-                        OffsetDateTime.now()
+                        OffsetDateTime.now(),
+                        Address.builder()
+                                .street("Bourbon Street")
+                                .number("1134")
+                                .neighborhood("North Ville")
+                                .city("York")
+                                .state("South California")
+                                .zipCode(new ZipCode("12345"))
+                                .complement("Apt. 114")
+                                .build()
                 )
         );
     }
@@ -39,7 +50,17 @@ class CustomerTest {
                 new Phone("222-2692"),
                 new Document("041.365.698-99"),
                 false,
-                OffsetDateTime.now());
+                OffsetDateTime.now(),
+                Address.builder()
+                        .street("Bourbon Street")
+                        .number("1134")
+                        .neighborhood("North Ville")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .complement("Apt. 114")
+                        .build()
+                );
 
         Assertions.assertThatExceptionOfType(DomainException.class)
                 .isThrownBy(() ->
@@ -58,16 +79,36 @@ class CustomerTest {
                 new Phone("222-2692"),
                 new Document("041.365.698-99"),
                 false,
-                OffsetDateTime.now());
+                OffsetDateTime.now(),
+                Address.builder()
+                        .street("Bourbon Street")
+                        .number("1134")
+                        .neighborhood("North Ville")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .complement("Apt. 114")
+                        .build()
+                );
 
         customer.archive();
 
-        Assertions.assertThat(customer.isArchived()).isTrue();
-        Assertions.assertThat(customer.fullName()).isEqualTo(new FullName("Anonymous", "Customer"));
-        Assertions.assertThat(customer.email().value()).endsWith("@anonymous.invalid");
-        Assertions.assertThat(customer.birthDate()).isNull();
-        Assertions.assertThat(customer.phone()).isNull();
-        Assertions.assertThat(customer.document()).isNull();
+        Assertions.assertWith(customer,
+                c -> assertThat(c.fullName()).isEqualTo(new FullName("Anonymous", "Customer")),
+                c -> assertThat(c.email().value()).endsWith("@anonymous.invalid"),
+                c -> assertThat(c.birthDate()).isNull(),
+                c -> assertThat(c.phone()).isNull(),
+                c -> assertThat(c.document()).isNull(),
+                c -> assertThat(c.address()).isEqualTo(Address.builder()
+                        .street("Bourbon Street")
+                        .number("1134")
+                        .neighborhood("North Ville")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .complement(null)
+                        .build())
+        );
     }
 
     @Test
@@ -80,7 +121,16 @@ class CustomerTest {
                 new Phone("222-2692"),
                 new Document("041.365.698-99"),
                 false,
-                OffsetDateTime.now()
+                OffsetDateTime.now(),
+                Address.builder()
+                        .street("Bourbon Street")
+                        .number("1134")
+                        .neighborhood("North Ville")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .complement("Apt. 114")
+                        .build()
         );
 
         customer.archive();
@@ -111,7 +161,16 @@ class CustomerTest {
                 new Phone("222-2692"),
                 new Document("041.365.698-99"),
                 false,
-                OffsetDateTime.now()
+                OffsetDateTime.now(),
+                Address.builder()
+                        .street("Bourbon Street")
+                        .number("1134")
+                        .neighborhood("North Ville")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .complement("Apt. 114")
+                        .build()
         );
 
         customer.addLoyaltyPoints(10);
@@ -130,7 +189,16 @@ class CustomerTest {
                 new Phone("222-2692"),
                 new Document("041.365.698-99"),
                 false,
-                OffsetDateTime.now()
+                OffsetDateTime.now(),
+                Address.builder()
+                        .street("Bourbon Street")
+                        .number("1134")
+                        .neighborhood("North Ville")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .complement("Apt. 114")
+                        .build()
         );
 
         Assertions.assertThatExceptionOfType(DomainException.class)
