@@ -2,6 +2,7 @@ package com.henio.algashop.ordering.domain.entity;
 
 import com.henio.algashop.ordering.domain.exception.CustomerArchivedException;
 import com.henio.algashop.ordering.domain.valueobject.*;
+import lombok.Builder;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -27,7 +28,8 @@ public class Customer {
     private LoyaltyPoints loyaltyPoints;
     private Address address;
 
-    public static Customer createCustomer(
+    @Builder(builderClassName = "CreateCustomerBuild", builderMethodName = "createCustomer")
+    private static Customer newCustomer(
             FullName fullName,
             BirthDate birthDate,
             Email email,
@@ -40,36 +42,7 @@ public class Customer {
                 false, OffsetDateTime.now(), null, new LoyaltyPoints(), address);
     }
 
-    public static Customer existing(
-            CustomerId id,
-            FullName fullName,
-            BirthDate birthDate,
-            Email email,
-            Phone phone,
-            Document document,
-            boolean promotionNotificationsAllowed,
-            boolean archived,
-            OffsetDateTime registeredAt,
-            OffsetDateTime archivedAt,
-            LoyaltyPoints loyaltyPoints,
-            Address address
-    ) {
-        return new Customer(
-                id,
-                fullName,
-                birthDate,
-                email,
-                phone,
-                document,
-                promotionNotificationsAllowed,
-                archived,
-                registeredAt,
-                archivedAt,
-                loyaltyPoints,
-                address
-        );
-    }
-
+    @Builder(builderClassName = "ExistingCustomerBuild", builderMethodName = "existing")
     private Customer(
             CustomerId id,
             FullName fullName,
