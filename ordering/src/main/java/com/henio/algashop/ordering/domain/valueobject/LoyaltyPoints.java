@@ -9,6 +9,8 @@ import static com.henio.algashop.ordering.domain.exception.CustomerMessages.LOYA
 
 public record LoyaltyPoints(int value) {
 
+    public static final LoyaltyPoints ZERO = new LoyaltyPoints(0);
+
     public LoyaltyPoints {
         if (value < 0) {
             throw new DomainException(
