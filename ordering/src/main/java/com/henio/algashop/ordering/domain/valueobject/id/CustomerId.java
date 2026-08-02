@@ -1,0 +1,44 @@
+package com.henio.algashop.ordering.domain.valueobject.id;
+
+import com.henio.algashop.ordering.domain.utility.IdGenerator;
+import io.hypersistence.tsid.TSID;
+
+import java.util.Objects;
+
+public record CustomerId(TSID value) {
+
+    public CustomerId {
+        Objects.requireNonNull(
+                value,
+                "Customer ID cannot be null."
+        );
+    }
+
+    public CustomerId(long value) {
+        this(TSID.from(value));
+    }
+
+    public CustomerId(String value) {
+        this(requireValidString(value));
+    }
+
+    public static CustomerId generate() {
+        return new CustomerId(
+                IdGenerator.generateTSID()
+        );
+    }
+
+    private static TSID requireValidString(String value) {
+        Objects.requireNonNull(
+                value,
+                "Customer ID cannot be null."
+        );
+
+        return TSID.from(value);
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
+    }
+}

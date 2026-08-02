@@ -1362,8 +1362,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": true,
-									"left": 424,
-									"top": 360,
+									"left": 264,
+									"top": 280,
 									"width": 10,
 									"height": 10
 								},
@@ -1379,8 +1379,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": true,
-									"left": 424,
-									"top": 360,
+									"left": 264,
+									"top": 280,
 									"width": 10,
 									"height": 10
 								}
@@ -5765,7 +5765,7 @@
 									"parentStyle": false,
 									"left": 1170,
 									"top": 512,
-									"width": 34.681640625,
+									"width": 35.33203125,
 									"height": 12,
 									"alpha": -0.5235987755982988,
 									"distance": 30,
@@ -8972,7 +8972,8 @@
 									"_parent": {
 										"$ref": "AAAAAAGXhASg7O6kCD8="
 									},
-									"name": "Quantity"
+									"name": "Quantity",
+									"type": ""
 								}
 							]
 						}
@@ -14656,5 +14657,6 @@
 				}
 			]
 		}
-	]
+	],
+	"documentVersion": 1
 }

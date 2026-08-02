@@ -2,6 +2,7 @@ package com.henio.algashop.ordering.domain.entity;
 
 import com.henio.algashop.ordering.domain.exception.CustomerArchivedException;
 import com.henio.algashop.ordering.domain.valueobject.*;
+import com.henio.algashop.ordering.domain.valueobject.id.CustomerId;
 import lombok.Builder;
 
 import java.time.OffsetDateTime;
@@ -38,7 +39,7 @@ public class Customer {
             boolean promotionNotificationsAllowed,
             Address address) {
 
-        return new Customer(new CustomerId(), fullName, birthDate, email, phone, document, promotionNotificationsAllowed,
+        return new Customer(CustomerId.generate(), fullName, birthDate, email, phone, document, promotionNotificationsAllowed,
                 false, OffsetDateTime.now(), null, new LoyaltyPoints(), address);
     }
 

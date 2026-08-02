@@ -1,6 +1,7 @@
 package com.henio.algashop.ordering.domain.entity;
 
 import com.henio.algashop.ordering.domain.valueobject.*;
+import com.henio.algashop.ordering.domain.valueobject.id.CustomerId;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -31,7 +32,7 @@ public class CustomerTestDataBuilder {
 
     public static Customer.ExistingCustomerBuild existingCustomer() {
         return Customer.existing()
-                .id(new CustomerId())
+                .id(CustomerId.generate())
                 .registeredAt(OffsetDateTime.now())
                 .promotionNotificationsAllowed(true)
                 .archived(false)
@@ -57,7 +58,7 @@ public class CustomerTestDataBuilder {
 
     public static Customer.ExistingCustomerBuild existingAnonymizedCustomer() {
         return Customer.existing()
-                .id(new CustomerId())
+                .id(CustomerId.generate())
                 .fullName(new FullName("Anonymous", "Anonymous"))
                 .birthDate(null)
                 .email(new Email("anonymous@anonymous.com"))
