@@ -14,27 +14,14 @@ public record OrderItemId(TSID value) {
         );
     }
 
-    public OrderItemId(long value) {
-        this(TSID.from(value));
-    }
-
-    public OrderItemId(String value) {
-        this(requireValidString(value));
+    public OrderItemId() {
+        this(IdGenerator.generateTSID());
     }
 
     public static OrderItemId generate() {
         return new OrderItemId(
                 IdGenerator.generateTSID()
         );
-    }
-
-    private static TSID requireValidString(String value) {
-        Objects.requireNonNull(
-                value,
-                "OrderItem ID cannot be null."
-        );
-
-        return TSID.from(value);
     }
 
     @Override

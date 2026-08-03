@@ -14,27 +14,14 @@ public record CustomerId(TSID value) {
         );
     }
 
-    public CustomerId(long value) {
-        this(TSID.from(value));
-    }
-
-    public CustomerId(String value) {
-        this(requireValidString(value));
+    public CustomerId() {
+        this(IdGenerator.generateTSID());
     }
 
     public static CustomerId generate() {
         return new CustomerId(
                 IdGenerator.generateTSID()
         );
-    }
-
-    private static TSID requireValidString(String value) {
-        Objects.requireNonNull(
-                value,
-                "Customer ID cannot be null."
-        );
-
-        return TSID.from(value);
     }
 
     @Override
