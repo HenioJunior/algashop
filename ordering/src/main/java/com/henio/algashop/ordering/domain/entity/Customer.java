@@ -1,6 +1,7 @@
 package com.henio.algashop.ordering.domain.entity;
 
 import com.henio.algashop.ordering.domain.exception.CustomerArchivedException;
+import com.henio.algashop.ordering.domain.exception.DomainException;
 import com.henio.algashop.ordering.domain.valueobject.*;
 import com.henio.algashop.ordering.domain.valueobject.id.CustomerId;
 import lombok.Builder;
@@ -22,28 +23,13 @@ public class Customer {
     private Email email;
     private Phone phone;
     private Document document;
-    private Boolean promotionNotificationsAllowed;
-    private Boolean archived;
+    private boolean promotionNotificationsAllowed;
+    private boolean archived;
     private OffsetDateTime registeredAt;
     private OffsetDateTime archivedAt;
     private LoyaltyPoints loyaltyPoints;
     private Address address;
 
-    @Builder(builderClassName = "CreateCustomerBuild", builderMethodName = "createCustomer")
-    private static Customer newCustomer(
-            FullName fullName,
-            BirthDate birthDate,
-            Email email,
-            Phone phone,
-            Document document,
-            boolean promotionNotificationsAllowed,
-            Address address) {
-
-        return new Customer(CustomerId.generate(), fullName, birthDate, email, phone, document, promotionNotificationsAllowed,
-                false, OffsetDateTime.now(), null, new LoyaltyPoints(), address);
-    }
-
-    @Builder(builderClassName = "ExistingCustomerBuild", builderMethodName = "existing")
     private Customer(
             CustomerId id,
             FullName fullName,
@@ -63,27 +49,55 @@ public class Customer {
                 "Customer id is required"
         );
 
-        this.fullName = fullName;
-        this.birthDate = birthDate;
-        this.email = email;
-        this.phone = phone;
-        this.document = document;
-
-        this.promotionNotificationsAllowed =
-                promotionNotificationsAllowed;
-
         this.registeredAt = Objects.requireNonNull(
                 registeredAt,
                 "Registration date is required"
         );
 
-        this.archived = archived;
-        this.archivedAt = archivedAt;
-        this.loyaltyPoints = new LoyaltyPoints();
+        this.loyaltyPoints = Objects.requireNonNull(
+                loyaltyPoints,
+                "Loyalty points are required"
+        );
+
         this.address = Objects.requireNonNull(
                 address,
                 "Address is required"
-        );;
+        );
+
+        this.fullName = fullName;
+        this.birthDate = birthDate;
+        this.email = email;
+        this.phone = phone;
+        this.document = document;
+        this.promotionNotificationsAllowed =
+                promotionNotificationsAllowed;
+        this.archived = archived;
+        this.archivedAt = archivedAt;
+    }
+
+    public static Customer create(
+            FullName fullName,
+            BirthDate birthDate,
+            Email email,
+            Phone phone,
+            Document document,
+            boolean promotionNotificationsAllowed,
+            Address address
+    ) {
+        return new Customer(
+                CustomerId.generate(),
+                Objects.requireNonNull(fullName, "Full name is required"),
+                Objects.requireNonNull(birthDate, "Birth date is required"),
+                Objects.requireNonNull(email, "Email is required"),
+                Objects.requireNonNull(phone, "Phone is required"),
+                Objects.requireNonNull(document, "Document is required"),
+                promotionNotificationsAllowed,
+                false,
+                OffsetDateTime.now(),
+                null,
+                new LoyaltyPoints(),
+                address
+        );
     }
 
     public void addLoyaltyPoints(int points) {
@@ -110,32 +124,50 @@ public class Customer {
 
     public void enablePromotionNotifications() {
         ensureNotArchived();
+
         this.promotionNotificationsAllowed = true;
     }
 
     public void disablePromotionNotifications() {
         ensureNotArchived();
+
         this.promotionNotificationsAllowed = false;
     }
 
     public void changeName(FullName fullName) {
         ensureNotArchived();
-        this.fullName = fullName;
+
+        this.fullName = Objects.requireNonNull(
+                fullName,
+                "Full name is required"
+        );
     }
 
     public void changeEmail(Email email) {
         ensureNotArchived();
-        this.email = email;
+
+        this.email = Objects.requireNonNull(
+                email,
+                "Email is required"
+        );
     }
 
     public void changePhone(Phone phone) {
         ensureNotArchived();
-        this.phone = phone;
+
+        this.phone = Objects.requireNonNull(
+                phone,
+                "Phone is required"
+        );
     }
 
     public void changeAddress(Address address) {
         ensureNotArchived();
-        this.address = address;
+
+        this.address = Objects.requireNonNull(
+                address,
+                "Address is required"
+        );
     }
 
     private void ensureNotArchived() {
