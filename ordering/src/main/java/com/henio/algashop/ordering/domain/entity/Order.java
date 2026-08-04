@@ -57,7 +57,7 @@ public class Order {
     public void addItem(
             ProductId productId,
             ProductName productName,
-            Money unitPrice,
+            Money price,
             Quantity quantity
     ) {
 
@@ -65,7 +65,7 @@ public class Order {
                 this.id,
                 productId,
                 productName,
-                unitPrice,
+                price,
                 quantity
         );
 
