@@ -1,5 +1,6 @@
 package com.henio.algashop.ordering.domain.entity;
 
+import com.henio.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.henio.algashop.ordering.domain.valueobject.*;
 import com.henio.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.henio.algashop.ordering.domain.valueobject.id.OrderId;
@@ -17,8 +18,8 @@ public class Order {
     private OrderId id;
     private CustomerId customerId;
 
-    private Money totalAmount;
-    private Quantity totalItems;
+    private Money totalItemsAmount;
+    private Quantity totalItemsQuantity;
 
     private OffsetDateTime placedAt;
     private OffsetDateTime paidAt;
@@ -44,8 +45,8 @@ public class Order {
                 "Customer id is required"
         );
 
-        this.totalAmount = Money.ZERO;
-        this.totalItems = Quantity.ZERO;
+        this.totalItemsAmount = Money.ZERO;
+        this.totalItemsQuantity = Quantity.ZERO;
         this.shippingCost = Money.ZERO;
         this.status = OrderStatus.DRAFT;
         this.items = new HashSet<>();
@@ -71,8 +72,42 @@ public class Order {
         );
 
         items.add(item);
+        recalculateTotals();
     }
 
+    public void place() {
+        //TODO Business rules!
+        placedAt = OffsetDateTime.now();
+        status = changeStatus(OrderStatus.PLACED);
+    }
+
+    private OrderStatus changeStatus(OrderStatus newOrderStatus) {
+    Objects.requireNonNull(newOrderStatus, "Order status cannot be null");
+    if(this.status.cannotChangeTo(newOrderStatus)) {
+        throw new OrderStatusCannotBeChangedException(this.id, status, newOrderStatus);
+    }
+    return this.status = newOrderStatus;
+    }
+
+    public boolean isDraft() {
+        return OrderStatus.DRAFT.equals(status);
+    }
+
+    public boolean isPlaced() {
+        return OrderStatus.PLACED.equals(status);
+    }
+
+    public boolean isPaid() {
+        return OrderStatus.PAID.equals(status);
+    }
+
+    public boolean isReady() {
+        return OrderStatus.READY.equals(status);
+    }
+
+    public boolean isCanceled() {
+        return OrderStatus.CANCELED.equals(status);
+    }
 
     public OrderId id() {
         return id;
@@ -83,11 +118,11 @@ public class Order {
     }
 
     public Money totalAmount() {
-        return totalAmount;
+        return totalItemsAmount;
     }
 
     public Quantity totalItems() {
-        return totalItems;
+        return totalItemsQuantity;
     }
 
     public OffsetDateTime placedAt() {
@@ -132,6 +167,22 @@ public class Order {
 
     public Set<OrderItem> items() {
         return Collections.unmodifiableSet(items);
+    }
+
+    public void recalculateTotals() {
+        totalItemsAmount = items.stream()
+                .map(OrderItem::totalAmount)
+                .reduce(Money.ZERO, Money::add);
+
+        totalItemsQuantity = items.stream()
+                .map(OrderItem::quantity)
+                .reduce(Quantity.ZERO, Quantity::add);
+
+        if(this.shipping == null) {
+            shippingCost = Money.ZERO;
+        }
+
+        totalItemsAmount = totalItemsAmount.add(shippingCost);
     }
 
     @Override

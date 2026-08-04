@@ -39,7 +39,12 @@ public class OrderItem {
             ProductName productName,
             Money price,
             Quantity quantity) {
-        return new OrderItem(orderId, productId, productName, price, quantity);
+
+        OrderItem orderItem = new OrderItem(orderId, productId, productName, price, quantity);
+
+        orderItem.recalculateTotals();
+
+        return orderItem;
     }
 
     public OrderItemId id() {
@@ -68,6 +73,10 @@ public class OrderItem {
 
     public Money totalAmount() {
         return totalAmount;
+    }
+
+    private void recalculateTotals() {
+        this.totalAmount = price.multiply(quantity);
     }
 
     @Override

@@ -34,6 +34,8 @@ public class CustomerMessages {
     public static final String FIELD_CANNOT_BE_BLANK = "Field cannot be blank";
     public static final String FIELD_IS_REQUIRED = "Field is required";
 
+    public static final String ORDER_STATUS_CANNOT_BE_CHANGED = "Order %s cannot be changed from %s to %s";
+
     private CustomerMessages() {
     }
 
