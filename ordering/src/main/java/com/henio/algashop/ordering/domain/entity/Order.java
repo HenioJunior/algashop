@@ -7,6 +7,7 @@ import com.henio.algashop.ordering.domain.valueobject.id.ProductId;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -130,7 +131,7 @@ public class Order {
     }
 
     public Set<OrderItem> items() {
-        return items;
+        return Collections.unmodifiableSet(items);
     }
 
     @Override

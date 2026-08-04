@@ -8,6 +8,7 @@ import com.henio.algashop.ordering.domain.valueobject.id.ProductId;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 class OrderTest {
 
@@ -46,5 +47,22 @@ class OrderTest {
                 });
     }
 
+    @Test
+    void givenOrderWithItems_whenTryToModifyReturnedCollection_shouldThrowException() {
+        Order order = Order.draft(CustomerId.generate());
 
+        order.addItem(
+                ProductId.generate(),
+                new ProductName("Notebook"),
+                new Money("2500.00"),
+                new Quantity(1)
+        );
+
+        assertThatExceptionOfType(UnsupportedOperationException.class)
+                .isThrownBy(() ->
+                        order.items().clear()
+                );
+
+        assertThat(order.items()).hasSize(1);
+    }
 }
