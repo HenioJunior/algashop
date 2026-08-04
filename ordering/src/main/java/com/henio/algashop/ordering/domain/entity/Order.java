@@ -1,11 +1,13 @@
 package com.henio.algashop.ordering.domain.entity;
 
 import com.henio.algashop.ordering.domain.exception.OrderCannotBePlacedException;
+import com.henio.algashop.ordering.domain.exception.OrderDoesNotContainOrderItemException;
 import com.henio.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.henio.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.henio.algashop.ordering.domain.valueobject.*;
 import com.henio.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.henio.algashop.ordering.domain.valueobject.id.OrderId;
+import com.henio.algashop.ordering.domain.valueobject.id.OrderItemId;
 import com.henio.algashop.ordering.domain.valueobject.id.ProductId;
 
 import java.time.LocalDate;
@@ -110,6 +112,15 @@ public class Order {
         this.shipping = shipping;
         this.shippingCost = shippingCost;
         this.expectedDeliveryDate = expectedDeliveryDate;
+    }
+
+    public void changeItemQuantity(OrderItemId orderItemId, Quantity quantity) {
+        Objects.requireNonNull(orderItemId, "Order item id cannot be null");
+        Objects.requireNonNull(quantity, "Quantity cannot be null");
+
+        OrderItem orderItem = findOrderItem(orderItemId);
+        orderItem.changeQuantity(quantity);
+        recalculateTotals();
     }
 
     public boolean isDraft() {
@@ -235,6 +246,14 @@ public class Order {
         if (this.items() == null || this.items().isEmpty()) {
             throw OrderCannotBePlacedException.noItems(this.id());
         }
+    }
+
+    private OrderItem findOrderItem(OrderItemId orderItemId) {
+        Objects.requireNonNull(orderItemId, "Order item id cannot be null");
+        return this.items.stream()
+                .filter(i -> i.id().equals(orderItemId))
+                .findFirst()
+                .orElseThrow(()-> new OrderDoesNotContainOrderItemException(this.id(), orderItemId));
     }
 
     @Override

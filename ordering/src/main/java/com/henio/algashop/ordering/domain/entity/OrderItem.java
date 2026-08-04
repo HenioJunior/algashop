@@ -47,6 +47,12 @@ public class OrderItem {
         return orderItem;
     }
 
+   void changeQuantity(Quantity quantity) {
+        Objects.requireNonNull(quantity, "Quantity cannot be null");
+        this.quantity = quantity;
+        recalculateTotals();
+    }
+
     public OrderItemId id() {
         return id;
     }
@@ -90,4 +96,5 @@ public class OrderItem {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
 }
