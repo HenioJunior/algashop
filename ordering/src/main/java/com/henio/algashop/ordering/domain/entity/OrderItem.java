@@ -41,4 +41,44 @@ public class OrderItem {
             Quantity quantity) {
         return new OrderItem(orderId, productId, productName, price, quantity);
     }
+
+    public OrderItemId id() {
+        return id;
+    }
+
+    public OrderId orderId() {
+        return orderId;
+    }
+
+    public ProductId productId() {
+        return productId;
+    }
+
+    public ProductName productName() {
+        return productName;
+    }
+
+    public Money price() {
+        return price;
+    }
+
+    public Quantity quantity() {
+        return quantity;
+    }
+
+    public Money totalAmount() {
+        return totalAmount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderItem orderItem = (OrderItem) o;
+        return Objects.equals(id, orderItem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }
