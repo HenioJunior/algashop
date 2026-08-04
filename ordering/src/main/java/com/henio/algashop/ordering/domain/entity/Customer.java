@@ -1,10 +1,8 @@
 package com.henio.algashop.ordering.domain.entity;
 
 import com.henio.algashop.ordering.domain.exception.CustomerArchivedException;
-import com.henio.algashop.ordering.domain.exception.DomainException;
 import com.henio.algashop.ordering.domain.valueobject.*;
 import com.henio.algashop.ordering.domain.valueobject.id.CustomerId;
-import lombok.Builder;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
