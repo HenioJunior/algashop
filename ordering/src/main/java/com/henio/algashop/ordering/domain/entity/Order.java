@@ -1,5 +1,7 @@
 package com.henio.algashop.ordering.domain.entity;
 
+import com.henio.algashop.ordering.domain.exception.OrderCannotBePlacedException;
+import com.henio.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.henio.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.henio.algashop.ordering.domain.valueobject.*;
 import com.henio.algashop.ordering.domain.valueobject.id.CustomerId;
@@ -76,17 +78,38 @@ public class Order {
     }
 
     public void place() {
-        //TODO Business rules!
+        this.verifyIfCanChangeToPlaced();
         placedAt = OffsetDateTime.now();
         status = changeStatus(OrderStatus.PLACED);
     }
 
-    private OrderStatus changeStatus(OrderStatus newOrderStatus) {
-    Objects.requireNonNull(newOrderStatus, "Order status cannot be null");
-    if(this.status.cannotChangeTo(newOrderStatus)) {
-        throw new OrderStatusCannotBeChangedException(this.id, status, newOrderStatus);
+    public void markAsPaid() {
+        this.paidAt = OffsetDateTime.now();
+        status = changeStatus(OrderStatus.PAID);
     }
-    return this.status = newOrderStatus;
+
+    public void changePaymentMethod(PaymentMethod paymentMethod) {
+        Objects.requireNonNull(paymentMethod, "Payment method cannot be null");
+        this.paymentMethod = paymentMethod;
+    }
+
+    public void changeBilling(BillingInfo billing) {
+        Objects.requireNonNull(billing, "Billing info cannot be null");
+        this.billing = billing;
+    }
+
+    public void changeShipping(ShippingInfo shipping, Money shippingCost, LocalDate expectedDeliveryDate) {
+        Objects.requireNonNull(shipping, "Shipping info cannot be null");
+        Objects.requireNonNull(shippingCost, "Shipping cost cannot be null");
+        Objects.requireNonNull(expectedDeliveryDate, "Expected delivery date cannot be null");
+
+        if(expectedDeliveryDate.isBefore(LocalDate.now())) {
+            throw new OrderInvalidShippingDeliveryDateException(id);
+        }
+
+        this.shipping = shipping;
+        this.shippingCost = shippingCost;
+        this.expectedDeliveryDate = expectedDeliveryDate;
     }
 
     public boolean isDraft() {
@@ -169,7 +192,7 @@ public class Order {
         return Collections.unmodifiableSet(items);
     }
 
-    public void recalculateTotals() {
+    private void recalculateTotals() {
         totalItemsAmount = items.stream()
                 .map(OrderItem::totalAmount)
                 .reduce(Money.ZERO, Money::add);
@@ -183,6 +206,35 @@ public class Order {
         }
 
         totalItemsAmount = totalItemsAmount.add(shippingCost);
+    }
+
+    private OrderStatus changeStatus(OrderStatus newOrderStatus) {
+        Objects.requireNonNull(newOrderStatus, "Order status cannot be null");
+        if(this.status.cannotChangeTo(newOrderStatus)) {
+            throw new OrderStatusCannotBeChangedException(this.id, status, newOrderStatus);
+        }
+        return this.status = newOrderStatus;
+    }
+
+    private void verifyIfCanChangeToPlaced() {
+        if (this.shipping() == null) {
+            throw OrderCannotBePlacedException.noShippingInfo(this.id());
+        }
+        if (this.billing() == null) {
+            throw OrderCannotBePlacedException.noBillingInfo(this.id());
+        }
+        if (this.paymentMethod() == null) {
+            throw OrderCannotBePlacedException.noPaymentMethod(this.id());
+        }
+        if (this.shippingCost() == null) {
+            throw OrderCannotBePlacedException.invalidShippingCost(this.id());
+        }
+        if (this.expectedDeliveryDate() == null) {
+            throw OrderCannotBePlacedException.invalidExpectedDeliveryDate(this.id());
+        }
+        if (this.items() == null || this.items().isEmpty()) {
+            throw OrderCannotBePlacedException.noItems(this.id());
+        }
     }
 
     @Override
