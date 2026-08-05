@@ -39,23 +39,11 @@ public class OrderTestDataBuilder {
         order.changePaymentMethod(paymentMethod);
 
         if (withItems) {
-            order.addItem(
-                    Product.builder()
-                            .id(ProductId.generate())
-                            .name(new ProductName("Notebook X11"))
-                            .price(new Money("3000.00"))
-                            .inStock(true)
-                            .build(),
+            order.addItem(ProductTestDataBuilder.aProduct().build(),
                     new Quantity(2)
             );
 
-            order.addItem(
-                    Product.builder()
-                            .id(ProductId.generate())
-                            .name(new ProductName("4GB RAM"))
-                            .price(new Money("200.00"))
-                            .inStock(true)
-                            .build(),
+            order.addItem(ProductTestDataBuilder.aProductAltRamMemory().build(),
                     new Quantity(1)
             );
         }

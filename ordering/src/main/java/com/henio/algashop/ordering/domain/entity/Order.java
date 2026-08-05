@@ -64,6 +64,8 @@ public class Order {
         Objects.requireNonNull(product, "Product cannot be null");
         Objects.requireNonNull(quantity, "Quantity cannot be null");
 
+        product.checkOutOfStock();
+
         OrderItem item = OrderItem.create(this.id, product, quantity);
 
         items.add(item);
