@@ -2,10 +2,8 @@ package com.henio.algashop.ordering.domain.entity;
 
 import com.henio.algashop.ordering.domain.valueobject.*;
 import com.henio.algashop.ordering.domain.valueobject.id.CustomerId;
-import com.henio.algashop.ordering.domain.valueobject.id.ProductId;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 public class OrderTestDataBuilder {
 
@@ -13,11 +11,9 @@ public class OrderTestDataBuilder {
 
     private PaymentMethod paymentMethod = PaymentMethod.GATEWAY_BALANCE;
 
-    private Money shippingCost = new Money("10.00");
+    private Shipping shipping = aShipping();
 
-    private LocalDate expectedDeliveryDate = LocalDate.now().plusWeeks(1);
-
-    private ShippingInfo shippingInfo = aShippingInfo();
+    private final Shipping pastDateShipping = aPastDateShipping();
 
     private BillingInfo billingInfo = aBillingInfo();
 
@@ -34,7 +30,7 @@ public class OrderTestDataBuilder {
 
     public Order build() {
         Order order = Order.draft(customerId);
-        order.changeShipping(shippingInfo, shippingCost, expectedDeliveryDate);
+        order.changeShipping(shipping);
         order.changeBilling(billingInfo);
         order.changePaymentMethod(paymentMethod);
 
@@ -81,12 +77,32 @@ public class OrderTestDataBuilder {
                 .fullName(new FullName("John", "Doe")).build();
     }
 
-    public static ShippingInfo aShippingInfo() {
-        return ShippingInfo.builder()
+    public static Shipping aShipping() {
+        return Shipping.builder()
                 .address(anAddress())
-                .fullName(new FullName("John", "Doe"))
-                .document(new Document("112-33-2321"))
-                .phone(new Phone("111-441-1244")).build();
+                .recipient(
+                        Recipient.builder()
+                                .fullName(new FullName("John", "Doe"))
+                                .document(new Document("112-33-2321"))
+                                .phone(new Phone("111-441-1244"))
+                                .build())
+                .cost(new Money("10.00"))
+                .expectedDate(LocalDate.now().plusDays(1))
+                .build();
+    }
+
+    public static Shipping aPastDateShipping() {
+        return Shipping.builder()
+                .address(anAddress())
+                .recipient(
+                        Recipient.builder()
+                                .fullName(new FullName("John", "Doe"))
+                                .document(new Document("112-33-2321"))
+                                .phone(new Phone("111-441-1244"))
+                                .build())
+                .cost(new Money("10.00"))
+                .expectedDate(LocalDate.now().minusDays(7))
+                .build();
     }
 
     public static Address anAddress() {
@@ -110,18 +126,8 @@ public class OrderTestDataBuilder {
         return this;
     }
 
-    public OrderTestDataBuilder shippingCost(Money shippingCost) {
-        this.shippingCost = shippingCost;
-        return this;
-    }
-
-    public OrderTestDataBuilder expectedDeliveryDate(LocalDate expectedDeliveryDate) {
-        this.expectedDeliveryDate = expectedDeliveryDate;
-        return this;
-    }
-
-    public OrderTestDataBuilder shippingInfo(ShippingInfo shippingInfo) {
-        this.shippingInfo = shippingInfo;
+    public OrderTestDataBuilder shippingInfo(Shipping shipping) {
+        this.shipping = shipping;
         return this;
     }
 

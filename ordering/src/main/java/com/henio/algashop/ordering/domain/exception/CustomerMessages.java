@@ -41,6 +41,7 @@ public class CustomerMessages {
             = "Loyalty points to add must be greater than zero";
 
     public static final String FIELD_CANNOT_BE_BLANK = "Field cannot be blank";
+
     public static final String FIELD_IS_REQUIRED = "Field is required";
 
     public static final String ERROR_ORDER_STATUS_CANNOT_BE_CHANGED
@@ -57,12 +58,6 @@ public class CustomerMessages {
 
     public static final String ERROR_ORDER_CANNOT_BE_PLACED_HAS_NO_BILLING_INFO
             = "Order %s cannot be placed, it has no billing info";
-
-    public static final String ERROR_ORDER_CANNOT_BE_PLACED_INVALID_SHIPPING_COST
-            = "Order %s cannot be placed, it has no shipping cost";
-
-    public static final String ERROR_ORDER_CANNOT_BE_PLACED_INVALID_DELIVERY_DATE
-            = "Order %s cannot be placed, it has no delivery date";
 
     public static final String ERROR_ORDER_CANNOT_BE_PLACED_HAS_NO_PAYMENT_METHOD
             = "Order %s cannot be placed, it has no payment method";

@@ -219,52 +219,46 @@ class OrderTest {
     }
 
     @Test
-    void givenDraftOrder_whenChangeShippingInfo_thenShouldAllowChange() {
-        ShippingInfo shippingInfo =
-                OrderTestDataBuilder.aShippingInfo();
+    void givenDraftOrder_whenChangeShipping_thenShouldAllowChange() {
+        Shipping shipping = OrderTestDataBuilder.aShipping();
 
         Order order = Order.draft(CustomerId.generate());
 
-        Money shippingCost = new Money("15.00");
-        LocalDate expectedDeliveryDate =
-                LocalDate.now().plusDays(1);
-
         order.changeShipping(
-                shippingInfo,
-                shippingCost,
-                expectedDeliveryDate
+                Shipping.builder()
+                        .address(OrderTestDataBuilder.anAddress())
+                        .recipient(
+                                Recipient.builder()
+                                        .fullName(new FullName("John", "Doe"))
+                                        .document(new Document("112-33-2321"))
+                                        .phone(new Phone("111-441-1244"))
+                                        .build())
+                        .cost(new Money("10.00"))
+                        .expectedDate(
+                                LocalDate.now()
+                                        .plusDays(1))
+                        .build()
         );
 
         Assertions.assertWith(
                 order,
                 o -> assertThat(o.shipping())
-                        .isEqualTo(shippingInfo),
-                o -> assertThat(o.shippingCost())
-                        .isEqualTo(shippingCost),
-                o -> assertThat(o.expectedDeliveryDate())
-                        .isEqualTo(expectedDeliveryDate)
+                        .isEqualTo(shipping),
+                o -> assertThat(o.shipping().cost())
+                        .isEqualTo(shipping.cost()),
+                o -> assertThat(o.shipping().expectedDate())
+                        .isEqualTo(shipping.expectedDate())
         );
     }
 
     @Test
-    void givenDraftOrderAndPastDeliveryDate_whenChangeShippingInfo_thenShouldThrowException() {
-        ShippingInfo shippingInfo =
-                OrderTestDataBuilder.aShippingInfo();
+    void givenDraftOrderAndPastDeliveryDate_whenChangeShipping_thenShouldThrowException() {
+        Shipping aPastDateShipping = OrderTestDataBuilder.aPastDateShipping();
 
         Order order = Order.draft(CustomerId.generate());
 
-        LocalDate expectedDeliveryDate =
-                LocalDate.now().minusDays(2);
-
-        assertThatExceptionOfType(
-                OrderInvalidShippingDeliveryDateException.class
-        ).isThrownBy(() ->
-                order.changeShipping(
-                        shippingInfo,
-                        Money.ZERO,
-                        expectedDeliveryDate
-                )
-        );
+        assertThatExceptionOfType(OrderInvalidShippingDeliveryDateException.class)
+                .isThrownBy(() -> order.changeShipping(aPastDateShipping));
     }
 
     @Test
