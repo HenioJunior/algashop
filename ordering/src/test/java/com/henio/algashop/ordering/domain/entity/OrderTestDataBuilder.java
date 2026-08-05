@@ -39,11 +39,25 @@ public class OrderTestDataBuilder {
         order.changePaymentMethod(paymentMethod);
 
         if (withItems) {
-            order.addItem(new ProductId(), new ProductName("Notebook X11"),
-                    new Money("3000"), new Quantity(2));
+            order.addItem(
+                    Product.builder()
+                            .id(ProductId.generate())
+                            .name(new ProductName("Notebook X11"))
+                            .price(new Money("3000.00"))
+                            .inStock(true)
+                            .build(),
+                    new Quantity(2)
+            );
 
-            order.addItem(new ProductId(), new ProductName("4GB RAM"),
-                    new Money("200"), new Quantity(1));
+            order.addItem(
+                    Product.builder()
+                            .id(ProductId.generate())
+                            .name(new ProductName("4GB RAM"))
+                            .price(new Money("200.00"))
+                            .inStock(true)
+                            .build(),
+                    new Quantity(1)
+            );
         }
 
         switch (this.status) {
@@ -57,8 +71,14 @@ public class OrderTestDataBuilder {
                 order.markAsPaid();
             }
             case READY -> {
+                throw new UnsupportedOperationException(
+                        "READY is not yet supported by OrderTestDataBuilder"
+                );
             }
             case CANCELED -> {
+                throw new UnsupportedOperationException(
+                        "CANCELED is not yet supported by OrderTestDataBuilder"
+                );
             }
         }
 

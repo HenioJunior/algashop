@@ -1,11 +1,10 @@
 package com.henio.algashop.ordering.domain.entity;
 
 import com.henio.algashop.ordering.domain.valueobject.Money;
-import com.henio.algashop.ordering.domain.valueobject.ProductName;
+import com.henio.algashop.ordering.domain.valueobject.Product;
 import com.henio.algashop.ordering.domain.valueobject.Quantity;
 import com.henio.algashop.ordering.domain.valueobject.id.OrderId;
 import com.henio.algashop.ordering.domain.valueobject.id.OrderItemId;
-import com.henio.algashop.ordering.domain.valueobject.id.ProductId;
 
 import java.util.Objects;
 
@@ -13,44 +12,35 @@ public class OrderItem {
 
     private OrderItemId id;
     private OrderId orderId;
-
-    private ProductId productId;
-    private ProductName productName;
-
-    private Money price;
+    private Product product;
     private Quantity quantity;
 
     private Money totalAmount;
 
-    private OrderItem(OrderId orderId, ProductId productId, ProductName productName, Money price, Quantity quantity) {
+    private OrderItem(OrderId orderId, Product product, Quantity quantity) {
         this.id = OrderItemId.generate();
         this.orderId = Objects.requireNonNull(orderId, "Order id is required");
-        this.productId = Objects.requireNonNull(productId, "Product id is required");
-        this.productName = Objects.requireNonNull(productName, "Product name is required");
-        this.price = Objects.requireNonNull(price, "Price is required");
+        this.product = Objects.requireNonNull(product, "Product is required");
         this.quantity = Objects.requireNonNull(quantity, "Quantity is required");
+        recalculateTotal();
 
-        this.totalAmount = price.multiply(quantity);
     }
 
     public static OrderItem create(
             OrderId orderId,
-            ProductId productId,
-            ProductName productName,
-            Money price,
+            Product product,
             Quantity quantity) {
 
-        OrderItem orderItem = new OrderItem(orderId, productId, productName, price, quantity);
-
-        orderItem.recalculateTotals();
-
-        return orderItem;
+        return new OrderItem(orderId, product, quantity);
     }
 
-   void changeQuantity(Quantity quantity) {
-        Objects.requireNonNull(quantity, "Quantity cannot be null");
-        this.quantity = quantity;
-        recalculateTotals();
+    void changeQuantity(Quantity quantity) {
+        this.quantity = Objects.requireNonNull(quantity, "Quantity cannot be null");
+        recalculateTotal();
+    }
+
+    private void recalculateTotal() {
+        this.totalAmount = product.price().multiply(quantity);
     }
 
     public OrderItemId id() {
@@ -61,16 +51,8 @@ public class OrderItem {
         return orderId;
     }
 
-    public ProductId productId() {
-        return productId;
-    }
-
-    public ProductName productName() {
-        return productName;
-    }
-
-    public Money price() {
-        return price;
+    public Product product() {
+        return product;
     }
 
     public Quantity quantity() {
@@ -79,10 +61,6 @@ public class OrderItem {
 
     public Money totalAmount() {
         return totalAmount;
-    }
-
-    private void recalculateTotals() {
-        this.totalAmount = price.multiply(quantity);
     }
 
     @Override

@@ -60,20 +60,11 @@ public class Order {
         return new Order(customerId);
     }
 
-    public void addItem(
-            ProductId productId,
-            ProductName productName,
-            Money price,
-            Quantity quantity
-    ) {
+    public void addItem(Product product, Quantity quantity) {
+        Objects.requireNonNull(product, "Product cannot be null");
+        Objects.requireNonNull(quantity, "Quantity cannot be null");
 
-        OrderItem item = OrderItem.create(
-                this.id,
-                productId,
-                productName,
-                price,
-                quantity
-        );
+        OrderItem item = OrderItem.create(this.id, product, quantity);
 
         items.add(item);
         recalculateTotals();
