@@ -5,7 +5,6 @@ import com.henio.algashop.ordering.domain.valueobject.id.OrderId;
 import static com.henio.algashop.ordering.domain.exception.CustomerMessages.*;
 
 public class OrderCannotBePlacedException extends DomainException {
-
     private OrderCannotBePlacedException(String message) {
         super(message);
     }
