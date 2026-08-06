@@ -6,6 +6,7 @@ import com.henio.algashop.ordering.domain.exception.OrderStatusCannotBeChangedEx
 import com.henio.algashop.ordering.domain.exception.ProductOutOfStockException;
 import com.henio.algashop.ordering.domain.valueobject.*;
 import com.henio.algashop.ordering.domain.valueobject.id.CustomerId;
+import com.henio.algashop.ordering.domain.valueobject.id.OrderItemId;
 import com.henio.algashop.ordering.domain.valueobject.id.ProductId;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert;
@@ -21,16 +22,16 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOf
 class OrderTest {
 
     @Test
-    public void  shouldGenerateDraftOrder(){
+    public void shouldGenerateDraftOrder() {
         CustomerId customerId = CustomerId.generate();
         Order order = Order.draft(customerId);
         Assertions.assertWith(order,
-                o-> Assertions.assertThat(o.id()).isNotNull(),
-                o-> Assertions.assertThat(o.customerId()).isEqualTo(customerId),
-                o-> Assertions.assertThat(o.totalAmount()).isEqualTo(Money.ZERO),
-                o-> Assertions.assertThat(o.totalItems()).isEqualTo(Quantity.ZERO),
-                o-> Assertions.assertThat(o.isDraft()).isTrue(),
-                o-> Assertions.assertThat(o.items()).isEmpty(),
+                o -> Assertions.assertThat(o.id()).isNotNull(),
+                o -> Assertions.assertThat(o.customerId()).isEqualTo(customerId),
+                o -> Assertions.assertThat(o.totalAmount()).isEqualTo(Money.ZERO),
+                o -> Assertions.assertThat(o.totalItems()).isEqualTo(Quantity.ZERO),
+                o -> Assertions.assertThat(o.isDraft()).isTrue(),
+                o -> Assertions.assertThat(o.items()).isEmpty(),
 
                 o -> Assertions.assertThat(o.placedAt()).isNull(),
                 o -> Assertions.assertThat(o.paidAt()).isNull(),
@@ -341,13 +342,45 @@ class OrderTest {
                 () -> order.changeShipping(shipping),
                 () -> order.changePaymentMethod(paymentMethod),
                 () -> order.changeBilling(billing),
-                () -> order.addItem( ProductTestDataBuilder.aProduct().build(), new Quantity(1))
+                () -> order.addItem(ProductTestDataBuilder.aProduct().build(), new Quantity(1))
         );
 
         operations.forEach(operation ->
                 assertThatExceptionOfType(OrderCannotBeEditedException.class)
                         .isThrownBy(operation)
         );
-
     }
+
+    @Test
+    void givenDraftOrderWithTwoItems_whenRemoveItem_shouldUpdateItemsAndTotals() {
+        Order order = Order.draft(new CustomerId());
+
+        Product firstProduct = ProductTestDataBuilder.aProduct()
+                .price(new Money("10.00"))
+                .build();
+
+        Product secondProduct = ProductTestDataBuilder.aProduct()
+                .price(new Money("20.00"))
+                .build();
+
+        order.addItem(firstProduct, new Quantity(2));
+        order.addItem(secondProduct, new Quantity(3));
+
+        OrderItem itemToRemove = order.items()
+                .stream()
+                .filter(item -> item.product().equals(firstProduct))
+                .findFirst()
+                .orElseThrow();
+
+        order.removeItem(itemToRemove.id());
+
+        assertThat(order.items())
+                .singleElement()
+                .extracting(OrderItem::product)
+                .isEqualTo(secondProduct);
+
+        assertThat(order.totalAmount())
+                .isEqualTo(new Money("60.00"));
+    }
+
 }

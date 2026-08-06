@@ -67,6 +67,26 @@ public class Order {
         recalculateTotal();
     }
 
+    public void removeItem(OrderItemId orderItemId) {
+        verifyIfChangeable();
+        Objects.requireNonNull(orderItemId, "Order item id cannot be null");
+
+        OrderItem orderItem = findOrderItem(orderItemId);
+        items.remove(orderItem);
+        recalculateTotal();
+    }
+
+    public void changeItemQuantity(OrderItemId orderItemId, Quantity quantity) {
+        Objects.requireNonNull(orderItemId, "Order item id cannot be null");
+        Objects.requireNonNull(quantity, "Quantity cannot be null");
+
+        verifyIfChangeable();
+
+        OrderItem orderItem = findOrderItem(orderItemId);
+        orderItem.changeQuantity(quantity);
+        recalculateTotal();
+    }
+
     public void place() {
         this.verifyIfCanChangeToPlaced();
         placedAt = OffsetDateTime.now();
@@ -100,17 +120,6 @@ public class Order {
         verifyIfChangeable();
 
         this.shipping = shipping;
-    }
-
-    public void changeItemQuantity(OrderItemId orderItemId, Quantity quantity) {
-        Objects.requireNonNull(orderItemId, "Order item id cannot be null");
-        Objects.requireNonNull(quantity, "Quantity cannot be null");
-
-        verifyIfChangeable();
-
-        OrderItem orderItem = findOrderItem(orderItemId);
-        orderItem.changeQuantity(quantity);
-        recalculateTotal();
     }
 
     private void recalculateTotal() {
