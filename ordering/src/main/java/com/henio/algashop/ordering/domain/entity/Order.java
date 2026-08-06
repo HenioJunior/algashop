@@ -88,38 +88,48 @@ public class Order {
     }
 
     public void place() {
-        this.verifyIfCanChangeToPlaced();
+        verifyIfCanChangeToPlaced();
+        changeStatus(OrderStatus.PLACED);
         placedAt = OffsetDateTime.now();
-        status = changeStatus(OrderStatus.PLACED);
     }
 
     public void markAsPaid() {
-        this.paidAt = OffsetDateTime.now();
-        status = changeStatus(OrderStatus.PAID);
+        changeStatus(OrderStatus.PAID);
+        paidAt = OffsetDateTime.now();
     }
 
-    public void changePaymentMethod(PaymentMethod paymentMethod) {
-        Objects.requireNonNull(paymentMethod, "Payment method cannot be null");
+    public void markAsReady() {
+        changeStatus(OrderStatus.READY);
+        readyAt = OffsetDateTime.now();
+    }
+
+    public void cancel() {
+        changeStatus(OrderStatus.CANCELED);
+        canceledAt = OffsetDateTime.now();
+    }
+
+    public void changePaymentMethod(PaymentMethod newPaymentMethod) {
+        Objects.requireNonNull(newPaymentMethod, "Payment method cannot be null");
         verifyIfChangeable();
-        this.paymentMethod = paymentMethod;
+        this.paymentMethod = newPaymentMethod;
     }
 
-    public void changeBilling(Billing billing) {
-        Objects.requireNonNull(billing, "Billing info cannot be null");
+    public void changeBilling(Billing newBilling) {
+        Objects.requireNonNull(newBilling, "Billing info cannot be null");
         verifyIfChangeable();
-        this.billing = billing;
+        this.billing = newBilling;
     }
 
-    public void changeShipping(Shipping shipping) {
-        Objects.requireNonNull(shipping, "Shipping info cannot be null");
+    public void changeShipping(Shipping newShipping) {
+        Objects.requireNonNull(newShipping, "Shipping info cannot be null");
 
-        if(shipping.expectedDate().isBefore(LocalDate.now())) {
+        if(newShipping.expectedDate().isBefore(LocalDate.now())) {
             throw new OrderInvalidShippingDeliveryDateException(id);
         }
 
         verifyIfChangeable();
 
-        this.shipping = shipping;
+        this.shipping = newShipping;
     }
 
     private void recalculateTotal() {

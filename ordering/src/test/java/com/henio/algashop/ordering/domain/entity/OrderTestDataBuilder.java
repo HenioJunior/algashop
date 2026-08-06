@@ -17,7 +17,7 @@ public class OrderTestDataBuilder {
 
     private Billing billing = aBilling();
 
-    private boolean withItems = true;
+    private boolean includeItems = true;
 
     private OrderStatus status = OrderStatus.DRAFT;
 
@@ -34,7 +34,7 @@ public class OrderTestDataBuilder {
         order.changeBilling(billing);
         order.changePaymentMethod(paymentMethod);
 
-        if (withItems) {
+        if (includeItems) {
             order.addItem(ProductTestDataBuilder.aProduct().build(),
                     new Quantity(2)
             );
@@ -55,14 +55,12 @@ public class OrderTestDataBuilder {
                 order.markAsPaid();
             }
             case READY -> {
-                throw new UnsupportedOperationException(
-                        "READY is not yet supported by OrderTestDataBuilder"
-                );
+                order.place();
+                order.markAsPaid();
+                order.markAsReady();
             }
             case CANCELED -> {
-                throw new UnsupportedOperationException(
-                        "CANCELED is not yet supported by OrderTestDataBuilder"
-                );
+                order.cancel();
             }
         }
 
@@ -138,7 +136,7 @@ public class OrderTestDataBuilder {
     }
 
     public OrderTestDataBuilder withItems(boolean withItems) {
-        this.withItems = withItems;
+        this.includeItems = withItems;
         return this;
     }
 
