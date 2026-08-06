@@ -1,5 +1,6 @@
 package com.henio.algashop.ordering.domain.entity;
 
+import com.henio.algashop.ordering.domain.exception.OrderCannotBeEditedException;
 import com.henio.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.henio.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.henio.algashop.ordering.domain.exception.ProductOutOfStockException;
@@ -11,6 +12,7 @@ import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,8 +21,26 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOf
 class OrderTest {
 
     @Test
-    public void shouldGenerateOrder(){
-        Order.draft(CustomerId.generate());
+    public void  shouldGenerateDraftOrder(){
+        CustomerId customerId = CustomerId.generate();
+        Order order = Order.draft(customerId);
+        Assertions.assertWith(order,
+                o-> Assertions.assertThat(o.id()).isNotNull(),
+                o-> Assertions.assertThat(o.customerId()).isEqualTo(customerId),
+                o-> Assertions.assertThat(o.totalAmount()).isEqualTo(Money.ZERO),
+                o-> Assertions.assertThat(o.totalItems()).isEqualTo(Quantity.ZERO),
+                o-> Assertions.assertThat(o.isDraft()).isTrue(),
+                o-> Assertions.assertThat(o.items()).isEmpty(),
+
+                o -> Assertions.assertThat(o.placedAt()).isNull(),
+                o -> Assertions.assertThat(o.paidAt()).isNull(),
+                o -> Assertions.assertThat(o.canceledAt()).isNull(),
+                o -> Assertions.assertThat(o.readyAt()).isNull(),
+                o -> Assertions.assertThat(o.billing()).isNull(),
+                o -> Assertions.assertThat(o.shipping()).isNull(),
+                o -> Assertions.assertThat(o.paymentMethod()).isNull()
+
+        );
     }
 
     @Test
@@ -202,20 +222,14 @@ class OrderTest {
     }
 
     @Test
-    void givenDraftOrder_whenChangeBillingInfo_thenShouldAllowChange() {
+    void givenDraftOrder_whenChangeBilling_thenShouldAllowChange() {
         Order order = OrderTestDataBuilder.anOrder().build();
 
-        BillingInfo newBillingInfo = BillingInfo.builder()
-                .address(OrderTestDataBuilder.anAddress())
-                .document(new Document("225-09-1992"))
-                .phone(new Phone("123-111-9911"))
-                .fullName(new FullName("John", "Doe"))
-                .build();
+        Billing billing = OrderTestDataBuilder.aBilling();
 
-        order.changeBilling(newBillingInfo);
+        order.changeBilling(billing);
 
-        assertThat(order.billing())
-                .isEqualTo(newBillingInfo);
+        assertThat(order.billing()).isEqualTo(billing);
     }
 
     @Test
@@ -304,5 +318,36 @@ class OrderTest {
         );
 
         Assertions.assertThatExceptionOfType(ProductOutOfStockException.class).isThrownBy(addItemTask);
+    }
+
+    @Test
+    public void givenPlacedOrder_whenTryToEdit_shouldThrowOrderCannotBeEditedException() {
+        Order order = Order.draft(new CustomerId());
+
+        Product product = ProductTestDataBuilder.aProduct().build();
+        Quantity initialQuantity = new Quantity(1);
+        Shipping shipping = OrderTestDataBuilder.aShipping();
+        Billing billing = OrderTestDataBuilder.aBilling();
+        PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
+
+        order.addItem(product, initialQuantity);
+        order.changeShipping(shipping);
+        order.changePaymentMethod(paymentMethod);
+        order.changeBilling(billing);
+
+        order.place();
+
+        List<ThrowableAssert.ThrowingCallable> operations = List.of(
+                () -> order.changeShipping(shipping),
+                () -> order.changePaymentMethod(paymentMethod),
+                () -> order.changeBilling(billing),
+                () -> order.addItem( ProductTestDataBuilder.aProduct().build(), new Quantity(1))
+        );
+
+        operations.forEach(operation ->
+                assertThatExceptionOfType(OrderCannotBeEditedException.class)
+                        .isThrownBy(operation)
+        );
+
     }
 }

@@ -1,25 +1,28 @@
 package com.henio.algashop.ordering.domain.entity;
 
-import com.henio.algashop.ordering.domain.valueobject.Money;
 import com.henio.algashop.ordering.domain.valueobject.Product;
-import com.henio.algashop.ordering.domain.valueobject.ProductName;
 import com.henio.algashop.ordering.domain.valueobject.Quantity;
 import com.henio.algashop.ordering.domain.valueobject.id.OrderId;
-import com.henio.algashop.ordering.domain.valueobject.id.ProductId;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
 
 class OrderItemTest {
 
     @Test
     public void shouldGenerateOrderItem(){
-        Product product = Product.builder()
-                .id(ProductId.generate())
-                .name(new ProductName("Apple Watch"))
-                .price(new Money(new BigDecimal(5000)))
-                .inStock(true)
-                .build();
-        OrderItem.create(OrderId.generate(), product, new Quantity(1));
+        Product product = ProductTestDataBuilder.aProduct().build();
+        Quantity quantity = new Quantity(1);
+        OrderId orderId = new OrderId();
+
+        OrderItem orderItem = OrderItem.create(orderId, product, quantity);
+
+        Assertions.assertWith(orderItem,
+                o-> Assertions.assertThat(o.id()).isNotNull(),
+                o-> Assertions.assertThat(o.product().id()).isEqualTo(product.id()),
+                o-> Assertions.assertThat(o.product().name()).isEqualTo(product.name()),
+                o-> Assertions.assertThat(o.product().price()).isEqualTo(product.price()),
+                o-> Assertions.assertThat(o.quantity()).isEqualTo(quantity),
+                o-> Assertions.assertThat(o.orderId()).isEqualTo(orderId)
+        );
     }
 }

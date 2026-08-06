@@ -1,9 +1,6 @@
 package com.henio.algashop.ordering.domain.entity;
 
-import com.henio.algashop.ordering.domain.exception.OrderCannotBePlacedException;
-import com.henio.algashop.ordering.domain.exception.OrderDoesNotContainOrderItemException;
-import com.henio.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
-import com.henio.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
+import com.henio.algashop.ordering.domain.exception.*;
 import com.henio.algashop.ordering.domain.valueobject.*;
 import com.henio.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.henio.algashop.ordering.domain.valueobject.id.OrderId;
@@ -30,7 +27,7 @@ public class Order {
     private OffsetDateTime canceledAt;
     private OffsetDateTime readyAt;
 
-    private BillingInfo billing;
+    private Billing billing;
     private Shipping shipping;
 
     private OrderStatus status;
@@ -60,12 +57,14 @@ public class Order {
         Objects.requireNonNull(product, "Product cannot be null");
         Objects.requireNonNull(quantity, "Quantity cannot be null");
 
+        verifyIfChangeable();
+
         product.checkOutOfStock();
 
         OrderItem item = OrderItem.create(this.id, product, quantity);
 
         items.add(item);
-        recalculateTotals();
+        recalculateTotal();
     }
 
     public void place() {
@@ -81,11 +80,13 @@ public class Order {
 
     public void changePaymentMethod(PaymentMethod paymentMethod) {
         Objects.requireNonNull(paymentMethod, "Payment method cannot be null");
+        verifyIfChangeable();
         this.paymentMethod = paymentMethod;
     }
 
-    public void changeBilling(BillingInfo billing) {
+    public void changeBilling(Billing billing) {
         Objects.requireNonNull(billing, "Billing info cannot be null");
+        verifyIfChangeable();
         this.billing = billing;
     }
 
@@ -96,6 +97,8 @@ public class Order {
             throw new OrderInvalidShippingDeliveryDateException(id);
         }
 
+        verifyIfChangeable();
+
         this.shipping = shipping;
     }
 
@@ -103,12 +106,14 @@ public class Order {
         Objects.requireNonNull(orderItemId, "Order item id cannot be null");
         Objects.requireNonNull(quantity, "Quantity cannot be null");
 
+        verifyIfChangeable();
+
         OrderItem orderItem = findOrderItem(orderItemId);
         orderItem.changeQuantity(quantity);
-        recalculateTotals();
+        recalculateTotal();
     }
 
-    private void recalculateTotals() {
+    private void recalculateTotal() {
         BigDecimal totalItemsAmount = items.stream().map(i -> i.totalAmount().value()).reduce(BigDecimal.ZERO, BigDecimal::add);
 
         Integer totalItemsQuantity = items.stream().map(i -> i.quantity().value()).reduce(0, Integer::sum);
@@ -151,12 +156,18 @@ public class Order {
         }
     }
 
+    private void verifyIfChangeable() {
+        if(!isDraft()) {
+            throw new OrderCannotBeEditedException(this.id, this.status);
+        }
+    }
+
     private OrderItem findOrderItem(OrderItemId orderItemId) {
         Objects.requireNonNull(orderItemId, "Order item id cannot be null");
         return this.items.stream()
                 .filter(i -> i.id().equals(orderItemId))
                 .findFirst()
-                .orElseThrow(()-> new OrderDoesNotContainOrderItemException(this.id(), orderItemId));
+                .orElseThrow(()-> new OrderDoesNotContainOrderItemException(this.id, orderItemId));
     }
 
     public boolean isDraft() {
@@ -211,7 +222,7 @@ public class Order {
         return readyAt;
     }
 
-    public BillingInfo billing() {
+    public Billing billing() {
         return billing;
     }
 
