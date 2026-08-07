@@ -10,7 +10,6 @@ import com.henio.algashop.ordering.domain.valueobject.Money;
 import com.henio.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.henio.algashop.ordering.domain.valueobject.id.ShoppingCartItemId;
 
-import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.*;
 
@@ -31,7 +30,7 @@ public class ShoppingCart {
         this.items = new HashSet<>();
     }
 
-    public static ShoppingCart startShopping(CustomerId customerId) {
+    public static ShoppingCart create(CustomerId customerId) {
         return new ShoppingCart(customerId);
     }
 
@@ -42,56 +41,51 @@ public class ShoppingCart {
     }
 
     public void removeItem(ShoppingCartItemId shoppingCartItemId) {
-        ShoppingCartItem shoppingCartItem = this.findItem(shoppingCartItemId);
+        ShoppingCartItem shoppingCartItem = this.requireItem(shoppingCartItemId);
         this.items.remove(shoppingCartItem);
-        this.recalculateTotals();
+        this.recalculateTotal();
     }
 
     public void addItem(Product product, Quantity quantity) {
-        Objects.requireNonNull(product);
-        Objects.requireNonNull(quantity);
+        Objects.requireNonNull(product, "Product cannot be null");
+        Objects.requireNonNull(quantity, "Quantity cannot be null");
 
         product.checkOutOfStock();
 
-        ShoppingCartItem shoppingCartItem = ShoppingCartItem.brandNew(
-                this.id,
-                product.id(),
-                product.name(),
-                product.price(),
-                quantity
-        );
+        findItemByProduct(product.id())
+                .ifPresentOrElse(
+                        item -> updateItem(item, product, quantity),
+                        () -> insertItem(product, quantity));
 
-        searchItemByProduct(product.id()).ifPresentOrElse(i -> updateItem(i, product, quantity), () -> insertItem(shoppingCartItem));
-
-        this.recalculateTotals();
+        this.recalculateTotal();
     }
 
-    public ShoppingCartItem findItem(ShoppingCartItemId shoppingCartItemId) {
-        Objects.requireNonNull(shoppingCartItemId);
+    public ShoppingCartItem requireItem(ShoppingCartItemId shoppingCartItemId) {
+        Objects.requireNonNull(shoppingCartItemId, "Shopping cart item id cannot be null");
         return this.items.stream()
-                .filter(i -> i.id().equals(shoppingCartItemId))
+                .filter(item -> item.id().equals(shoppingCartItemId))
                 .findFirst()
                 .orElseThrow(() -> new ShoppingCartDoesNotContainItemException(this.id(), shoppingCartItemId));
     }
 
-    public ShoppingCartItem findItem(ProductId productId) {
-        Objects.requireNonNull(productId);
+    public ShoppingCartItem requireItemByProduct(ProductId productId) {
+        Objects.requireNonNull(productId, "Product id cannot be null");
         return this.items.stream()
-                .filter(i -> i.productId().equals(productId))
+                .filter(item -> item.productId().equals(productId))
                 .findFirst()
                 .orElseThrow(() -> new ShoppingCartDoesNotContainProductException(this.id(), productId));
     }
 
     public void refreshItem(Product product) {
-        ShoppingCartItem shoppingCartItem = this.findItem(product.id());
+        ShoppingCartItem shoppingCartItem = this.requireItemByProduct(product.id());
         shoppingCartItem.refresh(product);
-        this.recalculateTotals();
+        this.recalculateTotal();
     }
 
     public void changeItemQuantity(ShoppingCartItemId shoppingCartItemId, Quantity quantity) {
-        ShoppingCartItem shoppingCartItem = this.findItem(shoppingCartItemId);
+        ShoppingCartItem shoppingCartItem = this.requireItem(shoppingCartItemId);
         shoppingCartItem.changeQuantity(quantity);
-        this.recalculateTotals();
+        this.recalculateTotal();
     }
 
     public boolean containsUnavailableItems() {
@@ -99,40 +93,48 @@ public class ShoppingCart {
     }
 
     public boolean isEmpty() {
-        return this.items().isEmpty();
+        return items().isEmpty();
     }
 
     public Set<ShoppingCartItem> items() {
         return Collections.unmodifiableSet(items);
     }
 
-    private void updateItem(ShoppingCartItem shoppingCartItem, Product product, Quantity quantity) {
-        shoppingCartItem.refresh(product);
-        shoppingCartItem.changeQuantity(shoppingCartItem.quantity().add(quantity));
+    private void updateItem(
+            ShoppingCartItem item,
+            Product product,
+            Quantity quantity
+    ) {
+        item.refresh(product);
+        item.changeQuantity(item.quantity().add(quantity));
     }
 
-    private void insertItem(ShoppingCartItem shoppingCartItem) {
-        this.items.add(shoppingCartItem);
+    private void insertItem(Product product, Quantity quantity) {
+        ShoppingCartItem item = ShoppingCartItem.create(
+                this.id,
+                product.id(),
+                product.name(),
+                product.price(),
+                quantity
+        );
+        this.items.add(item);
     }
 
-    private Optional<ShoppingCartItem> searchItemByProduct(ProductId productId) {
+    private Optional<ShoppingCartItem> findItemByProduct(ProductId productId) {
         Objects.requireNonNull(productId);
         return this.items.stream()
                 .filter(i -> i.productId().equals(productId))
                 .findFirst();
     }
 
-    private void recalculateTotals() {
-        BigDecimal totalAmount = items.stream()
-                .map(i -> i.totalAmount().value())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    private void recalculateTotal() {
+        this.totalAmount = items.stream()
+                .map(ShoppingCartItem::totalAmount)
+                .reduce(Money.ZERO, Money::add);
 
-        Integer totalItems = items.stream()
-                .map(i -> i.quantity().value())
-                .reduce(0, Integer::sum);
-
-        this.totalAmount = new Money(totalAmount);
-        this.totalItems = new Quantity(totalItems);
+        this.totalItems = items.stream()
+                .map(ShoppingCartItem::quantity)
+                .reduce(Quantity.ZERO, Quantity::add);
     }
 
     public ShoppingCartId id() {
@@ -166,5 +168,17 @@ public class ShoppingCart {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "ShoppingCart{" +
+                "id=" + id +
+                ", customerId=" + customerId +
+                ", totalAmount=" + totalAmount +
+                ", totalItems=" + totalItems +
+                ", createdAt=" + createdAt +
+                ", items=" + items +
+                '}';
     }
 }

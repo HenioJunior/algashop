@@ -29,12 +29,14 @@ public class ShoppingCartItem {
         this.price = Objects.requireNonNull(price, "Product price is required");
         this.quantity = Objects.requireNonNull(quantity, "Product quantity is required");
         this.available = true;
-        recalculateTotals();
+        recalculateTotal();
     }
 
-    public static ShoppingCartItem brandNew(ShoppingCartId shoppingCartId, ProductId productId, ProductName name, Money price, Quantity quantity) {
+    public static ShoppingCartItem create(ShoppingCartId shoppingCartId, ProductId productId, ProductName name, Money price, Quantity quantity) {
         return new ShoppingCartItem(shoppingCartId, productId, name, price, quantity);
     }
+
+
 
     void refresh(Product product) {
         Objects.requireNonNull(product);
@@ -47,16 +49,16 @@ public class ShoppingCartItem {
         this.price = product.price();
         this.available = product.inStock();
         this.productName = product.name();
-        this.recalculateTotals();
+        this.recalculateTotal();
     }
 
     void changeQuantity(Quantity quantity) {
         Objects.requireNonNull(quantity);
         this.quantity = quantity;
-        this.recalculateTotals();
+        this.recalculateTotal();
     }
 
-    private void recalculateTotals() {
+    private void recalculateTotal() {
         totalAmount = (price.multiply(quantity));
     }
 
@@ -105,4 +107,17 @@ public class ShoppingCartItem {
         return Objects.hash(id);
     }
 
+    @Override
+    public String toString() {
+        return "ShoppingCartItem{" +
+                "id=" + id +
+                ", shoppingCartId=" + shoppingCartId +
+                ", productId=" + productId +
+                ", productName=" + productName +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                ", available=" + available +
+                ", totalAmount=" + totalAmount +
+                '}';
+    }
 }

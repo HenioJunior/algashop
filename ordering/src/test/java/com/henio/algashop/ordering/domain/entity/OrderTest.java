@@ -6,7 +6,6 @@ import com.henio.algashop.ordering.domain.exception.OrderStatusCannotBeChangedEx
 import com.henio.algashop.ordering.domain.exception.ProductOutOfStockException;
 import com.henio.algashop.ordering.domain.valueobject.*;
 import com.henio.algashop.ordering.domain.valueobject.id.CustomerId;
-import com.henio.algashop.ordering.domain.valueobject.id.OrderItemId;
 import com.henio.algashop.ordering.domain.valueobject.id.ProductId;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert;
