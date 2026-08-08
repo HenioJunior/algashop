@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class Order {
+public class Order implements AggregateRoot<OrderId> {
 
     private final OrderId id;
     private final CustomerId customerId;

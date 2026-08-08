@@ -8,7 +8,7 @@ import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Customer {
+public class Customer implements AggregateRoot<CustomerId> {
 
     private static final FullName ANONYMIZED_CUSTOMER_NAME = new FullName("Anonymous", "Customer");
 

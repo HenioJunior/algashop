@@ -13,7 +13,7 @@ import com.henio.algashop.ordering.domain.model.valueobject.id.ShoppingCartItemI
 import java.time.OffsetDateTime;
 import java.util.*;
 
-public class ShoppingCart {
+public class ShoppingCart implements AggregateRoot<ShoppingCartId>{
     private ShoppingCartId id;
     private CustomerId customerId;
     private Money totalAmount;
