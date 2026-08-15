@@ -5,6 +5,7 @@ import com.henio.algashop.ordering.domain.model.valueobject.*;
 import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.henio.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.henio.algashop.ordering.domain.model.valueobject.id.OrderItemId;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -51,6 +52,40 @@ public class Order implements AggregateRoot<OrderId> {
 
     public static Order draft(CustomerId customerId) {
         return new Order(customerId);
+    }
+
+    @Builder(
+            builderClassName = "ExistingOrderBuilder",
+            builderMethodName = "existing"
+    )
+    private Order(
+            OrderId id,
+            CustomerId customerId,
+            Money totalAmount,
+            Quantity totalItems,
+            OffsetDateTime placedAt,
+            OffsetDateTime paidAt,
+            OffsetDateTime canceledAt,
+            OffsetDateTime readyAt,
+            Billing billing,
+            Shipping shipping,
+            OrderStatus status,
+            PaymentMethod paymentMethod,
+            Set<OrderItem> items
+    ) {
+        this.id = Objects.requireNonNull(id, "Order id is required");
+        this.customerId = Objects.requireNonNull(customerId, "Customer id is required");
+        this.totalAmount = Objects.requireNonNull(totalAmount, "Total amount is required");
+        this.totalItems = Objects.requireNonNull(totalItems, "Total items are required");
+        this.placedAt = placedAt;
+        this.paidAt = paidAt;
+        this.canceledAt = canceledAt;
+        this.readyAt = readyAt;
+        this.billing = billing;
+        this.shipping = shipping;
+        this.status = Objects.requireNonNull(status, "Order status is required");
+        this.paymentMethod = paymentMethod;
+        this.items = Objects.requireNonNull(items, "Order items are required");
     }
 
     public void addItem(Product product, Quantity quantity) {

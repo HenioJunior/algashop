@@ -1,6 +1,5 @@
-package com.henio.algashop.ordering.infrastructure.persistence.repository;
+package com.henio.algashop.ordering.infrastructure.persistence;
 
-import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OrderPersistenceEntityRepository extends JpaRepository<OrderPersistenceEntity, Long> {

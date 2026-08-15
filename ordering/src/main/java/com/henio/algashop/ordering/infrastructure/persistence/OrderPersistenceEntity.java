@@ -1,4 +1,4 @@
-package com.henio.algashop.ordering.infrastructure.persistence.entity;
+package com.henio.algashop.ordering.infrastructure.persistence;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -10,20 +10,20 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
+@Table(name = "tb_order")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @ToString(of = "id")
-@Table(name = "\"order\"")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class OrderPersistenceEntity {
 
     @Id
     @EqualsAndHashCode.Include
     private Long id;
-    private UUID customerId;
+    private Long customerId;
 
     private BigDecimal totalAmount;
     private Integer totalItems;

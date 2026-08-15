@@ -1,7 +1,6 @@
-package com.henio.algashop.ordering.infrastructure.persistence.repository;
+package com.henio.algashop.ordering.infrastructure.persistence;
 
 import com.henio.algashop.ordering.domain.model.utility.IdGenerator;
-import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,10 @@ class OrderPersistenceEntityRepositoryIT {
     @Test
     void shouldPersistOrder(){
         long orderId = IdGenerator.generateTSID().toLong();
+        long customerId = IdGenerator.generateTSID().toLong();
         OrderPersistenceEntity entity = OrderPersistenceEntity.builder()
                 .id(orderId)
-                .customerId(IdGenerator.generateTimeBasedUUID())
+                .customerId(customerId)
                 .totalItems(2)
                 .totalAmount(new BigDecimal(1000))
                 .status("DRAFT")
