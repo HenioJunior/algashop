@@ -7,6 +7,7 @@ import com.henio.algashop.ordering.domain.model.valueobject.id.OrderId;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class OrdersPersistenceAdapter implements Orders {
@@ -23,11 +24,9 @@ public class OrdersPersistenceAdapter implements Orders {
     }
 
     @Override
-    public Order ofId(OrderId orderId) {
-        Objects.requireNonNull(orderId, "Order id is required");
-        OrderPersistenceEntity orderPersistenceEntity = repository.findById(orderId.value().toLong())
-                .orElseThrow(() -> new OrderNotFoundException(orderId));
-        return disassembler.toDomain(orderPersistenceEntity);
+    public Optional<Order> ofId(OrderId orderId) {
+        Optional<OrderPersistenceEntity> possibleEntity = repository.findById(orderId.value().toLong());
+        return possibleEntity.map(disassembler::toDomain);
     }
 
 

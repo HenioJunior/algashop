@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import java.util.Optional;
+
 @DataJpaTest
 @Import({
         OrdersPersistenceAdapter.class,
@@ -33,12 +35,10 @@ class OrdersIT {
         OrderId orderId = order.id();
 
         orders.add(order);
-        Order savedOrder = orders.ofId(orderId);
+        Optional<Order> savedOrder = orders.ofId(orderId);
 
         Assertions.assertThat(savedOrder)
-                .isEqualTo(order);
-
+                .isPresent()
+                .contains(order);
     }
-
-
 }
