@@ -4,6 +4,7 @@ import com.henio.algashop.ordering.domain.model.entity.Order;
 import com.henio.algashop.ordering.domain.model.exception.OrderNotFoundException;
 import com.henio.algashop.ordering.domain.model.repository.Orders;
 import com.henio.algashop.ordering.domain.model.valueobject.id.OrderId;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -46,13 +47,40 @@ public class OrdersPersistenceAdapter implements Orders {
                         () -> insert(aggregateRoot));
     }
 
-    private void insert(Order aggregateRoot) {
-        OrderPersistenceEntity orderPersistenceEntity = assembler.fromDomain(aggregateRoot);
-        repository.save(orderPersistenceEntity);
+    private void update(Order aggregateRoot, OrderPersistenceEntity entity) {
+        checkVersion(aggregateRoot, entity);
+
+        assembler.merge(entity, aggregateRoot);
+
+        repository.flush();
+
+        AggregateVersionUpdater.update(
+                aggregateRoot,
+                entity.getVersion()
+        );
     }
 
-    private void update(Order aggregateRoot, OrderPersistenceEntity orderPersistenceEntity) {
-        OrderPersistenceEntity updatedEntity = assembler.merge(orderPersistenceEntity, aggregateRoot);
-        repository.save(updatedEntity);
+    private void insert(Order aggregateRoot) {
+        OrderPersistenceEntity entity = assembler.fromDomain(aggregateRoot);
+        repository.saveAndFlush(entity);
+        AggregateVersionUpdater.update(
+                aggregateRoot,
+                entity.getVersion()
+        );
+    }
+
+    private void checkVersion(
+            Order aggregateRoot,
+            OrderPersistenceEntity entity
+    ) {
+        if (!Objects.equals(
+                aggregateRoot.version(),
+                entity.getVersion()
+        )) {
+            throw new ObjectOptimisticLockingFailureException(
+                    Order.class,
+                    aggregateRoot.id()
+            );
+        }
     }
 }

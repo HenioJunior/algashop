@@ -35,6 +35,7 @@ public class Order implements AggregateRoot<OrderId> {
     private PaymentMethod paymentMethod;
 
     private final Set<OrderItem> items;
+    private Long version;
 
     private Order(CustomerId customerId) {
         this.id = OrderId.generate();
@@ -48,6 +49,7 @@ public class Order implements AggregateRoot<OrderId> {
         this.totalItems = Quantity.ZERO;
         this.status = OrderStatus.DRAFT;
         this.items = new HashSet<>();
+        this.version = 0L;
     }
 
     public static Order draft(CustomerId customerId) {
@@ -71,7 +73,8 @@ public class Order implements AggregateRoot<OrderId> {
             Shipping shipping,
             OrderStatus status,
             PaymentMethod paymentMethod,
-            Set<OrderItem> items
+            Set<OrderItem> items,
+            Long version
     ) {
         this.id = Objects.requireNonNull(id, "Order id is required");
         this.customerId = Objects.requireNonNull(customerId, "Customer id is required");
@@ -86,6 +89,7 @@ public class Order implements AggregateRoot<OrderId> {
         this.status = Objects.requireNonNull(status, "Order status is required");
         this.paymentMethod = paymentMethod;
         this.items = Objects.requireNonNull(items, "Order items are required");
+        this.version = version;
     }
 
     public void addItem(Product product, Quantity quantity) {
@@ -294,6 +298,14 @@ public class Order implements AggregateRoot<OrderId> {
 
     public Set<OrderItem> items() {
         return Collections.unmodifiableSet(items);
+    }
+
+    public Long version() {
+        return version;
+    }
+
+    private void setVersion(Long version) {
+        this.version = version;
     }
 
     @Override

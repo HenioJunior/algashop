@@ -32,6 +32,7 @@ public class OrderPersistenceDisassembler {
                         persistenceEntity.getPaymentMethod()
                 ))
                 .items(new HashSet<>())
+                .version(persistenceEntity.getVersion())
                 .build();
     }
 }

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import java.util.Optional;
 
@@ -56,5 +57,31 @@ class OrdersIT {
         order = orders.ofId(order.id()).orElseThrow();
 
         Assertions.assertThat(order.status()).isEqualTo(OrderStatus.PAID);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingStaleOrder(){
+        Order order = OrderTestDataBuilder.anOrder()
+                .status(OrderStatus.PLACED)
+                .build();
+
+        orders.add(order);
+
+        Order orderT1 = orders.ofId(order.id()).orElseThrow();
+        Order orderT2 = orders.ofId(order.id()).orElseThrow();
+
+        orderT1.markAsPaid();
+        orders.add(orderT1);
+
+        Assertions.assertThat(orderT1.version())
+                .isNotEqualTo(orderT2.version());
+
+        orderT2.cancel();
+
+       Assertions.assertThatExceptionOfType(ObjectOptimisticLockingFailureException.class)
+               .isThrownBy(()-> orders.add(orderT2));
+
+        Order savedOrder = orders.ofId(order.id()).orElseThrow();
+        Assertions.assertThat(savedOrder.status()).isEqualTo(OrderStatus.PAID);
     }
 }
