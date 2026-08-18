@@ -1,7 +1,8 @@
-package com.henio.algashop.ordering.infrastructure.persistence;
+package com.henio.algashop.ordering.infrastructure.persistence.assembler;
 
 import com.henio.algashop.ordering.domain.model.entity.Order;
 import com.henio.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
+import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;

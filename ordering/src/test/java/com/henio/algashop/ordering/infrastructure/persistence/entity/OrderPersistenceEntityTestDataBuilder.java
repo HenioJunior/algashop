@@ -1,4 +1,4 @@
-package com.henio.algashop.ordering.infrastructure.persistence;
+package com.henio.algashop.ordering.infrastructure.persistence.entity;
 
 import com.henio.algashop.ordering.domain.model.utility.IdGenerator;
 

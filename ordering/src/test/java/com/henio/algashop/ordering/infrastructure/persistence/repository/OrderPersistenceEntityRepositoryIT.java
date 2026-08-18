@@ -1,7 +1,9 @@
-package com.henio.algashop.ordering.infrastructure.persistence;
+package com.henio.algashop.ordering.infrastructure.persistence.repository;
 
 import com.henio.algashop.ordering.domain.model.utility.IdGenerator;
+import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntityTestDataBuilder;
 import com.henio.algashop.ordering.infrastructure.persistence.config.SpringDataAuditingConfig;
+import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

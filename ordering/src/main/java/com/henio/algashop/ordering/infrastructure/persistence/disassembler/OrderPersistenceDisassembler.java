@@ -1,4 +1,4 @@
-package com.henio.algashop.ordering.infrastructure.persistence;
+package com.henio.algashop.ordering.infrastructure.persistence.disassembler;
 
 import com.henio.algashop.ordering.domain.model.entity.Order;
 import com.henio.algashop.ordering.domain.model.entity.OrderStatus;
@@ -7,6 +7,7 @@ import com.henio.algashop.ordering.domain.model.valueobject.Money;
 import com.henio.algashop.ordering.domain.model.valueobject.Quantity;
 import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.henio.algashop.ordering.domain.model.valueobject.id.OrderId;
+import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import io.hypersistence.tsid.TSID;
 import org.springframework.stereotype.Component;
 
