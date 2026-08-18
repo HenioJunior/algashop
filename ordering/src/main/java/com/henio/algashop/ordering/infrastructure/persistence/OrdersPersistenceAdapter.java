@@ -32,7 +32,27 @@ public class OrdersPersistenceAdapter implements Orders {
 
     @Override
     public void add(Order aggregateRoot) {
-        Objects.requireNonNull(aggregateRoot, "Order is required");
-        repository.saveAndFlush(assembler.fromDomain(aggregateRoot));
+        Objects.requireNonNull(
+                aggregateRoot,
+                "Order is required");
+
+        long orderId = aggregateRoot.id()
+                .value()
+                .toLong();
+
+        repository.findById(orderId)
+                .ifPresentOrElse(
+                        entity -> update(aggregateRoot, entity),
+                        () -> insert(aggregateRoot));
+    }
+
+    private void insert(Order aggregateRoot) {
+        OrderPersistenceEntity orderPersistenceEntity = assembler.fromDomain(aggregateRoot);
+        repository.save(orderPersistenceEntity);
+    }
+
+    private void update(Order aggregateRoot, OrderPersistenceEntity orderPersistenceEntity) {
+        OrderPersistenceEntity updatedEntity = assembler.merge(orderPersistenceEntity, aggregateRoot);
+        repository.save(updatedEntity);
     }
 }

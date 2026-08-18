@@ -1,6 +1,7 @@
 package com.henio.algashop.ordering.domain.model.repository;
 
 import com.henio.algashop.ordering.domain.model.entity.Order;
+import com.henio.algashop.ordering.domain.model.entity.OrderStatus;
 import com.henio.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.henio.algashop.ordering.infrastructure.persistence.OrderPersistenceAssembler;
@@ -40,5 +41,20 @@ class OrdersIT {
         Assertions.assertThat(savedOrder)
                 .isPresent()
                 .contains(order);
+    }
+
+    @Test
+    void shouldUpdateExistingOrder() {
+        Order order = OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build();
+        orders.add(order);
+
+        order = orders.ofId(order.id()).orElseThrow();
+        order.markAsPaid();
+
+        orders.add(order);
+
+        order = orders.ofId(order.id()).orElseThrow();
+
+        Assertions.assertThat(order.status()).isEqualTo(OrderStatus.PAID);
     }
 }
