@@ -11,12 +11,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Table(name = "tb_order")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -84,4 +85,22 @@ public class OrderPersistenceEntity {
     })
     private ShippingEmbeddable shipping;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private Set<OrderItemPersistenceEntity> items = new HashSet<>();
+
+    public void replaceItems(Set<OrderItemPersistenceEntity> newItems) {
+        items.clear();
+
+        if (newItems == null) {
+            return;
+        }
+
+        newItems.forEach(this::addItem);
+    }
+
+    private void addItem(OrderItemPersistenceEntity item) {
+        item.setOrder(this);
+        this.items.add(item);
+    }
 }

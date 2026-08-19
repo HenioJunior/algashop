@@ -29,17 +29,8 @@ class OrderPersistenceEntityRepositoryIT {
 
     @Test
     void shouldPersistOrder(){
-        long orderId = IdGenerator.generateTSID().toLong();
-        long customerId = IdGenerator.generateTSID().toLong();
-        OrderPersistenceEntity entity = OrderPersistenceEntity.builder()
-                .id(orderId)
-                .customerId(customerId)
-                .totalItems(2)
-                .totalAmount(new BigDecimal(1000))
-                .status("DRAFT")
-                .paymentMethod("CREDIT_CARD")
-                .placedAt(OffsetDateTime.now())
-                .build();
+        OrderPersistenceEntity entity = OrderPersistenceEntityTestDataBuilder.existingOrder();
+        long orderId = entity.getId();
 
         orderPersistenceEntityRepository.saveAndFlush(entity);
         Assertions.assertThat(orderPersistenceEntityRepository.existsById(orderId)).isTrue();
