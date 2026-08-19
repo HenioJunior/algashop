@@ -1,6 +1,7 @@
 package com.henio.algashop.ordering.infrastructure.persistence.entity;
 
 import com.henio.algashop.ordering.domain.model.utility.IdGenerator;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -11,10 +12,9 @@ public class OrderPersistenceEntityTestDataBuilder {
     private OrderPersistenceEntityTestDataBuilder() {
     }
 
-    public static OrderPersistenceEntity existingOrder() {
+    public static OrderPersistenceEntity.OrderPersistenceEntityBuilder existingOrderBuilder() {
 
-        OrderPersistenceEntity order =
-        OrderPersistenceEntity.builder()
+        return OrderPersistenceEntity.builder()
                 .id(IdGenerator.generateTSID().toLong())
                 .customerId(IdGenerator.generateTSID().toLong())
                 .totalItems(3)
@@ -22,13 +22,11 @@ public class OrderPersistenceEntityTestDataBuilder {
                 .status("DRAFT")
                 .paymentMethod("CREDIT_CARD")
                 .placedAt(OffsetDateTime.now())
-                .build();
+                .items(Set.of(existingOrderItem(), existingOrderItemAlt()));
+    }
 
-        Set<OrderItemPersistenceEntity> items = Set.of(existingOrderItem(), existingOrderItemAlt());
-
-        order.replaceItems(items);
-
-        return order;
+    public static OrderPersistenceEntity existingOrder() {
+        return existingOrderBuilder().build();
     }
 
     public static OrderItemPersistenceEntity existingOrderItem() {

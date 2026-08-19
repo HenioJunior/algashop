@@ -1,18 +1,14 @@
 package com.henio.algashop.ordering.infrastructure.persistence.repository;
 
-import com.henio.algashop.ordering.domain.model.utility.IdGenerator;
-import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntityTestDataBuilder;
 import com.henio.algashop.ordering.infrastructure.persistence.config.SpringDataAuditingConfig;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
+import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntityTestDataBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.context.annotation.Import;
-
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 
 
 @DataJpaTest
@@ -34,6 +30,9 @@ class OrderPersistenceEntityRepositoryIT {
 
         orderPersistenceEntityRepository.saveAndFlush(entity);
         Assertions.assertThat(orderPersistenceEntityRepository.existsById(orderId)).isTrue();
+
+        OrderPersistenceEntity savedEntity = orderPersistenceEntityRepository.findById(orderId).orElseThrow();
+        Assertions.assertThat(savedEntity.getItems()).isNotEmpty();
     }
 
     @Test

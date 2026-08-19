@@ -6,6 +6,7 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "tb_order_item")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

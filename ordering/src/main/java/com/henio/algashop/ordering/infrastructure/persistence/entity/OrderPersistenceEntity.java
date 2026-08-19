@@ -19,8 +19,6 @@ import java.util.UUID;
 @Table(name = "tb_order")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @ToString(of = "id")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
@@ -85,9 +83,33 @@ public class OrderPersistenceEntity {
     })
     private ShippingEmbeddable shipping;
 
-    @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private Set<OrderItemPersistenceEntity> items = new HashSet<>();
+
+    @Builder
+    public OrderPersistenceEntity(Long id, Long customerId, BigDecimal totalAmount, Integer totalItems, String status,
+                                  String paymentMethod, OffsetDateTime placedAt, OffsetDateTime paidAt, OffsetDateTime canceledAt,
+                                  OffsetDateTime readyAt, UUID createdByUserId, OffsetDateTime lastModifiedAt,
+                                  UUID lastModifiedByUserId, Long version, BillingEmbeddable billing,
+                                  ShippingEmbeddable shipping, Set<OrderItemPersistenceEntity> items) {
+        this.id = id;
+        this.customerId = customerId;
+        this.totalAmount = totalAmount;
+        this.totalItems = totalItems;
+        this.status = status;
+        this.paymentMethod = paymentMethod;
+        this.placedAt = placedAt;
+        this.paidAt = paidAt;
+        this.canceledAt = canceledAt;
+        this.readyAt = readyAt;
+        this.createdByUserId = createdByUserId;
+        this.lastModifiedAt = lastModifiedAt;
+        this.lastModifiedByUserId = lastModifiedByUserId;
+        this.version = version;
+        this.billing = billing;
+        this.shipping = shipping;
+        this.replaceItems(items);
+    }
 
     public void replaceItems(Set<OrderItemPersistenceEntity> newItems) {
         items.clear();
