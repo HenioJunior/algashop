@@ -5,7 +5,7 @@ import com.henio.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class OrderPersistenceAssemblerTest {
 
@@ -29,5 +29,4 @@ class OrderPersistenceAssemblerTest {
                 p -> assertThat(p.getReadyAt()).isEqualTo(order.readyAt())
         );
     }
-
 }

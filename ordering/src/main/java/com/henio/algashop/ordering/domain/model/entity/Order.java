@@ -49,7 +49,7 @@ public class Order implements AggregateRoot<OrderId> {
         this.totalItems = Quantity.ZERO;
         this.status = OrderStatus.DRAFT;
         this.items = new HashSet<>();
-        this.version = 0L;
+        this.version = null;
     }
 
     public static Order draft(CustomerId customerId) {

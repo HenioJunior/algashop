@@ -1,6 +1,7 @@
 package com.henio.algashop.ordering.infrastructure.persistence.assembler;
 
 import com.henio.algashop.ordering.domain.model.entity.Order;
+import com.henio.algashop.ordering.domain.model.entity.OrderItem;
 import com.henio.algashop.ordering.domain.model.valueobject.Address;
 import com.henio.algashop.ordering.domain.model.valueobject.Billing;
 import com.henio.algashop.ordering.domain.model.valueobject.Recipient;
@@ -9,10 +10,15 @@ import com.henio.algashop.ordering.infrastructure.persistence.embeddable.Address
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.RecipientEmbeddable;
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
+import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderItemPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class OrderPersistenceAssembler {
@@ -20,7 +26,43 @@ public class OrderPersistenceAssembler {
     public OrderPersistenceEntity fromDomain(Order order) {
         Objects.requireNonNull(order, "Order is required");
 
-        return merge(new OrderPersistenceEntity(), order);
+        OrderPersistenceEntity entity = OrderPersistenceEntity.builder()
+                .id(order.id().value().toLong())
+                .customerId(order.customerId().value().toLong())
+                .totalAmount(new BigDecimal(order.totalAmount().toString()))
+                .totalItems(order.totalItems().value())
+                .status(order.status().toString())
+                .paymentMethod(order.paymentMethod().toString())
+                .placedAt(order.placedAt())
+                .paidAt(order.paidAt())
+                .canceledAt(order.canceledAt())
+                .readyAt(order.readyAt())
+                .version(order.version())
+                .billing(toBillingEmbeddable(order.billing()))
+                .shipping(toShippingEmbeddable(order.shipping()))
+                .build();
+
+                entity.replaceItems(toItemsEntity(order.items()));
+
+        return entity;
+    }
+
+    private Set<OrderItemPersistenceEntity> toItemsEntity(Set<OrderItem> orderItems) {
+        return orderItems
+                .stream()
+                .map(this::toItemEntity)
+                .collect(Collectors.toSet());
+    }
+
+    private OrderItemPersistenceEntity toItemEntity(OrderItem item) {
+        return OrderItemPersistenceEntity.builder()
+                .id(item.id().value().toLong())
+                .productId(item.id().value().toLong())
+                .productName(item.product().name().toString())
+                .price(new BigDecimal(item.product().price().toString()))
+                .quantity(item.quantity().value())
+                .totalAmount(new BigDecimal(item.totalAmount().toString()))
+                .build();
     }
 
     public OrderPersistenceEntity merge(
