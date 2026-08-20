@@ -10,10 +10,12 @@ import com.henio.algashop.ordering.infrastructure.persistence.disassembler.Order
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
 
+@Transactional(readOnly = true)
 @Component
 public class OrdersPersistenceAdapter implements Orders {
 
@@ -35,6 +37,7 @@ public class OrdersPersistenceAdapter implements Orders {
     }
 
 
+    @Transactional(readOnly = false)
     @Override
     public void add(Order aggregateRoot) {
         Objects.requireNonNull(
