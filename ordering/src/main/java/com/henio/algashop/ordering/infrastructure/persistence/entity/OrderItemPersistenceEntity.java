@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Getter
+@Data
 @ToString(of = "id")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class OrderItemPersistenceEntity {
@@ -24,7 +24,6 @@ public class OrderItemPersistenceEntity {
     private Integer quantity;
     private BigDecimal totalAmount;
 
-    @Setter
     @JoinColumn
     @ManyToOne(optional = false)
     private OrderPersistenceEntity order;
