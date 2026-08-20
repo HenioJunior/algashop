@@ -4,14 +4,13 @@ import com.henio.algashop.ordering.domain.model.entity.Order;
 import com.henio.algashop.ordering.domain.model.entity.OrderStatus;
 import com.henio.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.valueobject.id.OrderId;
+import com.henio.algashop.ordering.infrastructure.persistence.adapter.OrdersPersistenceAdapter;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.OrderItemPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.disassembler.OrderItemPersistenceDisassembler;
 import com.henio.algashop.ordering.infrastructure.persistence.disassembler.OrderPersistenceDisassembler;
-import com.henio.algashop.ordering.infrastructure.persistence.adapter.OrdersPersistenceAdapter;
 import com.henio.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceEntityRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +48,7 @@ class OrdersIT {
 
     @BeforeEach
     void cleanup() {
-        newTransaction.executeWithoutResult(status -> {
-            repository.deleteAll();
-        });
+        newTransaction.executeWithoutResult(status -> repository.deleteAll());
     }
 
 

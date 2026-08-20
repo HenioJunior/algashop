@@ -28,8 +28,8 @@ import org.springframework.context.annotation.Import;
 })
 class OrdersPersistenceAdapterIT {
 
-    private OrdersPersistenceAdapter persistenceAdapter;
-    private OrderPersistenceEntityRepository entityRepository;
+    private final OrdersPersistenceAdapter persistenceAdapter;
+    private final OrderPersistenceEntityRepository entityRepository;
 
     @Autowired
     OrdersPersistenceAdapterIT(OrdersPersistenceAdapter persistenceAdapter, OrderPersistenceEntityRepository entityRepository) {
