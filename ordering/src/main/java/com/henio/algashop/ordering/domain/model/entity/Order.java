@@ -100,7 +100,11 @@ public class Order implements AggregateRoot<OrderId> {
 
         product.checkOutOfStock();
 
-        OrderItem item = OrderItem.create(this.id, product, quantity);
+        OrderItem item = OrderItem.brandNew()
+                .orderId(this.id())
+                .quantity(quantity)
+                .product(product)
+                .build();
 
         items.add(item);
         recalculateTotal();

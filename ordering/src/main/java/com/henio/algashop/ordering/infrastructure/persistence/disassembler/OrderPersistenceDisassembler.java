@@ -12,12 +12,16 @@ import com.henio.algashop.ordering.infrastructure.persistence.embeddable.Recipie
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import io.hypersistence.tsid.TSID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 
+@RequiredArgsConstructor
 @Component
 public class OrderPersistenceDisassembler {
+
+    private final OrderItemPersistenceDisassembler itemDisassembler;
 
     public Order toDomain(OrderPersistenceEntity persistenceEntity) {
         return Order.existing()
@@ -35,7 +39,7 @@ public class OrderPersistenceDisassembler {
                         : PaymentMethod.valueOf(
                         persistenceEntity.getPaymentMethod()
                 ))
-                .items(new HashSet<>())
+                .items(itemDisassembler.toDomain(persistenceEntity.getItems()))
                 .version(persistenceEntity.getVersion())
                 .build();
     }

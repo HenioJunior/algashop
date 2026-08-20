@@ -7,16 +7,26 @@ import com.henio.algashop.ordering.domain.model.valueobject.Money;
 import com.henio.algashop.ordering.domain.model.valueobject.Quantity;
 import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.henio.algashop.ordering.domain.model.valueobject.id.OrderId;
+import com.henio.algashop.ordering.infrastructure.persistence.assembler.OrderItemPersistenceAssembler;
+import com.henio.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntityTestDataBuilder;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import io.hypersistence.tsid.TSID;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class OrderPersistenceDisassemblerTest {
 
-    private final OrderPersistenceDisassembler disassembler = new OrderPersistenceDisassembler();
+    private OrderPersistenceDisassembler disassembler;
+    private OrderItemPersistenceDisassembler itemDisassembler;
+
+    @BeforeEach
+    void setUp() {
+        itemDisassembler = new OrderItemPersistenceDisassembler();
+        disassembler = new OrderPersistenceDisassembler(itemDisassembler);
+    }
 
     @Test
     void shouldConvertFromPersistence() {
@@ -32,7 +42,8 @@ class OrderPersistenceDisassemblerTest {
                 s -> assertThat(s.canceledAt()).isEqualTo(persistenceEntity.getCanceledAt()),
                 s -> assertThat(s.readyAt()).isEqualTo(persistenceEntity.getReadyAt()),
                 s -> assertThat(s.status()).isEqualTo(OrderStatus.valueOf(persistenceEntity.getStatus())),
-                s -> assertThat(s.paymentMethod()).isEqualTo(PaymentMethod.valueOf(persistenceEntity.getPaymentMethod()))
+                s -> assertThat(s.paymentMethod()).isEqualTo(PaymentMethod.valueOf(persistenceEntity.getPaymentMethod())),
+                s -> assertThat(s.items().size()).isEqualTo(persistenceEntity.getItems().size())
         );
 
     }

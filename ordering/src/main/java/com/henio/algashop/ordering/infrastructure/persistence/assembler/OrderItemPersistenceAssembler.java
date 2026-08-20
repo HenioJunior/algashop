@@ -21,9 +21,9 @@ public class OrderItemPersistenceAssembler {
 
         return OrderItemPersistenceEntity.builder()
                 .id(orderItem.id().value().toLong())
-                .productId(orderItem.product().id().value().toLong())
-                .productName(orderItem.product().name().toString())
-                .price(orderItem.product().price().value())
+                .productId(orderItem.productId().value().toLong())
+                .productName(orderItem.productName().toString())
+                .price(orderItem.price().value())
                 .quantity(orderItem.quantity().value())
                 .totalAmount(orderItem.totalAmount().value())
                 .build();
@@ -34,9 +34,9 @@ public class OrderItemPersistenceAssembler {
         Objects.requireNonNull(orderItem, "Order item is required");
 
         entity.setId(orderItem.id().value().toLong());
-        entity.setProductId(orderItem.product().id().value().toLong());
-        entity.setProductName(orderItem.product().name().value());
-        entity.setPrice(orderItem.product().price().value());
+        entity.setProductId(orderItem.productId().value().toLong());
+        entity.setProductName(orderItem.productName().value());
+        entity.setPrice(orderItem.price().value());
         entity.setQuantity(orderItem.quantity().value());
         entity.setTotalAmount(orderItem.totalAmount().value());
         return entity;
@@ -79,8 +79,8 @@ public class OrderItemPersistenceAssembler {
         return OrderItemPersistenceEntity.builder()
                 .id(item.id().value().toLong())
                 .productId(item.id().value().toLong())
-                .productName(item.product().name().toString())
-                .price(new BigDecimal(item.product().price().toString()))
+                .productName(item.productName().toString())
+                .price(new BigDecimal(item.price().toString()))
                 .quantity(item.quantity().value())
                 .totalAmount(new BigDecimal(item.totalAmount().toString()))
                 .build();

@@ -57,9 +57,9 @@ class OrderTest {
 
         Assertions.assertWith(orderItem,
                 (i) -> Assertions.assertThat(i.id()).isNotNull(),
-                (i) -> Assertions.assertThat(i.product().name()).isEqualTo(new ProductName("Mouse Pad")),
-                (i) -> Assertions.assertThat(i.product().id()).isEqualTo(productId),
-                (i) -> Assertions.assertThat(i.product().price()).isEqualTo(new Money("100")),
+                (i) -> Assertions.assertThat(i.productName()).isEqualTo(new ProductName("Mouse Pad")),
+                (i) -> Assertions.assertThat(i.productId()).isEqualTo(productId),
+                (i) -> Assertions.assertThat(i.price()).isEqualTo(new Money("100")),
                 (i) -> Assertions.assertThat(i.quantity()).isEqualTo(new Quantity(1))
         );
     }
@@ -110,16 +110,13 @@ class OrderTest {
                     assertThat(item.orderId())
                             .isEqualTo(order.id());
 
-                    assertThat(item.product())
-                            .isEqualTo(product);
-
-                    assertThat(item.product().id())
+                    assertThat(item.productId())
                             .isEqualTo(product.id());
 
-                    assertThat(item.product().name())
+                    assertThat(item.productName())
                             .isEqualTo(product.name());
 
-                    assertThat(item.product().price())
+                    assertThat(item.price())
                             .isEqualTo(product.price());
 
                     assertThat(item.quantity())
@@ -367,7 +364,7 @@ class OrderTest {
 
         OrderItem itemToRemove = order.items()
                 .stream()
-                .filter(item -> item.product().equals(firstProduct))
+                .filter(item -> item.productId().equals(firstProduct.id()))
                 .findFirst()
                 .orElseThrow();
 
@@ -375,8 +372,8 @@ class OrderTest {
 
         assertThat(order.items())
                 .singleElement()
-                .extracting(OrderItem::product)
-                .isEqualTo(secondProduct);
+                .extracting(OrderItem::productId)
+                .isEqualTo(secondProduct.id());
 
         assertThat(order.totalAmount())
                 .isEqualTo(new Money("60.00"));
