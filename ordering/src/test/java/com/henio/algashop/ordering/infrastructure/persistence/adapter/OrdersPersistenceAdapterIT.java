@@ -4,8 +4,10 @@ package com.henio.algashop.ordering.infrastructure.persistence.adapter;
 import com.henio.algashop.ordering.domain.model.entity.Order;
 import com.henio.algashop.ordering.domain.model.entity.OrderStatus;
 import com.henio.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
+import com.henio.algashop.ordering.infrastructure.persistence.assembler.OrderItemPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.config.SpringDataAuditingConfig;
+import com.henio.algashop.ordering.infrastructure.persistence.disassembler.OrderItemPersistenceDisassembler;
 import com.henio.algashop.ordering.infrastructure.persistence.disassembler.OrderPersistenceDisassembler;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceEntityRepository;
@@ -19,7 +21,9 @@ import org.springframework.context.annotation.Import;
 @Import({
         OrdersPersistenceAdapter.class,
         OrderPersistenceAssembler.class,
+        OrderItemPersistenceAssembler.class,
         OrderPersistenceDisassembler.class,
+        OrderItemPersistenceDisassembler.class,
         SpringDataAuditingConfig.class
 })
 class OrdersPersistenceAdapterIT {

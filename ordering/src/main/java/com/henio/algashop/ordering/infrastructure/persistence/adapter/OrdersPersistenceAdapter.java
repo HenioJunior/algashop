@@ -51,6 +51,16 @@ public class OrdersPersistenceAdapter implements Orders {
                         () -> insert(aggregateRoot));
     }
 
+    @Override
+    public long count() {
+        return repository.count();
+    }
+
+    @Override
+    public boolean exists(OrderId orderId) {
+        return repository.existsById(orderId.value().toLong());
+    }
+
     private void update(Order aggregateRoot, OrderPersistenceEntity entity) {
         checkVersion(aggregateRoot, entity);
 

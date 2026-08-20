@@ -8,12 +8,9 @@ import com.henio.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.henio.algashop.ordering.domain.model.valueobject.id.OrderItemId;
 import com.henio.algashop.ordering.domain.model.valueobject.id.ProductId;
 import lombok.Builder;
-import lombok.Data;
-import lombok.Setter;
 
 import java.util.Objects;
 
-@Setter
 public class OrderItem {
 
     private OrderItemId id;
@@ -41,9 +38,7 @@ public class OrderItem {
     }
 
     @Builder(builderClassName = "BrandNewOrderItemBuilder", builderMethodName = "brandNew")
-    private static OrderItem createBrandNew(OrderId orderId,
-                                            Product product,
-                                            Quantity quantity) {
+    private static OrderItem createBrandNew(OrderId orderId, Product product, Quantity quantity) {
         Objects.requireNonNull(product);
         Objects.requireNonNull(orderId);
         Objects.requireNonNull(quantity);

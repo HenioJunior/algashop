@@ -4,10 +4,15 @@ import com.henio.algashop.ordering.domain.model.entity.Order;
 import com.henio.algashop.ordering.domain.model.entity.OrderStatus;
 import com.henio.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.valueobject.id.OrderId;
+import com.henio.algashop.ordering.infrastructure.persistence.assembler.OrderItemPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceAssembler;
+import com.henio.algashop.ordering.infrastructure.persistence.disassembler.OrderItemPersistenceDisassembler;
 import com.henio.algashop.ordering.infrastructure.persistence.disassembler.OrderPersistenceDisassembler;
 import com.henio.algashop.ordering.infrastructure.persistence.adapter.OrdersPersistenceAdapter;
+import com.henio.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceEntityRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
@@ -24,19 +29,31 @@ import java.util.function.Supplier;
 @Import({
         OrdersPersistenceAdapter.class,
         OrderPersistenceAssembler.class,
-        OrderPersistenceDisassembler.class
+        OrderItemPersistenceAssembler.class,
+        OrderPersistenceDisassembler.class,
+        OrderItemPersistenceDisassembler.class
 })
 class OrdersIT {
 
     private final Orders orders;
     private final TransactionTemplate newTransaction;
+    private final OrderPersistenceEntityRepository repository;
 
     @Autowired
-    public OrdersIT(Orders orders, PlatformTransactionManager transactionManager) {
+    public OrdersIT(Orders orders, PlatformTransactionManager transactionManager, OrderPersistenceEntityRepository repository) {
         this.orders = orders;
         this.newTransaction = new TransactionTemplate(transactionManager);
         this.newTransaction.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        this.repository = repository;
     }
+
+    @BeforeEach
+    void cleanup() {
+        newTransaction.executeWithoutResult(status -> {
+            repository.deleteAll();
+        });
+    }
+
 
     @Test
     void shouldPersistAndFind() {
@@ -104,5 +121,28 @@ class OrdersIT {
 
     private void inNewTransaction(Runnable callback) {
         newTransaction.executeWithoutResult(status -> callback.run());
+    }
+
+    @Test
+    public void shouldCountExistingOrders() {
+        Assertions.assertThat(orders.count()).isZero();
+
+        Order order1 = OrderTestDataBuilder.anOrder().build();
+        Order order2 = OrderTestDataBuilder.anOrder().build();
+
+        orders.add(order1);
+        orders.add(order2);
+
+        Assertions.assertThat(orders.count()).isEqualTo(2L);
+    }
+
+    @Test
+    public void shouldReturnIfOrderExists() {
+        Order order = OrderTestDataBuilder.anOrder().build();
+        orders.add(order);
+
+        Assertions.assertThat(orders.exists(order.id())).isTrue();
+        Assertions.assertThat(orders.exists(new OrderId())).isFalse();
+
     }
 }

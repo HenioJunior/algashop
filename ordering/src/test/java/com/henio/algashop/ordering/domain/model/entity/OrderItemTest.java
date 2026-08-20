@@ -22,7 +22,7 @@ class OrderItemTest {
 
         Assertions.assertWith(orderItem,
                 o-> Assertions.assertThat(o.id()).isNotNull(),
-                o-> Assertions.assertThat(o.productId()).isEqualTo(newProduct),
+                o-> Assertions.assertThat(o.productId()).isEqualTo(newProduct.id()),
                 o-> Assertions.assertThat(o.productName()).isEqualTo(newProduct.name()),
                 o-> Assertions.assertThat(o.price()).isEqualTo(newProduct.price()),
                 o-> Assertions.assertThat(o.quantity()).isEqualTo(newQuantity),
