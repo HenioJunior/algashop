@@ -4,12 +4,12 @@ import com.henio.algashop.ordering.domain.model.valueobject.*;
 
 import java.time.LocalDate;
 
-public class CustomerTestDataFactory {
+public class CustomerTestDataBuilder {
 
-    private CustomerTestDataFactory() {
+    private CustomerTestDataBuilder() {
     }
 
-    public static Customer createNewCustomer() {
+    public static Customer aCustomer() {
         return Customer.create(
                 new FullName("John", "Doe"),
                 new BirthDate(LocalDate.of(1991, 7, 5)),

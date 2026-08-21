@@ -3,6 +3,7 @@ package com.henio.algashop.ordering.domain.model.entity;
 import com.henio.algashop.ordering.domain.model.exception.CustomerArchivedException;
 import com.henio.algashop.ordering.domain.model.valueobject.*;
 import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
+import lombok.Builder;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -27,7 +28,9 @@ public class Customer implements AggregateRoot<CustomerId> {
     private OffsetDateTime archivedAt;
     private LoyaltyPoints loyaltyPoints;
     private Address address;
+    private Long version;
 
+    @Builder(builderClassName = "ExistingCustomerBuilding", builderMethodName = "existing")
     private Customer(
             CustomerId id,
             FullName fullName,
@@ -40,7 +43,8 @@ public class Customer implements AggregateRoot<CustomerId> {
             OffsetDateTime registeredAt,
             OffsetDateTime archivedAt,
             LoyaltyPoints loyaltyPoints,
-            Address address
+            Address address,
+            Long version
     ) {
         this.id = Objects.requireNonNull(
                 id,
@@ -71,6 +75,7 @@ public class Customer implements AggregateRoot<CustomerId> {
                 promotionNotificationsAllowed;
         this.archived = archived;
         this.archivedAt = archivedAt;
+        this.version = version;
     }
 
     public static Customer create(
@@ -94,7 +99,8 @@ public class Customer implements AggregateRoot<CustomerId> {
                 OffsetDateTime.now(),
                 null,
                 new LoyaltyPoints(),
-                address
+                address,
+                null
         );
     }
 
@@ -220,6 +226,14 @@ public class Customer implements AggregateRoot<CustomerId> {
 
     public Address address() {
         return address;
+    }
+
+    public Long version() {
+        return version;
+    }
+
+    private void setVersion(Long version) {
+        this.version = version;
     }
 
     @Override
