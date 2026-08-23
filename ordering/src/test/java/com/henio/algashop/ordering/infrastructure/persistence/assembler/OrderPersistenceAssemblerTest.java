@@ -6,7 +6,7 @@ import com.henio.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderItemPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntityTestDataBuilder;
-import org.assertj.core.api.Assertions.*;
+import com.henio.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceEntityRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,13 +18,14 @@ class OrderPersistenceAssemblerTest {
 
     private OrderPersistenceAssembler assembler;
     private OrderItemPersistenceAssembler itemAssembler;
+    private CustomerPersistenceEntityRepository customerRepository;
 
     @BeforeEach
     void setUp() {
         itemAssembler = new OrderItemPersistenceAssembler();
 
         assembler = new OrderPersistenceAssembler(
-                itemAssembler
+                itemAssembler, customerRepository
         );
     }
 
@@ -36,7 +37,7 @@ class OrderPersistenceAssemblerTest {
 
         assertThat(orderPersistenceEntity).satisfies(
                 p-> assertThat(p.getId()).isEqualTo(order.id().value().toLong()),
-                p-> assertThat(p.getCustomerId()).isEqualTo(order.customerId().value().toLong()),
+                p-> assertThat(p.getCustomer()).isEqualTo(customerRepository.getReferenceById(order.customerId().value().toLong())),
                 p -> assertThat(p.getTotalAmount()).isEqualTo(order.totalAmount().value()),
                 p -> assertThat(p.getTotalItems()).isEqualTo(order.totalItems().value()),
                 p -> assertThat(p.getStatus()).isEqualTo(order.status().name()),

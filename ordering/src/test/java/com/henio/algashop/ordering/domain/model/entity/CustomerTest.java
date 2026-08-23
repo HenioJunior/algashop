@@ -12,13 +12,13 @@ class CustomerTest {
     void given_invalidEmail_whenTryCreateCustomer_shouldGenerateException() {
 
         Assertions.assertThatExceptionOfType(DomainException.class).isThrownBy(
-                () -> CustomerTestDataBuilder.aCustomer().changeEmail(new Email("invalid"))
+                () -> CustomerTestDataBuilder.brandNewCustomer().changeEmail(new Email("invalid"))
         );
     }
 
     @Test
     void given_invalidEmail_whenTryUpdatedCustomerEmail_shouldGenerateException() {
-        Customer customer = CustomerTestDataBuilder.aCustomer();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer();
 
         Assertions.assertThatExceptionOfType(DomainException.class)
                 .isThrownBy(() ->
@@ -28,7 +28,7 @@ class CustomerTest {
 
     @Test
     void given_brandNewCustomer_whenAddLoyaltyPoints_shouldSumPoints() {
-        Customer customer = CustomerTestDataBuilder.aCustomer();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer();
 
         customer.addLoyaltyPoints(10);
         customer.addLoyaltyPoints(20);
@@ -38,7 +38,7 @@ class CustomerTest {
 
     @Test
     void given_brandNewCustomer_whenAddInvalidLoyaltyPoints_shouldGenerateException() {
-        Customer customer = CustomerTestDataBuilder.aCustomer();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer();
 
         Assertions.assertThatExceptionOfType(DomainException.class)
                 .isThrownBy(()-> customer.addLoyaltyPoints(0));

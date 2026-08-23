@@ -7,8 +7,6 @@ import com.henio.algashop.ordering.domain.model.valueobject.Money;
 import com.henio.algashop.ordering.domain.model.valueobject.Quantity;
 import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.henio.algashop.ordering.domain.model.valueobject.id.OrderId;
-import com.henio.algashop.ordering.infrastructure.persistence.assembler.OrderItemPersistenceAssembler;
-import com.henio.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntityTestDataBuilder;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import io.hypersistence.tsid.TSID;
@@ -34,7 +32,7 @@ class OrderPersistenceDisassemblerTest {
         Order domainEntity = disassembler.toDomain(persistenceEntity);
         assertThat(domainEntity).satisfies(
                 s -> assertThat(s.id()).isEqualTo(new OrderId(TSID.from(persistenceEntity.getId()))),
-                s -> assertThat(s.customerId()).isEqualTo(new CustomerId(TSID.from(persistenceEntity.getCustomerId()))),
+                s -> assertThat(s.customerId()).isEqualTo(new CustomerId(TSID.from(persistenceEntity.getCustomer().getId()))),
                 s -> assertThat(s.totalAmount()).isEqualTo(new Money(persistenceEntity.getTotalAmount())),
                 s -> assertThat(s.totalItems()).isEqualTo(new Quantity(persistenceEntity.getTotalItems())),
                 s -> assertThat(s.placedAt()).isEqualTo(persistenceEntity.getPlacedAt()),

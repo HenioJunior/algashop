@@ -1,7 +1,9 @@
 package com.henio.algashop.ordering.infrastructure.persistence.entity;
 
+import com.henio.algashop.ordering.domain.model.entity.Customer;
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
+import io.hypersistence.tsid.TSID;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -27,7 +29,10 @@ public class OrderPersistenceEntity {
     @Id
     @EqualsAndHashCode.Include
     private Long id;
-    private Long customerId;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private CustomerPersistenceEntity customer;
 
     private BigDecimal totalAmount;
     private Integer totalItems;
@@ -87,13 +92,13 @@ public class OrderPersistenceEntity {
     private Set<OrderItemPersistenceEntity> items = new HashSet<>();
 
     @Builder
-    public OrderPersistenceEntity(Long id, Long customerId, BigDecimal totalAmount, Integer totalItems, String status,
+    public OrderPersistenceEntity(Long id, CustomerPersistenceEntity customer, BigDecimal totalAmount, Integer totalItems, String status,
                                   String paymentMethod, OffsetDateTime placedAt, OffsetDateTime paidAt, OffsetDateTime canceledAt,
                                   OffsetDateTime readyAt, UUID createdByUserId, OffsetDateTime lastModifiedAt,
                                   UUID lastModifiedByUserId, Long version, BillingEmbeddable billing,
                                   ShippingEmbeddable shipping, Set<OrderItemPersistenceEntity> items) {
         this.id = id;
-        this.customerId = customerId;
+        this.customer = customer;
         this.totalAmount = totalAmount;
         this.totalItems = totalItems;
         this.status = status;
@@ -124,5 +129,9 @@ public class OrderPersistenceEntity {
     private void addItem(OrderItemPersistenceEntity item) {
         item.setOrder(this);
         this.items.add(item);
+    }
+
+    public Long getCustomerId() {
+        return this.customer.getId();
     }
 }

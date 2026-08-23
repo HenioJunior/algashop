@@ -15,7 +15,7 @@ import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Component
@@ -26,7 +26,16 @@ public class OrderPersistenceDisassembler {
     public Order toDomain(OrderPersistenceEntity persistenceEntity) {
         return Order.existing()
                 .id(new OrderId(TSID.from(persistenceEntity.getId())))
-                .customerId(new CustomerId(TSID.from(persistenceEntity.getCustomerId())))
+                .customerId(
+                        new CustomerId(
+                                TSID.from(
+                                        Objects.requireNonNull(
+                                                persistenceEntity.getCustomerId(),
+                                                "Customer id is required"
+                                        )
+                                )
+                        )
+                )
                 .totalAmount(new Money(persistenceEntity.getTotalAmount()))
                 .totalItems(new Quantity(persistenceEntity.getTotalItems()))
                 .placedAt(persistenceEntity.getPlacedAt())

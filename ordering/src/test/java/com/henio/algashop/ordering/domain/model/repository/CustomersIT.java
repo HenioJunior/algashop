@@ -8,7 +8,9 @@ import com.henio.algashop.ordering.domain.model.valueobject.FullName;
 import com.henio.algashop.ordering.infrastructure.persistence.adapter.CustomersPersistenceAdapter;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.disassembler.CustomerPersistenceDisassembler;
+import com.henio.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceEntityRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
@@ -28,11 +30,13 @@ public class CustomersIT {
 
     private final Customers customers;
     private final TransactionTemplate newTransaction;
+    private final CustomerPersistenceEntityRepository repository;
 
     @Autowired
     CustomersIT(
             Customers customers,
-            PlatformTransactionManager transactionManager
+            PlatformTransactionManager transactionManager,
+            CustomerPersistenceEntityRepository repository
     ) {
         this.customers = customers;
 
@@ -40,11 +44,17 @@ public class CustomersIT {
         this.newTransaction.setPropagationBehavior(
                 TransactionDefinition.PROPAGATION_REQUIRES_NEW
         );
+        this.repository = repository;
+    }
+
+    @BeforeEach
+    void cleanup() {
+        newTransaction.executeWithoutResult(status -> repository.deleteAll());
     }
 
     @Test
     void shouldPersistAndFindCustomer() {
-        Customer customer = CustomerTestDataBuilder.aCustomer();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer();
 
         customers.add(customer);
 
@@ -87,7 +97,7 @@ public class CustomersIT {
 
     @Test
     void shouldCheckIfCustomerExists() {
-        Customer customer = CustomerTestDataBuilder.aCustomer();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer();
 
         Assertions.assertThat(customers.exists(customer.id()))
                 .isFalse();
@@ -103,8 +113,8 @@ public class CustomersIT {
         Assertions.assertThat(customers.count())
                 .isZero();
 
-        Customer customer1 = CustomerTestDataBuilder.aCustomer();
-        Customer customer2 = CustomerTestDataBuilder.aCustomer();
+        Customer customer1 = CustomerTestDataBuilder.brandNewCustomer();
+        Customer customer2 = CustomerTestDataBuilder.brandNewCustomer();
 
         customers.add(customer1);
         customers.add(customer2);
@@ -115,7 +125,7 @@ public class CustomersIT {
 
     @Test
     void shouldUpdateCustomerAndIncrementVersion() {
-        Customer customer = CustomerTestDataBuilder.aCustomer();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer();
 
         customers.add(customer);
 
@@ -140,7 +150,7 @@ public class CustomersIT {
 
     @Test
     void shouldNotAllowStaleUpdates() {
-        Customer customer = CustomerTestDataBuilder.aCustomer();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer();
 
         newTransaction.executeWithoutResult(status ->
                 customers.add(customer)
@@ -171,7 +181,7 @@ public class CustomersIT {
 
     @Test
     void shouldPersistArchivedCustomer() {
-        Customer customer = CustomerTestDataBuilder.aCustomer();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer();
 
         customers.add(customer);
 

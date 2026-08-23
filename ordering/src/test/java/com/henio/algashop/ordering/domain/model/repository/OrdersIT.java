@@ -3,13 +3,21 @@ package com.henio.algashop.ordering.domain.model.repository;
 import com.henio.algashop.ordering.domain.model.entity.Order;
 import com.henio.algashop.ordering.domain.model.entity.OrderStatus;
 import com.henio.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
+import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.henio.algashop.ordering.domain.model.valueobject.id.OrderId;
+import com.henio.algashop.ordering.infrastructure.persistence.adapter.CustomersPersistenceAdapter;
 import com.henio.algashop.ordering.infrastructure.persistence.adapter.OrdersPersistenceAdapter;
+import com.henio.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.OrderItemPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceAssembler;
+import com.henio.algashop.ordering.infrastructure.persistence.disassembler.CustomerPersistenceDisassembler;
 import com.henio.algashop.ordering.infrastructure.persistence.disassembler.OrderItemPersistenceDisassembler;
 import com.henio.algashop.ordering.infrastructure.persistence.disassembler.OrderPersistenceDisassembler;
+import com.henio.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;
+import com.henio.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntityTestDataBuilder;
+import com.henio.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceEntityRepository;
 import com.henio.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceEntityRepository;
+import io.hypersistence.tsid.TSID;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,27 +45,41 @@ class OrdersIT {
     private final Orders orders;
     private final TransactionTemplate newTransaction;
     private final OrderPersistenceEntityRepository repository;
+    private final CustomerPersistenceEntityRepository customerRepository;
 
     @Autowired
-    public OrdersIT(Orders orders, PlatformTransactionManager transactionManager, OrderPersistenceEntityRepository repository) {
+    public OrdersIT(Orders orders,
+                    PlatformTransactionManager transactionManager,
+                    OrderPersistenceEntityRepository repository,
+                    CustomerPersistenceEntityRepository customerRepository) {
         this.orders = orders;
         this.newTransaction = new TransactionTemplate(transactionManager);
         this.newTransaction.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
         this.repository = repository;
+        this.customerRepository = customerRepository;
     }
 
     @BeforeEach
     void cleanup() {
-        newTransaction.executeWithoutResult(status -> repository.deleteAll());
+        inNewTransaction(() -> {
+            repository.deleteAll();
+            customerRepository.deleteAll();
+        });
     }
 
 
     @Test
     void shouldPersistAndFind() {
-        Order order = OrderTestDataBuilder.anOrder().build();
+        CustomerId customerId = persistCustomer();
+
+        Order order = OrderTestDataBuilder.anOrder()
+                .customerId(customerId)
+                .build();
+
         OrderId orderId = order.id();
 
         orders.add(order);
+
         Optional<Order> savedOrder = orders.ofId(orderId);
 
         Assertions.assertThat(savedOrder)
@@ -67,7 +89,11 @@ class OrdersIT {
 
     @Test
     void shouldUpdateExistingOrder() {
-        Order order = OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build();
+        CustomerId customerId = persistCustomer();
+
+        Order order = OrderTestDataBuilder.anOrder()
+                .customerId(customerId)
+                .status(OrderStatus.PLACED).build();
         orders.add(order);
 
         order = orders.ofId(order.id()).orElseThrow();
@@ -82,10 +108,17 @@ class OrdersIT {
 
     @Test
     void shouldThrowExceptionWhenUpdatingStaleOrder(){
-        // T0: insere o pedido em transação própria
+        //T0
         OrderId orderId = inNewTransaction(() -> {
-            Order order = OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build();
+            CustomerId customerId = persistCustomer();
+
+            Order order = OrderTestDataBuilder.anOrder()
+                    .customerId(customerId)
+                    .status(OrderStatus.PLACED)
+                    .build();
+
             orders.add(order);
+
             return order.id();
         });
 
@@ -124,8 +157,14 @@ class OrdersIT {
     public void shouldCountExistingOrders() {
         Assertions.assertThat(orders.count()).isZero();
 
-        Order order1 = OrderTestDataBuilder.anOrder().build();
-        Order order2 = OrderTestDataBuilder.anOrder().build();
+        CustomerId customerId = persistCustomer();
+
+        Order order1 = OrderTestDataBuilder.anOrder()
+                .customerId(customerId)
+                .build();
+        Order order2 = OrderTestDataBuilder.anOrder()
+                .customerId(customerId)
+                .build();
 
         orders.add(order1);
         orders.add(order2);
@@ -135,11 +174,25 @@ class OrdersIT {
 
     @Test
     public void shouldReturnIfOrderExists() {
-        Order order = OrderTestDataBuilder.anOrder().build();
+        CustomerId customerId = persistCustomer();
+
+        Order order = OrderTestDataBuilder.anOrder()
+                .customerId(customerId)
+                .build();
         orders.add(order);
 
         Assertions.assertThat(orders.exists(order.id())).isTrue();
         Assertions.assertThat(orders.exists(new OrderId())).isFalse();
 
+    }
+
+    private CustomerId persistCustomer() {
+        CustomerPersistenceEntity customer = CustomerPersistenceEntityTestDataBuilder
+                .aCustomer()
+                .build();
+
+        customerRepository.saveAndFlush(customer);
+
+        return new CustomerId(TSID.from(customer.getId()));
     }
 }

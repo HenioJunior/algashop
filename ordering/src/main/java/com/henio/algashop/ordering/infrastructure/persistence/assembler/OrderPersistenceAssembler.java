@@ -9,8 +9,11 @@ import com.henio.algashop.ordering.infrastructure.persistence.embeddable.Address
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.RecipientEmbeddable;
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
+import com.henio.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderItemPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
+import com.henio.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceEntityRepository;
+import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,13 +26,14 @@ import java.util.Set;
 public class OrderPersistenceAssembler {
 
     private final OrderItemPersistenceAssembler itemAssembler;
+    private final CustomerPersistenceEntityRepository customerRepository;
 
     public OrderPersistenceEntity fromDomain(Order order) {
         Objects.requireNonNull(order, "Order is required");
 
         OrderPersistenceEntity entity = OrderPersistenceEntity.builder()
                 .id(order.id().value().toLong())
-                .customerId(order.customerId().value().toLong())
+                .customer(toCustomerEntity(order.customerId().value().toLong()))
                 .totalAmount(new BigDecimal(order.totalAmount().toString()))
                 .totalItems(order.totalItems().value())
                 .status(order.status().toString())
@@ -56,7 +60,7 @@ public class OrderPersistenceAssembler {
         Objects.requireNonNull(order, "Order is required");
 
         entity.setId(order.id().value().toLong());
-        entity.setCustomerId(order.customerId().value().toLong());
+        entity.setCustomer(toCustomerEntity(order.customerId().value().toLong()));
         entity.setTotalAmount(order.totalAmount().value());
         entity.setTotalItems(order.totalItems().value());
         entity.setStatus(order.status().name());
@@ -79,6 +83,9 @@ public class OrderPersistenceAssembler {
         return entity;
     }
 
+    private CustomerPersistenceEntity toCustomerEntity(long customerId) {
+        return customerRepository.getReferenceById(customerId);
+    }
 
 
     private BillingEmbeddable toBillingEmbeddable(Billing billing) {

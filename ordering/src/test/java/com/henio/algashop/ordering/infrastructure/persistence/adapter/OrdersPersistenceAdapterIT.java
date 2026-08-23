@@ -1,16 +1,19 @@
 package com.henio.algashop.ordering.infrastructure.persistence.adapter;
 
 
-import com.henio.algashop.ordering.domain.model.entity.Order;
-import com.henio.algashop.ordering.domain.model.entity.OrderStatus;
-import com.henio.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
+import com.henio.algashop.ordering.domain.model.entity.*;
+import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.OrderItemPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.config.SpringDataAuditingConfig;
 import com.henio.algashop.ordering.infrastructure.persistence.disassembler.OrderItemPersistenceDisassembler;
 import com.henio.algashop.ordering.infrastructure.persistence.disassembler.OrderPersistenceDisassembler;
+import com.henio.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;
+import com.henio.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntityTestDataBuilder;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
+import com.henio.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceEntityRepository;
 import com.henio.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceEntityRepository;
+import io.hypersistence.tsid.TSID;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,45 +35,68 @@ class OrdersPersistenceAdapterIT {
 
     private final OrdersPersistenceAdapter persistenceAdapter;
     private final OrderPersistenceEntityRepository entityRepository;
+    private final CustomerPersistenceEntityRepository customerEntityRepository;
 
     @Autowired
-    OrdersPersistenceAdapterIT(OrdersPersistenceAdapter persistenceAdapter, OrderPersistenceEntityRepository entityRepository) {
+    OrdersPersistenceAdapterIT(OrdersPersistenceAdapter persistenceAdapter, OrderPersistenceEntityRepository entityRepository, CustomerPersistenceEntityRepository customerEntityRepository) {
         this.persistenceAdapter = persistenceAdapter;
         this.entityRepository = entityRepository;
+        this.customerEntityRepository = customerEntityRepository;
     }
 
     @Test
     void shouldUpdateAndKeepPersistenceEntityState() {
-        Order order = OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build();
+        CustomerPersistenceEntity customerEntity =
+                CustomerPersistenceEntityTestDataBuilder.aCustomer().build();
+
+        customerEntityRepository.saveAndFlush(customerEntity);
+
+
+        Order order = OrderTestDataBuilder.anOrder()
+                .customerId(new CustomerId(TSID.from(customerEntity.getId())))
+                .status(OrderStatus.PLACED)
+                .build();
+
         long orderId = order.id().value().toLong();
 
         persistenceAdapter.add(order);
 
-        OrderPersistenceEntity orderPersistenceEntity = entityRepository.findById(orderId).orElseThrow();
+        OrderPersistenceEntity persistenceEntity = entityRepository.findById(orderId).orElseThrow();
 
-        Assertions.assertThat(orderPersistenceEntity.getStatus()).isEqualTo("PLACED");
+        Assertions.assertThat(persistenceEntity.getStatus())
+                .isEqualTo(OrderStatus.PLACED.name());
 
-        Assertions.assertThat(orderPersistenceEntity.getCreatedByUserId()).isNotNull();
-        Assertions.assertThat(orderPersistenceEntity.getLastModifiedAt()).isNotNull();
-        Assertions.assertThat(orderPersistenceEntity.getLastModifiedByUserId()).isNotNull();
+        assertAuditFields(persistenceEntity);
 
         order = persistenceAdapter.ofId(order.id()).orElseThrow();
         order.markAsPaid();
+
         persistenceAdapter.add(order);
 
-        orderPersistenceEntity = entityRepository.findById(orderId).orElseThrow();
+        persistenceEntity =
+                entityRepository.findById(orderId).orElseThrow();
 
-        Assertions.assertThat(orderPersistenceEntity.getStatus()).isEqualTo(OrderStatus.PAID.name());
+        Assertions.assertThat(persistenceEntity.getStatus())
+                .isEqualTo(OrderStatus.PAID.name());
 
-        Assertions.assertThat(orderPersistenceEntity.getCreatedByUserId()).isNotNull();
-        Assertions.assertThat(orderPersistenceEntity.getLastModifiedAt()).isNotNull();
-        Assertions.assertThat(orderPersistenceEntity.getLastModifiedByUserId()).isNotNull();
+        assertAuditFields(persistenceEntity);
+    }
+
+    private void assertAuditFields(OrderPersistenceEntity entity) {
+        Assertions.assertThat(entity.getCreatedByUserId()).isNotNull();
+        Assertions.assertThat(entity.getLastModifiedAt()).isNotNull();
+        Assertions.assertThat(entity.getLastModifiedByUserId()).isNotNull();
     }
 
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     void shouldAddFindAndNotFailWhenNoTransaction() {
-        Order order = OrderTestDataBuilder.anOrder().build();
+        CustomerPersistenceEntity customerEntity =
+                CustomerPersistenceEntityTestDataBuilder.aCustomer().build();
+
+        customerEntityRepository.saveAndFlush(customerEntity);
+
+        Order order = OrderTestDataBuilder.anOrder().customerId(new CustomerId(TSID.from(customerEntity.getId()))).build();
 
         persistenceAdapter.add(order);
 
