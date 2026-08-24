@@ -2,6 +2,7 @@ package com.henio.algashop.ordering.infrastructure.persistence.adapter;
 
 import com.henio.algashop.ordering.domain.model.entity.Order;
 import com.henio.algashop.ordering.domain.model.repository.Orders;
+import com.henio.algashop.ordering.domain.model.valueobject.Money;
 import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.henio.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.henio.algashop.ordering.infrastructure.persistence.AggregateVersionUpdater;
@@ -75,6 +76,16 @@ public class OrdersPersistenceAdapter implements Orders {
                 customerId.value().toLong(), year.getValue());
 
         return entities.stream().map(disassembler::toDomain).toList();
+    }
+
+    @Override
+    public long salesQuantityByCustomerInYear(CustomerId customerId, Year year) {
+        return persistenceRepository.salesQuantityByCustomerInYear(customerId.value().toLong(), year.getValue());
+    }
+
+    @Override
+    public Money totalSoldForCustomer(CustomerId customerId) {
+        return new Money(persistenceRepository.totalSoldForCustomer(customerId.value().toLong()));
     }
 
     private void update(Order aggregateRoot, OrderPersistenceEntity entity) {
