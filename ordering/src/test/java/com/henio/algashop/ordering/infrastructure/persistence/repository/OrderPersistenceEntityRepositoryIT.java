@@ -26,17 +26,7 @@ class OrderPersistenceEntityRepositoryIT {
 
     @Test
     void shouldPersistOrder(){
-        CustomerPersistenceEntity customer =
-                CustomerPersistenceEntityTestDataBuilder.aCustomer().build();
-
-        customerRepository.saveAndFlush(customer);
-
-
-        OrderPersistenceEntity entity =
-                OrderPersistenceEntityTestDataBuilder.existingOrderBuilder()
-                        .customer(customer)
-                        .build();
-
+        OrderPersistenceEntity entity = newOrderWithPersistedCustomer();
         long orderId = entity.getId();
 
         orderPersistenceEntityRepository.saveAndFlush(entity);
@@ -53,20 +43,22 @@ class OrderPersistenceEntityRepositoryIT {
 
     @Test
     void shouldSetAuditingValues() {
-        CustomerPersistenceEntity customer =
-                CustomerPersistenceEntityTestDataBuilder.aCustomer().build();
-
-        customerRepository.saveAndFlush(customer);
-
-        OrderPersistenceEntity entity =
-                OrderPersistenceEntityTestDataBuilder.existingOrderBuilder()
-                        .customer(customer)
-                        .build();
-
+        OrderPersistenceEntity entity = newOrderWithPersistedCustomer();
         entity = orderPersistenceEntityRepository.saveAndFlush(entity);
 
         Assertions.assertThat(entity.getCreatedByUserId()).isNotNull();
         Assertions.assertThat(entity.getLastModifiedAt()).isNotNull();
         Assertions.assertThat(entity.getLastModifiedByUserId()).isNotNull();
+    }
+
+    private OrderPersistenceEntity newOrderWithPersistedCustomer() {
+        CustomerPersistenceEntity customer =
+                CustomerPersistenceEntityTestDataBuilder.aCustomer().build();
+
+        customerRepository.saveAndFlush(customer);
+
+        return OrderPersistenceEntityTestDataBuilder.existingOrderBuilder()
+                .customer(customer)
+                .build();
     }
 }
