@@ -8,6 +8,7 @@ import com.henio.algashop.ordering.domain.model.valueobject.Quantity;
 import com.henio.algashop.ordering.domain.model.valueobject.id.ProductId;
 import com.henio.algashop.ordering.domain.model.valueobject.id.ShoppingCartId;
 import com.henio.algashop.ordering.domain.model.valueobject.id.ShoppingCartItemId;
+import lombok.Builder;
 
 import java.util.Objects;
 
@@ -22,19 +23,33 @@ public class ShoppingCartItem {
     private boolean available;
     private Money totalAmount;
 
-    private ShoppingCartItem(ShoppingCartId shoppingCartId, ProductId productId, ProductName productName, Money price, Quantity quantity) {
-        this.id = ShoppingCartItemId.generate();
-        this.shoppingCartId = Objects.requireNonNull(shoppingCartId, "Shopping cart id is required");
-        this.productId = Objects.requireNonNull(productId, "Product id is required");
-        this.productName = Objects.requireNonNull(productName, "Product name is required");
-        this.price = Objects.requireNonNull(price, "Product price is required");
-        this.quantity = Objects.requireNonNull(quantity, "Product quantity is required");
-        this.available = true;
-        recalculateTotal();
+    @Builder(builderClassName = "ExistingShoppingCartItem", builderMethodName = "existing")
+    public ShoppingCartItem(
+            ShoppingCartItemId id,
+            ShoppingCartId shoppingCartId,
+            ProductId productId,
+            ProductName productName,
+            Money price,
+            Quantity quantity,
+            Boolean available,
+            Money totalAmount)
+    {
+        this.id = id;
+        this.shoppingCartId = shoppingCartId;
+        this.productId = productId;
+        this.productName = productName;
+        this.price = price;
+        this.quantity = quantity;
+        this.available = available;
+        this.totalAmount = totalAmount;
     }
 
-    public static ShoppingCartItem create(ShoppingCartId shoppingCartId, ProductId productId, ProductName name, Money price, Quantity quantity) {
-        return new ShoppingCartItem(shoppingCartId, productId, name, price, quantity);
+    @Builder(builderClassName = "BrandNewShoppingCartItem", builderMethodName = "brandNew")
+    public ShoppingCartItem(ShoppingCartId shoppingCartId,
+                            ProductId productId, ProductName productName, Money price,
+                            Quantity quantity, Boolean available) {
+        this(new ShoppingCartItemId(), shoppingCartId, productId, productName, price, quantity, available, Money.ZERO);
+        this.recalculateTotal();
     }
 
     void refresh(Product product) {

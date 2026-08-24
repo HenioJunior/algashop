@@ -17,7 +17,7 @@ public class ShoppingCartTestDataBuilder {
     }
 
     public ShoppingCart build() {
-        ShoppingCart cart = ShoppingCart.create(customerId);
+        ShoppingCart cart = ShoppingCart.startShopping(customerId);
 
         if (withItems) {
             cart.addItem(

@@ -19,7 +19,7 @@ class ShoppingCartTest {
     void givenCustomer_whenStartShopping_shouldInitializeEmptyCart() {
         var customerId = new CustomerId();
 
-        ShoppingCart cart = ShoppingCart.create(customerId);
+        ShoppingCart cart = ShoppingCart.startShopping(customerId);
 
         Assertions.assertWith(cart,
                 c -> Assertions.assertThat(c.id()).isNotNull(),

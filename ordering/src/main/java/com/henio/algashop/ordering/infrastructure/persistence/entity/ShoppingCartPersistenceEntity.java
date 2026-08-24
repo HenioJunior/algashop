@@ -84,4 +84,11 @@ public class ShoppingCartPersistenceEntity {
         item.setShoppingCart(this);
         this.items.add(item);
     }
+
+    public Long getCustomerId() {
+        if (customer == null) {
+            return null;
+        }
+        return customer.getId();
+    }
 }

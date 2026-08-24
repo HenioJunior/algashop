@@ -24,14 +24,14 @@ public class ShoppingCartItemTestDataBuilder {
     }
 
     public ShoppingCartItem build() {
-        return ShoppingCartItem.create(
-                shoppingCartId,
-                productId,
-                productName,
-                price,
-                quantity
-        );
-
+        return ShoppingCartItem.brandNew()
+                .shoppingCartId(shoppingCartId)
+                .productId(productId)
+                .productName(productName)
+                .price(price)
+                .quantity(quantity)
+                .available(available)
+                .build();
     }
 
     public ShoppingCartItemTestDataBuilder shoppingCartId(ShoppingCartId shoppingCartId) {

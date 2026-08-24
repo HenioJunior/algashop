@@ -9,6 +9,7 @@ import com.henio.algashop.ordering.domain.model.valueobject.id.ShoppingCartId;
 import com.henio.algashop.ordering.domain.model.valueobject.Money;
 import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.henio.algashop.ordering.domain.model.valueobject.id.ShoppingCartItemId;
+import lombok.Builder;
 
 import java.time.OffsetDateTime;
 import java.util.*;
@@ -22,17 +23,26 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId>{
     private OffsetDateTime createdAt;
     private Set<ShoppingCartItem> items;
 
-    private ShoppingCart(CustomerId customerId) {
-        this.id = ShoppingCartId.generate();
-        this.customerId = Objects.requireNonNull(customerId, "Customer id is required");
-        this.totalAmount = Money.ZERO;
-        this.totalItems = Quantity.ZERO;
-        this.createdAt = OffsetDateTime.now();
-        this.items = new HashSet<>();
+    @Builder(builderClassName = "ExistingShoppingCartBuilder", builderMethodName = "existing")
+    private ShoppingCart(
+            ShoppingCartId id,
+            CustomerId customerId,
+            Money totalAmount,
+            Quantity totalItems,
+            OffsetDateTime createdAt,
+            Set<ShoppingCartItem> items)
+    {
+        this.id = id;
+        this.customerId = customerId;
+        this.totalAmount = totalAmount;
+        this.totalItems = totalItems;
+        this.createdAt = createdAt;
+        this.items = items;
     }
 
-    public static ShoppingCart create(CustomerId customerId) {
-        return new ShoppingCart(customerId);
+    public static ShoppingCart startShopping(CustomerId customerId) {
+        return new ShoppingCart(new ShoppingCartId(), customerId, Money.ZERO,
+                Quantity.ZERO, OffsetDateTime.now(), new HashSet<>());
     }
 
     public void empty() {
@@ -53,10 +63,17 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId>{
 
         product.checkOutOfStock();
 
-        findItemByProduct(product.id())
-                .ifPresentOrElse(
-                        item -> updateItem(item, product, quantity),
-                        () -> insertItem(product, quantity));
+        ShoppingCartItem shoppingCartItem = ShoppingCartItem.brandNew()
+                .shoppingCartId(this.id())
+                .productId(product.id())
+                .productName(product.name())
+                .price(product.price())
+                .available(product.inStock())
+                .quantity(quantity)
+                .build();
+
+        searchItemByProduct(product.id())
+                .ifPresentOrElse(i -> updateItem(i, product, quantity), () -> insertItem(shoppingCartItem));
 
         this.recalculateTotal();
     }
@@ -110,18 +127,11 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId>{
         item.changeQuantity(item.quantity().add(quantity));
     }
 
-    private void insertItem(Product product, Quantity quantity) {
-        ShoppingCartItem item = ShoppingCartItem.create(
-                this.id,
-                product.id(),
-                product.name(),
-                product.price(),
-                quantity
-        );
-        this.items.add(item);
+    private void insertItem(ShoppingCartItem shoppingCartItem) {
+        this.items.add(shoppingCartItem);
     }
 
-    private Optional<ShoppingCartItem> findItemByProduct(ProductId productId) {
+    private Optional<ShoppingCartItem> searchItemByProduct(ProductId productId) {
         Objects.requireNonNull(productId);
         return this.items.stream()
                 .filter(i -> i.productId().equals(productId))
