@@ -3,31 +3,51 @@ package com.henio.algashop.ordering.infrastructure.persistence.assembler;
 import com.henio.algashop.ordering.domain.model.entity.Order;
 import com.henio.algashop.ordering.domain.model.entity.OrderItem;
 import com.henio.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
-import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderItemPersistenceEntity;
-import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
-import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntityTestDataBuilder;
+import com.henio.algashop.ordering.infrastructure.persistence.entity.*;
 import com.henio.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceEntityRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
+@ExtendWith(MockitoExtension.class)
 class OrderPersistenceAssemblerTest {
 
-    private OrderPersistenceAssembler assembler;
-    private OrderItemPersistenceAssembler itemAssembler;
+    @Mock
     private CustomerPersistenceEntityRepository customerRepository;
 
+    private OrderPersistenceAssembler assembler;
+
+    private OrderItemPersistenceAssembler itemAssembler;
+
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         itemAssembler = new OrderItemPersistenceAssembler();
 
         assembler = new OrderPersistenceAssembler(
-                itemAssembler, customerRepository
+                itemAssembler,
+                customerRepository
         );
+
+        Mockito.when(customerRepository.getReferenceById(Mockito.anyLong()))
+                .thenAnswer(invocation -> {
+                    Long customerId = invocation.getArgument(0);
+
+                    return CustomerPersistenceEntityTestDataBuilder
+                            .aCustomer()
+                            .id(customerId)
+                            .build();
+                });
     }
+
 
     @Test
     void shouldConvertToDomain() {
