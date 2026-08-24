@@ -12,6 +12,7 @@ import com.henio.algashop.ordering.domain.model.valueobject.id.ShoppingCartItemI
 import java.util.Objects;
 
 public class ShoppingCartItem {
+
     private ShoppingCartItemId id;
     private ShoppingCartId shoppingCartId;
     private ProductId productId;
@@ -35,8 +36,6 @@ public class ShoppingCartItem {
     public static ShoppingCartItem create(ShoppingCartId shoppingCartId, ProductId productId, ProductName name, Money price, Quantity quantity) {
         return new ShoppingCartItem(shoppingCartId, productId, name, price, quantity);
     }
-
-
 
     void refresh(Product product) {
         Objects.requireNonNull(product);
