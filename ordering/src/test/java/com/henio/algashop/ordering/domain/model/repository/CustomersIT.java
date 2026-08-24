@@ -222,7 +222,7 @@ public class CustomersIT {
 
     @Test
     void shouldNotFindByEmailIfNoCustomerExistsWithEmail() {
-        Optional<Customer> customerOptional = customers.ofEmail(new Email(UUID.randomUUID().toString() + "@email.com"));
+        Optional<Customer> customerOptional = customers.ofEmail(new Email(UUID.randomUUID() + "@email.com"));
         Assertions.assertThat(customerOptional).isNotPresent();
 
     }
