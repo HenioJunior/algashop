@@ -50,6 +50,22 @@ public class CustomersPersistenceAdapter implements Customers {
 
     }
 
+    @Override
+    public long count() {
+        return persistenceRepository.count();
+    }
+
+    @Override
+    public boolean exists(CustomerId customerId) {
+        return persistenceRepository.existsById(customerId.value().toLong());
+    }
+
+    @Override
+    public Optional<Customer> ofEmail(Email email) {
+        return persistenceRepository.findByEmail(email.value())
+                .map(disassembler::toDomain);
+    }
+
     private void update(Customer aggregateRoot, CustomerPersistenceEntity entity) {
         checkVersion(aggregateRoot, entity);
         assembler.merge(entity, aggregateRoot);
@@ -84,21 +100,5 @@ public class CustomersPersistenceAdapter implements Customers {
                     aggregateRoot.id()
             );
         }
-    }
-
-    @Override
-    public long count() {
-        return persistenceRepository.count();
-    }
-
-    @Override
-    public boolean exists(CustomerId customerId) {
-        return persistenceRepository.existsById(customerId.value().toLong());
-    }
-
-    @Override
-    public Optional<Customer> ofEmail(Email email) {
-        return persistenceRepository.findByEmail(email.value())
-                .map(disassembler::toDomain);
     }
 }

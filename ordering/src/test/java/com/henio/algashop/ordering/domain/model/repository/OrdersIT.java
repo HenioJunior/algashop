@@ -4,6 +4,7 @@ import com.henio.algashop.ordering.domain.model.entity.CustomerTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.entity.Order;
 import com.henio.algashop.ordering.domain.model.entity.OrderStatus;
 import com.henio.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
+import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.henio.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.henio.algashop.ordering.infrastructure.persistence.adapter.CustomersPersistenceAdapter;
 import com.henio.algashop.ordering.infrastructure.persistence.adapter.OrdersPersistenceAdapter;
@@ -25,6 +26,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.time.Year;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -166,5 +169,33 @@ class OrdersIT {
         Assertions.assertThat(orders.exists(order.id())).isTrue();
         Assertions.assertThat(orders.exists(new OrderId())).isFalse();
 
+    }
+
+    @Test
+    void shouldListExistingOrdersByYear(){
+        orders.add(
+                OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build()
+        );
+        orders.add(
+                OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build()
+        );
+        orders.add(
+                OrderTestDataBuilder.anOrder().status(OrderStatus.CANCELED).build()
+        );
+        orders.add(
+                OrderTestDataBuilder.anOrder().status(OrderStatus.DRAFT).build()
+        );
+
+        CustomerId customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+
+        List<Order> updatedOrders = orders.placedByCustomerInYear(customerId, Year.now());
+        Assertions.assertThat(updatedOrders).isNotEmpty();
+        Assertions.assertThat(updatedOrders).hasSize(2);
+
+        updatedOrders = orders.placedByCustomerInYear(customerId, Year.now().minusYears(1));
+        Assertions.assertThat(updatedOrders).isEmpty();
+
+        updatedOrders = orders.placedByCustomerInYear(new CustomerId(), Year.now());
+        Assertions.assertThat(updatedOrders).isEmpty();
     }
 }

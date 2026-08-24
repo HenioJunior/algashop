@@ -2,6 +2,7 @@ package com.henio.algashop.ordering.infrastructure.persistence.adapter;
 
 import com.henio.algashop.ordering.domain.model.entity.Order;
 import com.henio.algashop.ordering.domain.model.repository.Orders;
+import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.henio.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.henio.algashop.ordering.infrastructure.persistence.AggregateVersionUpdater;
 import com.henio.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceEntityRepository;
@@ -12,6 +13,10 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
+import java.time.Year;
+import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -19,20 +24,20 @@ import java.util.Optional;
 @Component
 public class OrdersPersistenceAdapter implements Orders {
 
-    private final OrderPersistenceEntityRepository repository;
+    private final OrderPersistenceEntityRepository persistenceRepository;
     private final OrderPersistenceAssembler assembler;
     private final OrderPersistenceDisassembler disassembler;
 
-    public OrdersPersistenceAdapter(OrderPersistenceEntityRepository repository, OrderPersistenceAssembler assembler,
+    public OrdersPersistenceAdapter(OrderPersistenceEntityRepository persistenceRepository, OrderPersistenceAssembler assembler,
                                     OrderPersistenceDisassembler disassembler) {
-        this.repository = repository;
+        this.persistenceRepository = persistenceRepository;
         this.assembler = assembler;
         this.disassembler = disassembler;
     }
 
     @Override
     public Optional<Order> ofId(OrderId orderId) {
-        Optional<OrderPersistenceEntity> possibleEntity = repository.findById(orderId.value().toLong());
+        Optional<OrderPersistenceEntity> possibleEntity = persistenceRepository.findById(orderId.value().toLong());
         return possibleEntity.map(disassembler::toDomain);
     }
 
@@ -48,7 +53,7 @@ public class OrdersPersistenceAdapter implements Orders {
                 .value()
                 .toLong();
 
-        repository.findById(orderId)
+        persistenceRepository.findById(orderId)
                 .ifPresentOrElse(
                         entity -> update(aggregateRoot, entity),
                         () -> insert(aggregateRoot));
@@ -56,12 +61,23 @@ public class OrdersPersistenceAdapter implements Orders {
 
     @Override
     public long count() {
-        return repository.count();
+        return persistenceRepository.count();
     }
 
     @Override
     public boolean exists(OrderId orderId) {
-        return repository.existsById(orderId.value().toLong());
+        return persistenceRepository.existsById(orderId.value().toLong());
+    }
+
+    @Override
+    public List<Order> placedByCustomerInYear(CustomerId customerId, Year year) {
+        OffsetDateTime start = year.atDay(1).atStartOfDay().atOffset(ZoneOffset.UTC);
+        OffsetDateTime end = start.plusYears(1).minusNanos(1);
+
+        List<OrderPersistenceEntity> entities = persistenceRepository.findByCustomer_IdAndPlacedAtBetween(
+                customerId.value().toLong(), start, end);
+
+        return entities.stream().map(disassembler::toDomain).toList();
     }
 
     private void update(Order aggregateRoot, OrderPersistenceEntity entity) {
@@ -69,7 +85,7 @@ public class OrdersPersistenceAdapter implements Orders {
 
         assembler.merge(entity, aggregateRoot);
 
-        repository.flush();
+        persistenceRepository.flush();
 
         AggregateVersionUpdater.update(
                 aggregateRoot,
@@ -79,7 +95,7 @@ public class OrdersPersistenceAdapter implements Orders {
 
     private void insert(Order aggregateRoot) {
         OrderPersistenceEntity entity = assembler.fromDomain(aggregateRoot);
-        repository.saveAndFlush(entity);
+        persistenceRepository.saveAndFlush(entity);
         AggregateVersionUpdater.update(
                 aggregateRoot,
                 entity.getVersion()
