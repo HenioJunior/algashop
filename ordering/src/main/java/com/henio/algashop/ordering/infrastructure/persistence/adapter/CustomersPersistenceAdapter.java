@@ -66,6 +66,11 @@ public class CustomersPersistenceAdapter implements Customers {
                 .map(disassembler::toDomain);
     }
 
+    @Override
+    public boolean isEmailUnique(Email email, CustomerId exceptCustomerId) {
+        return !persistenceRepository.existsByEmailAndIdNot(email.value(), exceptCustomerId.value().toLong());
+    }
+
     private void update(Customer aggregateRoot, CustomerPersistenceEntity entity) {
         checkVersion(aggregateRoot, entity);
         assembler.merge(entity, aggregateRoot);

@@ -5,6 +5,7 @@ import com.henio.algashop.ordering.domain.model.entity.Customer;
 import com.henio.algashop.ordering.domain.model.entity.CustomerTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.valueobject.Email;
 import com.henio.algashop.ordering.domain.model.valueobject.FullName;
+import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.henio.algashop.ordering.infrastructure.persistence.adapter.CustomersPersistenceAdapter;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.disassembler.CustomerPersistenceDisassembler;
@@ -224,5 +225,15 @@ public class CustomersIT {
         Optional<Customer> customerOptional = customers.ofEmail(new Email(UUID.randomUUID().toString() + "@email.com"));
         Assertions.assertThat(customerOptional).isNotPresent();
 
+    }
+
+    @Test
+    void shouldReturnIfEmailExists() {
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer();
+        customers.add(customer);
+
+        Assertions.assertThat(customers.isEmailUnique(customer.email(), customer.id())).isTrue();
+        Assertions.assertThat(customers.isEmailUnique(customer.email(), new CustomerId())).isFalse();
+        Assertions.assertThat(customers.isEmailUnique(new Email("alex@gmail.com"), new CustomerId())).isTrue();
     }
 }
