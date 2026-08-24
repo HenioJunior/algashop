@@ -1,8 +1,8 @@
 package com.henio.algashop.ordering.infrastructure.persistence.adapter;
 
 import com.henio.algashop.ordering.domain.model.entity.Customer;
-import com.henio.algashop.ordering.domain.model.entity.Order;
 import com.henio.algashop.ordering.domain.model.repository.Customers;
+import com.henio.algashop.ordering.domain.model.valueobject.Email;
 import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.henio.algashop.ordering.infrastructure.persistence.AggregateVersionUpdater;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceAssembler;
@@ -22,13 +22,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CustomersPersistenceAdapter implements Customers {
 
-    private final CustomerPersistenceEntityRepository repository;
+    private final CustomerPersistenceEntityRepository persistenceRepository;
     private final CustomerPersistenceAssembler assembler;
     private final CustomerPersistenceDisassembler disassembler;
 
     @Override
     public Optional<Customer> ofId(CustomerId customerId) {
-        Optional<CustomerPersistenceEntity> possibleCustomer = repository.findById(customerId.value().toLong());
+        Optional<CustomerPersistenceEntity> possibleCustomer = persistenceRepository.findById(customerId.value().toLong());
         return possibleCustomer.map(disassembler::toDomain);
     }
 
@@ -44,7 +44,7 @@ public class CustomersPersistenceAdapter implements Customers {
                 .value()
                 .toLong();
 
-        repository.findById(customerId)
+        persistenceRepository.findById(customerId)
                 .ifPresentOrElse(entity -> update(aggregateRoot, entity),
                         () -> insert(aggregateRoot));
 
@@ -54,7 +54,7 @@ public class CustomersPersistenceAdapter implements Customers {
         checkVersion(aggregateRoot, entity);
         assembler.merge(entity, aggregateRoot);
 
-        repository.flush();
+        persistenceRepository.flush();
 
         AggregateVersionUpdater.update(
                 aggregateRoot,
@@ -64,7 +64,7 @@ public class CustomersPersistenceAdapter implements Customers {
 
     private void insert(Customer aggregateRoot) {
         CustomerPersistenceEntity entity = assembler.fromDomain(aggregateRoot);
-        repository.saveAndFlush(entity);
+        persistenceRepository.saveAndFlush(entity);
         AggregateVersionUpdater.update(
                 aggregateRoot,
                 entity.getVersion()
@@ -88,11 +88,17 @@ public class CustomersPersistenceAdapter implements Customers {
 
     @Override
     public long count() {
-        return repository.count();
+        return persistenceRepository.count();
     }
 
     @Override
     public boolean exists(CustomerId customerId) {
-        return repository.existsById(customerId.value().toLong());
+        return persistenceRepository.existsById(customerId.value().toLong());
+    }
+
+    @Override
+    public Optional<Customer> ofEmail(Email email) {
+        return persistenceRepository.findByEmail(email.value())
+                .map(disassembler::toDomain);
     }
 }

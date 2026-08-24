@@ -20,6 +20,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @DataJpaTest
 @Import({
         CustomersPersistenceAdapter.class,
@@ -203,5 +206,23 @@ public class CustomersIT {
 
         Assertions.assertThat(archivedCustomer.isPromotionNotificationsAllowed())
                 .isFalse();
+    }
+
+    @Test
+    void shouldFindByEmail() {
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer();
+        customers.add(customer);
+
+        Optional<Customer> customerOptional = customers.ofEmail(customer.email());
+
+        Assertions.assertThat(customerOptional).isPresent();
+
+    }
+
+    @Test
+    void shouldNotFindByEmailIfNoCustomerExistsWithEmail() {
+        Optional<Customer> customerOptional = customers.ofEmail(new Email(UUID.randomUUID().toString() + "@email.com"));
+        Assertions.assertThat(customerOptional).isNotPresent();
+
     }
 }
