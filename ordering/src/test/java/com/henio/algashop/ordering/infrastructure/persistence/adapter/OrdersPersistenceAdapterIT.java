@@ -15,6 +15,7 @@ import com.henio.algashop.ordering.infrastructure.persistence.repository.Custome
 import com.henio.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceEntityRepository;
 import io.hypersistence.tsid.TSID;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
@@ -42,6 +43,12 @@ class OrdersPersistenceAdapterIT {
         this.persistenceAdapter = persistenceAdapter;
         this.entityRepository = entityRepository;
         this.customerEntityRepository = customerEntityRepository;
+    }
+
+    @BeforeEach
+    void cleanup() {
+        entityRepository.deleteAll();
+        customerEntityRepository.deleteAll();
     }
 
     @Test

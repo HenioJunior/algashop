@@ -1,9 +1,7 @@
 package com.henio.algashop.ordering.infrastructure.persistence.entity;
 
-import com.henio.algashop.ordering.domain.model.entity.Customer;
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
-import io.hypersistence.tsid.TSID;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -30,7 +28,7 @@ public class OrderPersistenceEntity {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "customer_id")
     private CustomerPersistenceEntity customer;
 

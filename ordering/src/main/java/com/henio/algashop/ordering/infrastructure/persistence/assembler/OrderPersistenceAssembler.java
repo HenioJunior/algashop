@@ -13,7 +13,6 @@ import com.henio.algashop.ordering.infrastructure.persistence.entity.CustomerPer
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderItemPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceEntityRepository;
-import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,8 +1,11 @@
 package com.henio.algashop.ordering.infrastructure.persistence.repository;
 
 import com.henio.algashop.ordering.infrastructure.persistence.config.SpringDataAuditingConfig;
+import com.henio.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;
+import com.henio.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntityTestDataBuilder;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntityTestDataBuilder;
+import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,18 +17,26 @@ import org.springframework.context.annotation.Import;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(SpringDataAuditingConfig.class)
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 class OrderPersistenceEntityRepositoryIT {
 
     private final OrderPersistenceEntityRepository orderPersistenceEntityRepository;
+    private final CustomerPersistenceEntityRepository customerRepository;
 
-    @Autowired
-    public OrderPersistenceEntityRepositoryIT(OrderPersistenceEntityRepository orderPersistenceEntityRepository) {
-        this.orderPersistenceEntityRepository = orderPersistenceEntityRepository;
-    }
 
     @Test
     void shouldPersistOrder(){
-        OrderPersistenceEntity entity = OrderPersistenceEntityTestDataBuilder.existingOrder();
+        CustomerPersistenceEntity customer =
+                CustomerPersistenceEntityTestDataBuilder.aCustomer().build();
+
+        customerRepository.saveAndFlush(customer);
+
+
+        OrderPersistenceEntity entity =
+                OrderPersistenceEntityTestDataBuilder.existingOrderBuilder()
+                        .customer(customer)
+                        .build();
+
         long orderId = entity.getId();
 
         orderPersistenceEntityRepository.saveAndFlush(entity);
@@ -42,7 +53,16 @@ class OrderPersistenceEntityRepositoryIT {
 
     @Test
     void shouldSetAuditingValues() {
-        OrderPersistenceEntity entity = OrderPersistenceEntityTestDataBuilder.existingOrder();
+        CustomerPersistenceEntity customer =
+                CustomerPersistenceEntityTestDataBuilder.aCustomer().build();
+
+        customerRepository.saveAndFlush(customer);
+
+        OrderPersistenceEntity entity =
+                OrderPersistenceEntityTestDataBuilder.existingOrderBuilder()
+                        .customer(customer)
+                        .build();
+
         entity = orderPersistenceEntityRepository.saveAndFlush(entity);
 
         Assertions.assertThat(entity.getCreatedByUserId()).isNotNull();
