@@ -61,7 +61,7 @@ public class CustomerTestDataBuilder {
 
     public static Customer.ExistingCustomerBuilding existingAnonymizedCustomer() {
         return Customer.existing()
-                .id(new CustomerId())
+                .id(DEFAULT_CUSTOMER_ID)
                 .fullName(new FullName("Anonymous", "Anonymous"))
                 .birthDate(null)
                 .email(new Email("anonymous@anonymous.com"))

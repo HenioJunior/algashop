@@ -13,11 +13,9 @@ public class OrderPersistenceEntityTestDataBuilder {
 
     public static OrderPersistenceEntity.OrderPersistenceEntityBuilder existingOrderBuilder() {
 
-        CustomerPersistenceEntity.CustomerPersistenceEntityBuilder customerEntity = CustomerPersistenceEntityTestDataBuilder.aCustomer();
-
         return OrderPersistenceEntity.builder()
                 .id(IdGenerator.generateTSID().toLong())
-                .customer(customerEntity.build())
+                .customer(CustomerPersistenceEntityTestDataBuilder.aCustomer().build())
                 .totalItems(3)
                 .totalAmount(new BigDecimal(1250))
                 .status("DRAFT")

@@ -34,8 +34,7 @@ public class CustomerPersistenceEntityTestDataBuilder {
                         .state("South California")
                         .zipCode("12345")
                         .complement("Apt. 114")
-                        .build())
-                ;
+                        .build());
     }
 
 }
