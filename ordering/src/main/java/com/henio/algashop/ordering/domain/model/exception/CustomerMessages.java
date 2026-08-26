@@ -87,6 +87,9 @@ public class CustomerMessages {
     public static final String ERROR_ORDER_IS_NOT_READY_YET =
             "Order is not ready yet";
 
+    public static final String ERROR_EMAIL_ALREADY_REGISTERED =
+            "Email already registered";
+
     private CustomerMessages() {
     }
 
