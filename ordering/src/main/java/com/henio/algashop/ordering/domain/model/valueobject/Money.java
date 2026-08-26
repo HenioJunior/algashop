@@ -31,12 +31,13 @@ public record Money(BigDecimal value) implements Comparable<Money> {
     public Money multiply(Quantity quantity) {
         Objects.requireNonNull(quantity, "Quantity cannot be null");
 
-        if (quantity.compareTo(Quantity.ZERO) <= 0) {
+        if (quantity.value() < 1) {
             throw new IllegalArgumentException(
                     "Quantity must be greater than zero."
             );
         }
-        return new Money(value.multiply(new BigDecimal(quantity.value())));
+        BigDecimal multiplied = this.value.multiply(new BigDecimal(quantity.value()));
+        return new Money(multiplied);
     }
 
 
@@ -45,22 +46,17 @@ public record Money(BigDecimal value) implements Comparable<Money> {
         return new Money(value.add(other.value));
     }
 
-    public Money divide(int divisor) {
-        if (divisor == 0) {
+    public Money divide(Money o) {
+        if (Money.ZERO.equals(o)) {
             throw new IllegalArgumentException("Divisor cannot be zero");
         }
-        return new Money(
-                value.divide(
-                        BigDecimal.valueOf(divisor),
-                        2,
-                        roundingMode
-                ));
+        return new Money(this.value.divide(o.value, roundingMode));
     }
 
     @Override
     public int compareTo(Money other) {
         Objects.requireNonNull(other, "Money cannot be null");
-        return value.compareTo(other.value);
+        return this.value.compareTo(other.value);
     }
 
     @Override
