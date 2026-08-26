@@ -2,6 +2,7 @@ package com.henio.algashop.ordering.domain.service;
 
 import com.henio.algashop.ordering.domain.model.entity.Customer;
 import com.henio.algashop.ordering.domain.model.repository.Customers;
+import com.henio.algashop.ordering.domain.model.service.CustomerRegistrationService;
 import com.henio.algashop.ordering.domain.model.valueobject.*;
 import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import org.assertj.core.api.Assertions;

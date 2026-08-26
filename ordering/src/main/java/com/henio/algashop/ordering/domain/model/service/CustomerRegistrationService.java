@@ -1,4 +1,4 @@
-package com.henio.algashop.ordering.domain.service;
+package com.henio.algashop.ordering.domain.model.service;
 
 import com.henio.algashop.ordering.domain.model.entity.Customer;
 import com.henio.algashop.ordering.domain.model.exception.CustomerEmailIsInUseException;
