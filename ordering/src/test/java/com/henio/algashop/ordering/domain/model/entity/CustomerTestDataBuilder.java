@@ -14,7 +14,7 @@ public class CustomerTestDataBuilder {
     }
 
     public static Customer brandNewCustomer() {
-        return Customer.create(
+        return Customer.createBrandNew(
                 new FullName("John", "Doe"),
                 new BirthDate(LocalDate.of(1991, 7, 5)),
                 new Email("johndoe@email.com"),

@@ -75,7 +75,8 @@ public class Customer implements AggregateRoot<CustomerId> {
         this.version = version;
     }
 
-    public static Customer create(
+    @Builder(builderClassName = "BrandNewCustomerBuild", builderMethodName = "brandNew")
+    public static Customer createBrandNew(
             FullName fullName,
             BirthDate birthDate,
             Email email,
