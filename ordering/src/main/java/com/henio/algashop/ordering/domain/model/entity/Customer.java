@@ -30,7 +30,9 @@ public class Customer implements AggregateRoot<CustomerId> {
     private Address address;
     private Long version;
 
-    @Builder(builderClassName = "ExistingCustomerBuilding", builderMethodName = "existing")
+    @Builder(
+            builderClassName = "ExistingCustomerBuilder",
+            builderMethodName = "existing")
     private Customer(
             CustomerId id,
             FullName fullName,
@@ -50,29 +52,24 @@ public class Customer implements AggregateRoot<CustomerId> {
                 id,
                 "Customer id is required"
         );
-
         this.registeredAt = Objects.requireNonNull(
                 registeredAt,
                 "Registration date is required"
         );
-
         this.loyaltyPoints = Objects.requireNonNull(
                 loyaltyPoints,
                 "Loyalty points are required"
         );
-
         this.address = Objects.requireNonNull(
                 address,
                 "Address is required"
         );
-
         this.fullName = fullName;
         this.birthDate = birthDate;
         this.email = email;
         this.phone = phone;
         this.document = document;
-        this.promotionNotificationsAllowed =
-                promotionNotificationsAllowed;
+        this.promotionNotificationsAllowed = promotionNotificationsAllowed;
         this.archived = archived;
         this.archivedAt = archivedAt;
         this.version = version;
@@ -98,16 +95,18 @@ public class Customer implements AggregateRoot<CustomerId> {
                 false,
                 OffsetDateTime.now(),
                 null,
-                new LoyaltyPoints(),
-                address,
+                LoyaltyPoints.ZERO,
+                Objects.requireNonNull(address, "Address is required"),
                 null
         );
     }
 
-    public void addLoyaltyPoints(int points) {
+    public void addLoyaltyPoints(LoyaltyPoints loyaltyPointsAdded) {
         ensureNotArchived();
-
-        this.loyaltyPoints = this.loyaltyPoints.add(points);
+        if (loyaltyPointsAdded.equals(LoyaltyPoints.ZERO)) {
+            return;
+        }
+        this.loyaltyPoints = this.loyaltyPoints.add(loyaltyPointsAdded);
     }
 
     public void archive() {

@@ -33,7 +33,7 @@ public class CustomerTestDataBuilder {
         );
     }
 
-    public static Customer.ExistingCustomerBuilding existingCustomer() {
+    public static Customer.ExistingCustomerBuilder existingCustomer() {
         return Customer.existing()
                 .id(DEFAULT_CUSTOMER_ID)
                 .registeredAt(OffsetDateTime.now())
@@ -59,7 +59,7 @@ public class CustomerTestDataBuilder {
                 ;
     }
 
-    public static Customer.ExistingCustomerBuilding existingAnonymizedCustomer() {
+    public static Customer.ExistingCustomerBuilder existingAnonymizedCustomer() {
         return Customer.existing()
                 .id(DEFAULT_CUSTOMER_ID)
                 .fullName(new FullName("Anonymous", "Anonymous"))
