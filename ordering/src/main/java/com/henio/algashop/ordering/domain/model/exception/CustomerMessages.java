@@ -81,6 +81,12 @@ public class CustomerMessages {
     public static final String ERROR_SHOPPING_CART_DOES_NOT_CONTAIN_PRODUCT =
             "Shopping Cart %s does not contain product %s";
 
+    public static final String ERROR_CUSTOMER_AND_ORDER_MUST_BELONG_TO_THE_SAME_CUSTOMER =
+            "Customer and order must belong to the same customer";
+
+    public static final String ERROR_ORDER_IS_NOT_READY_YET =
+            "Order is not ready yet";
+
     private CustomerMessages() {
     }
 
