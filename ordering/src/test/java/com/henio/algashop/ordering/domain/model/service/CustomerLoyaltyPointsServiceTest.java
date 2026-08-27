@@ -2,7 +2,6 @@ package com.henio.algashop.ordering.domain.model.service;
 
 
 import com.henio.algashop.ordering.domain.model.entity.*;
-import com.henio.algashop.ordering.domain.model.service.CustomerLoyaltyPointsService;
 import com.henio.algashop.ordering.domain.model.valueobject.LoyaltyPoints;
 import com.henio.algashop.ordering.domain.model.valueobject.Product;
 import com.henio.algashop.ordering.domain.model.valueobject.Quantity;
