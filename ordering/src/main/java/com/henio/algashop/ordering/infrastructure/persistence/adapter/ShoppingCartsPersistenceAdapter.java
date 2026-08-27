@@ -38,7 +38,7 @@ public class ShoppingCartsPersistenceAdapter implements ShoppingCarts {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void add(ShoppingCart aggregateRoot) {
         Long ShoppingCartId = aggregateRoot.id().value().toLong();
 
@@ -55,7 +55,7 @@ public class ShoppingCartsPersistenceAdapter implements ShoppingCarts {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void remove(ShoppingCart shoppingCart) {
         Objects.requireNonNull(shoppingCart, "Shopping cart is required");
         persistenceRepository.deleteById(
@@ -64,7 +64,7 @@ public class ShoppingCartsPersistenceAdapter implements ShoppingCarts {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void remove(ShoppingCartId shoppingCartId) {
         this.persistenceRepository.deleteById(shoppingCartId.value().toLong());
     }

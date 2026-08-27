@@ -10,7 +10,6 @@ import com.henio.algashop.ordering.infrastructure.persistence.assembler.Shopping
 import com.henio.algashop.ordering.infrastructure.persistence.config.SpringDataAuditingConfig;
 import com.henio.algashop.ordering.infrastructure.persistence.disassembler.CustomerPersistenceDisassembler;
 import com.henio.algashop.ordering.infrastructure.persistence.disassembler.ShoppingCartPersistenceDisassembler;
-import com.henio.algashop.ordering.infrastructure.persistence.repository.ShoppingCartPersistenceEntityRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +35,10 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ShoppingCartUpdateAdapterIT {
 
-    private ShoppingCartsPersistenceAdapter persistenceAdapter;
-    private CustomersPersistenceAdapter customersPersistenceAdapter;
+    private final ShoppingCartsPersistenceAdapter persistenceAdapter;
+    private final CustomersPersistenceAdapter customersPersistenceAdapter;
 
-    private ShoppingCartUpdateAdapter shoppingCartUpdateAdapter;
+    private final ShoppingCartUpdateAdapter shoppingCartUpdateAdapter;
 
     @Autowired
     public ShoppingCartUpdateAdapterIT(ShoppingCartsPersistenceAdapter persistenceAdapter,

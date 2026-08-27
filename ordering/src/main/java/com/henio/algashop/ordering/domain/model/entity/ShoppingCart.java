@@ -16,12 +16,12 @@ import java.util.*;
 
 public class ShoppingCart implements AggregateRoot<ShoppingCartId>{
 
-    private ShoppingCartId id;
-    private CustomerId customerId;
+    private final ShoppingCartId id;
+    private final CustomerId customerId;
     private Money totalAmount;
     private Quantity totalItems;
-    private OffsetDateTime createdAt;
-    private Set<ShoppingCartItem> items;
+    private final OffsetDateTime createdAt;
+    private final Set<ShoppingCartItem> items;
     private Long version;
 
     @Builder(builderClassName = "ExistingShoppingCartBuilder", builderMethodName = "existing")
