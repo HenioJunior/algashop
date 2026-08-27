@@ -14,9 +14,9 @@ import java.util.Objects;
 
 public class ShoppingCartItem {
 
-    private ShoppingCartItemId id;
-    private ShoppingCartId shoppingCartId;
-    private ProductId productId;
+    private final ShoppingCartItemId id;
+    private final ShoppingCartId shoppingCartId;
+    private final ProductId productId;
     private ProductName productName;
     private Money price;
     private Quantity quantity;

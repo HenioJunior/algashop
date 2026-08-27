@@ -90,6 +90,9 @@ public class CustomerMessages {
     public static final String ERROR_EMAIL_ALREADY_REGISTERED =
             "Email already registered";
 
+    public static final String ERROR_SHOPPING_CART_IS_NOT_VALID =
+            "Shopping cart is not valid";
+
     private CustomerMessages() {
     }
 
