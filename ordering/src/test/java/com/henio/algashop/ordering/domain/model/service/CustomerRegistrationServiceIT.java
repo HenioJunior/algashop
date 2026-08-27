@@ -1,34 +1,23 @@
-package com.henio.algashop.ordering.domain.service;
+package com.henio.algashop.ordering.domain.model.service;
 
 import com.henio.algashop.ordering.domain.model.entity.Customer;
-import com.henio.algashop.ordering.domain.model.repository.Customers;
-import com.henio.algashop.ordering.domain.model.service.CustomerRegistrationService;
 import com.henio.algashop.ordering.domain.model.valueobject.*;
-import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 
-@ExtendWith(MockitoExtension.class)
-class CustomerRegistrationServiceTest {
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-    @Mock
-    private Customers customers;
+@SpringBootTest
+class CustomerRegistrationServiceIT {
 
-    @InjectMocks
+    @Autowired
     private CustomerRegistrationService customerRegistrationService;
 
     @Test
     public void shouldRegister() {
-        Mockito.when(customers.isEmailUnique(Mockito.any(Email.class), Mockito.any(CustomerId.class)))
-                .thenReturn(true);
-
         Customer customer = customerRegistrationService.register(
                 new FullName("John", "Doe"),
                 new BirthDate(LocalDate.of(1991, 7, 5)),
@@ -47,7 +36,7 @@ class CustomerRegistrationServiceTest {
                         .build()
         );
 
-        Assertions.assertThat(customer.fullName()).isEqualTo(new FullName("John", "Doe"));
-        Assertions.assertThat(customer.email()).isEqualTo(new Email("johndoe@email.com"));
+        assertThat(customer.fullName()).isEqualTo(new FullName("John", "Doe"));
+        assertThat(customer.email()).isEqualTo(new Email("johndoe@email.com"));
     }
 }

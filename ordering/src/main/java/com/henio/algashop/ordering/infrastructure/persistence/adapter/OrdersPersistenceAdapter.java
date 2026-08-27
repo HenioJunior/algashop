@@ -43,7 +43,7 @@ public class OrdersPersistenceAdapter implements Orders {
     }
 
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public void add(Order aggregateRoot) {
         Objects.requireNonNull(

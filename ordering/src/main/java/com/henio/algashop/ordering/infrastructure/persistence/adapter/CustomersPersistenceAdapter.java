@@ -32,7 +32,7 @@ public class CustomersPersistenceAdapter implements Customers {
         return possibleCustomer.map(disassembler::toDomain);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public void add(Customer aggregateRoot) {
         Objects.requireNonNull(

@@ -3,14 +3,16 @@ package com.henio.algashop.ordering.domain.model.service;
 import com.henio.algashop.ordering.domain.model.entity.Customer;
 import com.henio.algashop.ordering.domain.model.exception.CustomerEmailIsInUseException;
 import com.henio.algashop.ordering.domain.model.repository.Customers;
+import com.henio.algashop.ordering.domain.model.utility.DomainService;
 import com.henio.algashop.ordering.domain.model.valueobject.*;
 import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@DomainService
 public class CustomerRegistrationService {
 
-    private Customers customers;
+    private final Customers customers;
 
     public Customer register(FullName fullName, BirthDate birthDate, Email email, Phone phone, Document document, 
                              boolean promotionNotificationsAllowed, Address address) {
