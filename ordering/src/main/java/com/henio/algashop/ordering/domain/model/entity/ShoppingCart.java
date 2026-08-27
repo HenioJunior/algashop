@@ -53,7 +53,7 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId>{
     }
 
     public void removeItem(ShoppingCartItemId shoppingCartItemId) {
-        ShoppingCartItem shoppingCartItem = this.requireItem(shoppingCartItemId);
+        ShoppingCartItem shoppingCartItem = this.findItem(shoppingCartItemId);
         this.items.remove(shoppingCartItem);
         this.recalculateTotal();
     }
@@ -79,7 +79,7 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId>{
         this.recalculateTotal();
     }
 
-    public ShoppingCartItem requireItem(ShoppingCartItemId shoppingCartItemId) {
+    public ShoppingCartItem findItem(ShoppingCartItemId shoppingCartItemId) {
         Objects.requireNonNull(shoppingCartItemId, "Shopping cart item id cannot be null");
         return this.items.stream()
                 .filter(item -> item.id().equals(shoppingCartItemId))
@@ -87,7 +87,7 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId>{
                 .orElseThrow(() -> new ShoppingCartDoesNotContainItemException(this.id(), shoppingCartItemId));
     }
 
-    public ShoppingCartItem requireItemByProduct(ProductId productId) {
+    public ShoppingCartItem findItem(ProductId productId) {
         Objects.requireNonNull(productId, "Product id cannot be null");
         return this.items.stream()
                 .filter(item -> item.productId().equals(productId))
@@ -96,13 +96,13 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId>{
     }
 
     public void refreshItem(Product product) {
-        ShoppingCartItem shoppingCartItem = this.requireItemByProduct(product.id());
+        ShoppingCartItem shoppingCartItem = this.findItem(product.id());
         shoppingCartItem.refresh(product);
         this.recalculateTotal();
     }
 
     public void changeItemQuantity(ShoppingCartItemId shoppingCartItemId, Quantity quantity) {
-        ShoppingCartItem shoppingCartItem = this.requireItem(shoppingCartItemId);
+        ShoppingCartItem shoppingCartItem = this.findItem(shoppingCartItemId);
         shoppingCartItem.changeQuantity(quantity);
         this.recalculateTotal();
     }

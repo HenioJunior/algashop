@@ -1,6 +1,5 @@
 package com.henio.algashop.ordering.infrastructure.persistence.adapter;
 
-import com.henio.algashop.ordering.domain.model.entity.Order;
 import com.henio.algashop.ordering.domain.model.entity.ShoppingCart;
 import com.henio.algashop.ordering.domain.model.repository.ShoppingCarts;
 import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
@@ -8,20 +7,15 @@ import com.henio.algashop.ordering.domain.model.valueobject.id.ShoppingCartId;
 import com.henio.algashop.ordering.infrastructure.persistence.AggregateVersionUpdater;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.ShoppingCartPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.disassembler.ShoppingCartPersistenceDisassembler;
-import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.ShoppingCartPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.repository.ShoppingCartPersistenceEntityRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -63,7 +57,10 @@ public class ShoppingCartsPersistenceAdapter implements ShoppingCarts {
     @Override
     @Transactional(readOnly = false)
     public void remove(ShoppingCart shoppingCart) {
-        this.persistenceRepository.delete(assembler.fromDomain(shoppingCart));
+        Objects.requireNonNull(shoppingCart, "Shopping cart is required");
+        persistenceRepository.deleteById(
+                shoppingCart.id().value().toLong()
+        );
     }
 
     @Override

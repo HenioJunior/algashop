@@ -37,13 +37,20 @@ class CustomerTest {
     }
 
     @Test
-    void given_brandNewCustomer_whenAddInvalidLoyaltyPoints_shouldGenerateException() {
+    void givenBrandNewCustomer_whenAddZeroLoyaltyPoints_shouldNotChangeLoyaltyPoints() {
         Customer customer = CustomerTestDataBuilder.brandNewCustomer();
 
-        Assertions.assertThatExceptionOfType(DomainException.class)
-                .isThrownBy(()-> customer.addLoyaltyPoints(LoyaltyPoints.ZERO));
+        LoyaltyPoints currentPoints = customer.loyaltyPoints();
 
+        customer.addLoyaltyPoints(LoyaltyPoints.ZERO);
+
+        Assertions.assertThat(customer.loyaltyPoints())
+                .isEqualTo(currentPoints);
+    }
+
+    @Test
+    void givenNegativeValue_whenCreateLoyaltyPoints_shouldGenerateException() {
         Assertions.assertThatExceptionOfType(DomainException.class)
-                .isThrownBy(()-> customer.addLoyaltyPoints(new LoyaltyPoints(-10)));
+                .isThrownBy(() -> new LoyaltyPoints(-10));
     }
 }

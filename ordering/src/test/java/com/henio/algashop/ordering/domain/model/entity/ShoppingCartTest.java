@@ -115,7 +115,7 @@ class ShoppingCartTest {
 
         cart.refreshItem(updatedProduct);
 
-        var item = cart.requireItemByProduct(product.id());
+        var item = cart.findItem(product.id());
 
         Assertions.assertThat(item.price()).isEqualTo(new Money("100"));
         Assertions.assertThat(cart.totalAmount()).isEqualTo(new Money("200"));
@@ -160,7 +160,7 @@ class ShoppingCartTest {
         ShoppingCart cart = ShoppingCartTestDataBuilder.aShoppingCart().build();
         var item = cart.items().iterator().next();
 
-        var found = cart.requireItem(item.id());
+        var found = cart.findItem(item.id());
 
         Assertions.assertThat(found).isEqualTo(item);
     }
