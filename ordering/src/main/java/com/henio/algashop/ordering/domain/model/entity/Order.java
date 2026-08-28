@@ -191,8 +191,6 @@ public class Order implements AggregateRoot<OrderId> {
 
         this.totalAmount = new Money(totalAmountWithShippingCost);
         this.totalItems = new Quantity(totalItemsQuantity);
-
-
     }
 
     private OrderStatus changeStatus(OrderStatus newOrderStatus) {
