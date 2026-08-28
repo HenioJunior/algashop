@@ -222,7 +222,7 @@ class OrderTest {
     void givenDraftOrder_whenChangeBilling_thenShouldAllowChange() {
         Order order = OrderTestDataBuilder.anOrder().build();
 
-        Billing billing = OrderTestDataBuilder.aBilling();
+        Billing billing = BillingTestDataBuilder.aBilling().build();
 
         order.changeBilling(billing);
 
@@ -231,13 +231,13 @@ class OrderTest {
 
     @Test
     void givenDraftOrder_whenChangeShipping_thenShouldAllowChange() {
-        Shipping shipping = OrderTestDataBuilder.aShipping();
+        Shipping shipping = ShippingTestDataBuilder.aShipping().build();
 
         Order order = Order.draft(CustomerId.generate());
 
         order.changeShipping(
                 Shipping.builder()
-                        .address(OrderTestDataBuilder.anAddress())
+                        .address(AddressTestDataBuilder.anAddress().build())
                         .recipient(
                                 Recipient.builder()
                                         .fullName(new FullName("John", "Doe"))
@@ -264,7 +264,7 @@ class OrderTest {
 
     @Test
     void givenDraftOrderAndPastDeliveryDate_whenChangeShipping_thenShouldThrowException() {
-        Shipping aPastDateShipping = OrderTestDataBuilder.aPastDateShipping();
+        Shipping aPastDateShipping = ShippingTestDataBuilder.aPastDateShipping().build();
 
         Order order = Order.draft(CustomerId.generate());
 
@@ -323,8 +323,8 @@ class OrderTest {
 
         Product product = ProductTestDataBuilder.aProduct().build();
         Quantity initialQuantity = new Quantity(1);
-        Shipping shipping = OrderTestDataBuilder.aShipping();
-        Billing billing = OrderTestDataBuilder.aBilling();
+        Shipping shipping = ShippingTestDataBuilder.aShipping().build();
+        Billing billing = BillingTestDataBuilder.aBilling().build();
         PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
 
         order.addItem(product, initialQuantity);

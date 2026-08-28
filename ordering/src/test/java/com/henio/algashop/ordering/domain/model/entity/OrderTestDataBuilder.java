@@ -3,8 +3,6 @@ package com.henio.algashop.ordering.domain.model.entity;
 import com.henio.algashop.ordering.domain.model.valueobject.*;
 import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
 
-import java.time.LocalDate;
-
 import static com.henio.algashop.ordering.domain.model.entity.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 
 public class OrderTestDataBuilder {
@@ -13,11 +11,9 @@ public class OrderTestDataBuilder {
 
     private PaymentMethod paymentMethod = PaymentMethod.GATEWAY_BALANCE;
 
-    private Shipping shipping = aShipping();
+    private Shipping shipping = ShippingTestDataBuilder.aShipping().build();
 
-    private final Shipping pastDateShipping = aPastDateShipping();
-
-    private Billing billing = aBilling();
+    private Billing billing = BillingTestDataBuilder.aBilling().build();
 
     private boolean includeItems = true;
 
@@ -69,54 +65,6 @@ public class OrderTestDataBuilder {
         return order;
     }
 
-    public static Billing aBilling() {
-        return Billing.builder()
-                .address(anAddress())
-                .document(new Document("225-09-1992"))
-                .phone(new Phone("123-111-9911"))
-                .email(new Email("john.doe@email.com"))
-                .fullName(new FullName("John", "Doe")).build();
-    }
-
-    public static Shipping aShipping() {
-        return Shipping.builder()
-                .address(anAddress())
-                .recipient(
-                        Recipient.builder()
-                                .fullName(new FullName("John", "Doe"))
-                                .document(new Document("112-33-2321"))
-                                .phone(new Phone("111-441-1244"))
-                                .build())
-                .cost(new Money("10.00"))
-                .expectedDate(LocalDate.now().plusDays(1))
-                .build();
-    }
-
-    public static Shipping aPastDateShipping() {
-        return Shipping.builder()
-                .address(anAddress())
-                .recipient(
-                        Recipient.builder()
-                                .fullName(new FullName("John", "Doe"))
-                                .document(new Document("112-33-2321"))
-                                .phone(new Phone("111-441-1244"))
-                                .build())
-                .cost(new Money("10.00"))
-                .expectedDate(LocalDate.now().minusDays(7))
-                .build();
-    }
-
-    public static Address anAddress() {
-        return Address.builder()
-                .street("Bourbon Street")
-                .number("1234")
-                .neighborhood("North Ville")
-                .complement("apt. 11")
-                .city("Montfort")
-                .state("South Carolina")
-                .zipCode(new ZipCode("79911")).build();
-    }
-
     public OrderTestDataBuilder customerId(CustomerId customerId) {
         this.customerId = customerId;
         return this;
@@ -132,7 +80,7 @@ public class OrderTestDataBuilder {
         return this;
     }
 
-    public OrderTestDataBuilder billingInfo(Billing billing) {
+    public OrderTestDataBuilder billing(Billing billing) {
         this.billing = billing;
         return this;
     }

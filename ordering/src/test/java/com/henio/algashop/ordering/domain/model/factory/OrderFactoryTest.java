@@ -4,10 +4,7 @@ import com.henio.algashop.ordering.domain.model.entity.Order;
 import com.henio.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.entity.PaymentMethod;
 import com.henio.algashop.ordering.domain.model.entity.ProductTestDataBuilder;
-import com.henio.algashop.ordering.domain.model.valueobject.Billing;
-import com.henio.algashop.ordering.domain.model.valueobject.Product;
-import com.henio.algashop.ordering.domain.model.valueobject.Quantity;
-import com.henio.algashop.ordering.domain.model.valueobject.Shipping;
+import com.henio.algashop.ordering.domain.model.valueobject.*;
 import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,8 +13,8 @@ public class OrderFactoryTest {
 
     @Test
     public void shouldGenerateFilledOrderThatCanBePlaced() {
-        Shipping shipping = OrderTestDataBuilder.aShipping();
-        Billing billing = OrderTestDataBuilder.aBilling();
+        Shipping shipping = ShippingTestDataBuilder.aShipping().build();
+        Billing billing = BillingTestDataBuilder.aBilling().build();
 
         Product product = ProductTestDataBuilder.aProduct().build();
         PaymentMethod paymentMethod = PaymentMethod.GATEWAY_BALANCE;
