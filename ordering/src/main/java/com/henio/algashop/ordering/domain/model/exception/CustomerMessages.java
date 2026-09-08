@@ -93,6 +93,12 @@ public class CustomerMessages {
     public static final String ERROR_SHOPPING_CART_IS_NOT_VALID =
             "Shopping cart is not valid";
 
+    public static final String ERROR_CUSTOMER_NOT_FOUND
+            = "Customer with id %s not found";
+
+    public static final String ERROR_CUSTOMER_ALREADY_HAVE_SHOPPING_CART
+            = "Customer with id %s already have shopping cart";
+
     private CustomerMessages() {
     }
 
