@@ -3,10 +3,10 @@ package com.henio.algashop.ordering.infrastructure.fake;
 import com.henio.algashop.ordering.domain.model.valueobject.Address;
 import com.henio.algashop.ordering.domain.model.valueobject.ZipCode;
 import org.springframework.stereotype.Component;
-import com.henio.algashop.ordering.domain.model.service.OriginAddress;
+import com.henio.algashop.ordering.domain.model.service.OriginAddressService;
 
 @Component
-public class FixedOriginAddressService implements OriginAddress {
+public class FixedOriginAddressServiceService implements OriginAddressService {
     @Override
     public Address originAddress() {
         return Address.builder()
