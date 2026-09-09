@@ -1,11 +1,11 @@
 package com.henio.algashop.ordering.domain.model.commons;
 
-import com.henio.algashop.ordering.domain.model.DomainException;
+import com.henio.algashop.ordering.domain.model.shared.DomainException;
 
 import java.util.Locale;
 import java.util.Objects;
 
-import static com.henio.algashop.ordering.domain.model.ErrorMessages.*;
+import static com.henio.algashop.ordering.domain.model.validation.ErrorMessages.*;
 
 public record Email(String value) {
     public Email(String value) {

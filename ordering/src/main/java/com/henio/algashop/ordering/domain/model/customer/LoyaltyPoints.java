@@ -1,11 +1,11 @@
 package com.henio.algashop.ordering.domain.model.customer;
 
-import com.henio.algashop.ordering.domain.model.DomainException;
+import com.henio.algashop.ordering.domain.model.shared.DomainException;
 
 import java.util.Objects;
 
-import static com.henio.algashop.ordering.domain.model.ErrorMessages.LOYALTY_POINTS_CANNOT_BE_NEGATIVE;
-import static com.henio.algashop.ordering.domain.model.ErrorMessages.LOYALTY_POINTS_TO_ADD_MUST_BE_GREATER_THAN_ZERO;
+import static com.henio.algashop.ordering.domain.model.validation.ErrorMessages.LOYALTY_POINTS_CANNOT_BE_NEGATIVE;
+import static com.henio.algashop.ordering.domain.model.validation.ErrorMessages.LOYALTY_POINTS_TO_ADD_MUST_BE_GREATER_THAN_ZERO;
 
 public record LoyaltyPoints(int value) {
 

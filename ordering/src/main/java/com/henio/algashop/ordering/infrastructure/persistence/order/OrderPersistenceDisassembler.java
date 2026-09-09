@@ -3,6 +3,8 @@ package com.henio.algashop.ordering.infrastructure.persistence.order;
 import com.henio.algashop.ordering.domain.model.commons.*;
 import com.henio.algashop.ordering.domain.model.order.*;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
+import com.henio.algashop.ordering.domain.model.order.shipping.Recipient;
+import com.henio.algashop.ordering.domain.model.order.shipping.Shipping;
 import com.henio.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddable;
 import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;

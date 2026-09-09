@@ -1,8 +1,8 @@
 package com.henio.algashop.ordering.domain.model.order;
 
-import com.henio.algashop.ordering.domain.model.DomainException;
+import com.henio.algashop.ordering.domain.model.shared.DomainException;
 
-import static com.henio.algashop.ordering.domain.model.ErrorMessages.*;
+import static com.henio.algashop.ordering.domain.model.validation.ErrorMessages.*;
 
 public class OrderCannotBePlacedException extends DomainException {
     private OrderCannotBePlacedException(String message) {

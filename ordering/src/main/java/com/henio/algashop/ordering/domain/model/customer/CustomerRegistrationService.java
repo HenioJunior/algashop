@@ -1,7 +1,7 @@
 package com.henio.algashop.ordering.domain.model.customer;
 
 import com.henio.algashop.ordering.domain.model.commons.*;
-import com.henio.algashop.ordering.domain.model.DomainService;
+import com.henio.algashop.ordering.domain.model.shared.DomainService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

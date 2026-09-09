@@ -1,9 +1,10 @@
 package com.henio.algashop.ordering.domain.model.order;
 
+import com.henio.algashop.ordering.domain.model.order.shipping.Shipping;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartItem;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartCantProceedToCheckoutException;
-import com.henio.algashop.ordering.domain.model.DomainService;
+import com.henio.algashop.ordering.domain.model.shared.DomainService;
 import com.henio.algashop.ordering.domain.model.product.Product;
 
 import java.util.Objects;

@@ -2,7 +2,7 @@ package com.henio.algashop.ordering.domain.model.customer;
 
 import com.henio.algashop.ordering.domain.model.order.Order;
 import com.henio.algashop.ordering.domain.model.order.OrderNotBelongsToCustomerException;
-import com.henio.algashop.ordering.domain.model.DomainService;
+import com.henio.algashop.ordering.domain.model.shared.DomainService;
 import com.henio.algashop.ordering.domain.model.commons.Money;
 
 import java.util.Objects;

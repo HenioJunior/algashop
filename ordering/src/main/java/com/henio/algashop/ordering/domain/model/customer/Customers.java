@@ -1,6 +1,6 @@
 package com.henio.algashop.ordering.domain.model.customer;
 
-import com.henio.algashop.ordering.domain.model.Repository;
+import com.henio.algashop.ordering.domain.model.shared.Repository;
 import com.henio.algashop.ordering.domain.model.commons.Email;
 
 import java.util.Optional;

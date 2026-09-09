@@ -1,6 +1,6 @@
 package com.henio.algashop.ordering.infrastructure.persistence.order;
 
-import com.henio.algashop.ordering.domain.model.IdGenerator;
+import com.henio.algashop.ordering.domain.model.shared.IdGenerator;
 import com.henio.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityTestDataBuilder;
 
 import java.math.BigDecimal;

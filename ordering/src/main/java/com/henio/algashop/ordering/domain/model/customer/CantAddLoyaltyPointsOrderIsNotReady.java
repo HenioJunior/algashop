@@ -1,8 +1,8 @@
 package com.henio.algashop.ordering.domain.model.customer;
 
-import com.henio.algashop.ordering.domain.model.DomainException;
+import com.henio.algashop.ordering.domain.model.shared.DomainException;
 
-import static com.henio.algashop.ordering.domain.model.ErrorMessages.ERROR_ORDER_IS_NOT_READY_YET;
+import static com.henio.algashop.ordering.domain.model.validation.ErrorMessages.ERROR_ORDER_IS_NOT_READY_YET;
 
 public class CantAddLoyaltyPointsOrderIsNotReady extends DomainException {
 

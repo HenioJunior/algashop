@@ -1,9 +1,11 @@
-package com.henio.algashop.ordering.domain.model;
+package com.henio.algashop.ordering.domain.model.validation;
+
+import com.henio.algashop.ordering.domain.model.shared.DomainException;
 
 import java.util.Objects;
 
-import static com.henio.algashop.ordering.domain.model.ErrorMessages.FIELD_CANNOT_BE_BLANK;
-import static com.henio.algashop.ordering.domain.model.ErrorMessages.FIELD_IS_REQUIRED;
+import static com.henio.algashop.ordering.domain.model.validation.ErrorMessages.FIELD_CANNOT_BE_BLANK;
+import static com.henio.algashop.ordering.domain.model.validation.ErrorMessages.FIELD_IS_REQUIRED;
 
 public final class FieldValidator {
 

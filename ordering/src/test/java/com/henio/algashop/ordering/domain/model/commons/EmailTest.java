@@ -1,6 +1,6 @@
 package com.henio.algashop.ordering.domain.model.commons;
 
-import com.henio.algashop.ordering.domain.model.DomainException;
+import com.henio.algashop.ordering.domain.model.shared.DomainException;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

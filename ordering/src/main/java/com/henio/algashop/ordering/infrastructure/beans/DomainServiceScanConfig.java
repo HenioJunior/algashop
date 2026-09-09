@@ -1,6 +1,6 @@
 package com.henio.algashop.ordering.infrastructure.beans;
 
-import com.henio.algashop.ordering.domain.model.DomainService;
+import com.henio.algashop.ordering.domain.model.shared.DomainService;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;

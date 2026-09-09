@@ -1,6 +1,6 @@
 package com.henio.algashop.ordering.domain.model.customer;
 
-import com.henio.algashop.ordering.domain.model.AggregateRoot;
+import com.henio.algashop.ordering.domain.model.shared.AggregateRoot;
 import com.henio.algashop.ordering.domain.model.commons.*;
 import lombok.Builder;
 

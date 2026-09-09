@@ -3,6 +3,7 @@ package com.henio.algashop.ordering.domain.model.order;
 import com.henio.algashop.ordering.domain.model.commons.Document;
 import com.henio.algashop.ordering.domain.model.commons.FullName;
 import com.henio.algashop.ordering.domain.model.commons.Phone;
+import com.henio.algashop.ordering.domain.model.order.shipping.Recipient;
 
 public class RecipientTestDataBuilder {
 

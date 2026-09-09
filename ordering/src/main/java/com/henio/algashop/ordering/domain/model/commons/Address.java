@@ -1,6 +1,6 @@
 package com.henio.algashop.ordering.domain.model.commons;
 
-import com.henio.algashop.ordering.domain.model.FieldValidator;
+import com.henio.algashop.ordering.domain.model.validation.FieldValidator;
 import lombok.Builder;
 
 @Builder(toBuilder = true)

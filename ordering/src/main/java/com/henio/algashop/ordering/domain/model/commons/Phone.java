@@ -1,11 +1,11 @@
 package com.henio.algashop.ordering.domain.model.commons;
 
-import com.henio.algashop.ordering.domain.model.DomainException;
+import com.henio.algashop.ordering.domain.model.shared.DomainException;
 
 import java.util.Objects;
 
-import static com.henio.algashop.ordering.domain.model.ErrorMessages.PHONE_NUMBER_CANNOT_BE_BLANK;
-import static com.henio.algashop.ordering.domain.model.ErrorMessages.PHONE_NUMBER_IS_REQUIRED;
+import static com.henio.algashop.ordering.domain.model.validation.ErrorMessages.PHONE_NUMBER_CANNOT_BE_BLANK;
+import static com.henio.algashop.ordering.domain.model.validation.ErrorMessages.PHONE_NUMBER_IS_REQUIRED;
 
 public record Phone(String value) {
 

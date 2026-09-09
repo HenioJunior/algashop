@@ -1,4 +1,4 @@
-package com.henio.algashop.ordering.domain.model;
+package com.henio.algashop.ordering.domain.model.shared;
 
 import java.lang.annotation.*;
 

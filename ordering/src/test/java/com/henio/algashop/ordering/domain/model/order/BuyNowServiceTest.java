@@ -5,6 +5,7 @@ import com.henio.algashop.ordering.domain.model.commons.Money;
 import com.henio.algashop.ordering.domain.model.commons.Quantity;
 import com.henio.algashop.ordering.domain.model.customer.Customer;
 import com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
+import com.henio.algashop.ordering.domain.model.order.shipping.Shipping;
 import com.henio.algashop.ordering.domain.model.order.shipping.ShippingTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.product.Product;
 import com.henio.algashop.ordering.domain.model.product.ProductName;

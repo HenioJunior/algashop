@@ -1,6 +1,7 @@
 package com.henio.algashop.ordering.domain.model.order;
 
-import com.henio.algashop.ordering.domain.model.AggregateRoot;
+import com.henio.algashop.ordering.domain.model.order.shipping.Shipping;
+import com.henio.algashop.ordering.domain.model.shared.AggregateRoot;
 import com.henio.algashop.ordering.domain.model.commons.Money;
 import com.henio.algashop.ordering.domain.model.commons.Quantity;
 import com.henio.algashop.ordering.domain.model.product.Product;

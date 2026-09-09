@@ -3,7 +3,7 @@ package com.henio.algashop.ordering.domain.model.shoppingcart;
 import com.henio.algashop.ordering.domain.model.customer.CustomerAlreadyHaveShoppingCartException;
 import com.henio.algashop.ordering.domain.model.customer.CustomerNotFoundException;
 import com.henio.algashop.ordering.domain.model.customer.Customers;
-import com.henio.algashop.ordering.domain.model.DomainService;
+import com.henio.algashop.ordering.domain.model.shared.DomainService;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import lombok.RequiredArgsConstructor;
 

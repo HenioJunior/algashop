@@ -1,8 +1,8 @@
 package com.henio.algashop.ordering.domain.model.customer;
 
-import com.henio.algashop.ordering.domain.model.DomainException;
+import com.henio.algashop.ordering.domain.model.shared.DomainException;
 
-import static com.henio.algashop.ordering.domain.model.ErrorMessages.ERROR_EMAIL_ALREADY_REGISTERED;
+import static com.henio.algashop.ordering.domain.model.validation.ErrorMessages.ERROR_EMAIL_ALREADY_REGISTERED;
 
 public class CustomerEmailIsInUseException extends DomainException {
 

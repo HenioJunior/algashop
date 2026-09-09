@@ -1,6 +1,6 @@
 package com.henio.algashop.ordering.domain.model.order;
 
-import com.henio.algashop.ordering.domain.model.Repository;
+import com.henio.algashop.ordering.domain.model.shared.Repository;
 import com.henio.algashop.ordering.domain.model.commons.Money;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 

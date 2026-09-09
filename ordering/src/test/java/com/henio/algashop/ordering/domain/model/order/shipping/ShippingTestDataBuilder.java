@@ -1,8 +1,6 @@
 package com.henio.algashop.ordering.domain.model.order.shipping;
 
 import com.henio.algashop.ordering.domain.model.commons.*;
-import com.henio.algashop.ordering.domain.model.order.Recipient;
-import com.henio.algashop.ordering.domain.model.order.Shipping;
 
 import java.time.LocalDate;
 

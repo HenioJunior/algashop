@@ -1,13 +1,13 @@
 package com.henio.algashop.ordering.domain.model.customer;
 
-import com.henio.algashop.ordering.domain.model.DomainException;
+import com.henio.algashop.ordering.domain.model.shared.DomainException;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Objects;
 
-import static com.henio.algashop.ordering.domain.model.ErrorMessages.BIRTH_DATE_IS_REQUIRED;
-import static com.henio.algashop.ordering.domain.model.ErrorMessages.BIRTH_DATE_MUST_BE_IN_PAST;
+import static com.henio.algashop.ordering.domain.model.validation.ErrorMessages.BIRTH_DATE_IS_REQUIRED;
+import static com.henio.algashop.ordering.domain.model.validation.ErrorMessages.BIRTH_DATE_MUST_BE_IN_PAST;
 
 public record BirthDate(LocalDate value) {
 

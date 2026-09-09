@@ -1,6 +1,8 @@
 package com.henio.algashop.ordering.domain.model.order;
 
 import com.henio.algashop.ordering.domain.model.commons.*;
+import com.henio.algashop.ordering.domain.model.order.shipping.Recipient;
+import com.henio.algashop.ordering.domain.model.order.shipping.Shipping;
 import com.henio.algashop.ordering.domain.model.order.shipping.ShippingTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.product.Product;

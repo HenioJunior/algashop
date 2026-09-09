@@ -1,4 +1,4 @@
-package com.henio.algashop.ordering.domain.model.order;
+package com.henio.algashop.ordering.domain.model.order.shipping;
 
 import com.henio.algashop.ordering.domain.model.commons.Document;
 import com.henio.algashop.ordering.domain.model.commons.FullName;

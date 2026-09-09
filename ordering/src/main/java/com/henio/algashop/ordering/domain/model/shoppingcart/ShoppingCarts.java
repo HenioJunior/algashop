@@ -1,6 +1,5 @@
 package com.henio.algashop.ordering.domain.model.shoppingcart;
 
-import com.henio.algashop.ordering.domain.model.RemoveCapableRepository;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 
 import java.util.Optional;

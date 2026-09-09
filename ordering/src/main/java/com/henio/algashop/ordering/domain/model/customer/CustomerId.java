@@ -1,6 +1,6 @@
 package com.henio.algashop.ordering.domain.model.customer;
 
-import com.henio.algashop.ordering.domain.model.IdGenerator;
+import com.henio.algashop.ordering.domain.model.shared.IdGenerator;
 import io.hypersistence.tsid.TSID;
 
 import java.util.Objects;
