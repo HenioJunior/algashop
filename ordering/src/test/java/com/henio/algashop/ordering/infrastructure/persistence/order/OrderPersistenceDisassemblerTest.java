@@ -1,0 +1,46 @@
+package com.henio.algashop.ordering.infrastructure.persistence.order;
+
+import com.henio.algashop.ordering.domain.model.order.Order;
+import com.henio.algashop.ordering.domain.model.order.OrderStatus;
+import com.henio.algashop.ordering.domain.model.order.PaymentMethod;
+import com.henio.algashop.ordering.domain.model.commons.Money;
+import com.henio.algashop.ordering.domain.model.commons.Quantity;
+import com.henio.algashop.ordering.domain.model.customer.CustomerId;
+import com.henio.algashop.ordering.domain.model.order.OrderId;
+import io.hypersistence.tsid.TSID;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class OrderPersistenceDisassemblerTest {
+
+    private OrderPersistenceDisassembler disassembler;
+    private OrderItemPersistenceDisassembler itemDisassembler;
+
+    @BeforeEach
+    void setUp() {
+        itemDisassembler = new OrderItemPersistenceDisassembler();
+        disassembler = new OrderPersistenceDisassembler(itemDisassembler);
+    }
+
+    @Test
+    void shouldConvertFromPersistence() {
+        OrderPersistenceEntity persistenceEntity = OrderPersistenceEntityTestDataBuilder.existingOrder();
+        Order domainEntity = disassembler.toDomain(persistenceEntity);
+        assertThat(domainEntity).satisfies(
+                s -> assertThat(s.id()).isEqualTo(new OrderId(TSID.from(persistenceEntity.getId()))),
+                s -> assertThat(s.customerId()).isEqualTo(new CustomerId(TSID.from(persistenceEntity.getCustomer().getId()))),
+                s -> assertThat(s.totalAmount()).isEqualTo(new Money(persistenceEntity.getTotalAmount())),
+                s -> assertThat(s.totalItems()).isEqualTo(new Quantity(persistenceEntity.getTotalItems())),
+                s -> assertThat(s.placedAt()).isEqualTo(persistenceEntity.getPlacedAt()),
+                s -> assertThat(s.paidAt()).isEqualTo(persistenceEntity.getPaidAt()),
+                s -> assertThat(s.canceledAt()).isEqualTo(persistenceEntity.getCanceledAt()),
+                s -> assertThat(s.readyAt()).isEqualTo(persistenceEntity.getReadyAt()),
+                s -> assertThat(s.status()).isEqualTo(OrderStatus.valueOf(persistenceEntity.getStatus())),
+                s -> assertThat(s.paymentMethod()).isEqualTo(PaymentMethod.valueOf(persistenceEntity.getPaymentMethod())),
+                s -> assertThat(s.items().size()).isEqualTo(persistenceEntity.getItems().size())
+        );
+
+    }
+}
