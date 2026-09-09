@@ -2,6 +2,8 @@ package com.henio.algashop.ordering.application.service;
 
 import com.henio.algashop.ordering.application.model.AddressData;
 import com.henio.algashop.ordering.application.model.CustomerInput;
+import com.henio.algashop.ordering.application.model.CustomerOutput;
+import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import io.hypersistence.tsid.TSID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +42,15 @@ class CustomerManagementApplicationServiceIT {
 
         TSID customerId = customerManagementApplicationService.create(input);
         assertThat(customerId).isNotNull();
+
+        CustomerOutput customerOutput = customerManagementApplicationService.findById(new CustomerId(customerId));
+
+        assertThat(customerOutput.getId()).isEqualTo(customerId.toString());
+        assertThat(customerOutput.getFirstName()).isEqualTo("John");
+        assertThat(customerOutput.getLastName()).isEqualTo("Doe");
+        assertThat(customerOutput.getEmail()).isEqualTo("johndoe@email.com");
+        assertThat(customerOutput.getBirthDate()).isEqualTo(LocalDate.of(1991, 7,5));
+        assertThat(customerOutput.getRegisteredAt()).isNotNull();
+
     }
 }
