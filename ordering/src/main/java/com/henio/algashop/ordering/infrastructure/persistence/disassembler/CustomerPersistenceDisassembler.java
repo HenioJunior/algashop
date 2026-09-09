@@ -1,8 +1,10 @@
 package com.henio.algashop.ordering.infrastructure.persistence.disassembler;
 
-import com.henio.algashop.ordering.domain.model.entity.Customer;
-import com.henio.algashop.ordering.domain.model.valueobject.*;
-import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
+import com.henio.algashop.ordering.domain.model.commons.*;
+import com.henio.algashop.ordering.domain.model.customer.BirthDate;
+import com.henio.algashop.ordering.domain.model.customer.Customer;
+import com.henio.algashop.ordering.domain.model.customer.LoyaltyPoints;
+import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.AddressEmbeddable;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;
 import io.hypersistence.tsid.TSID;

@@ -1,8 +1,8 @@
 package com.henio.algashop.ordering.infrastructure.persistence.adapter;
 
-import com.henio.algashop.ordering.domain.model.service.ShoppingCartProductAdjustmentService;
-import com.henio.algashop.ordering.domain.model.valueobject.Money;
-import com.henio.algashop.ordering.domain.model.valueobject.id.ProductId;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartProductAdjustmentService;
+import com.henio.algashop.ordering.domain.model.commons.Money;
+import com.henio.algashop.ordering.domain.model.product.ProductId;
 import com.henio.algashop.ordering.infrastructure.persistence.repository.ShoppingCartPersistenceEntityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

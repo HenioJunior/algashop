@@ -1,12 +1,12 @@
 package com.henio.algashop.ordering.infrastructure.persistence.disassembler;
 
-import com.henio.algashop.ordering.domain.model.entity.Order;
-import com.henio.algashop.ordering.domain.model.entity.OrderStatus;
-import com.henio.algashop.ordering.domain.model.entity.PaymentMethod;
-import com.henio.algashop.ordering.domain.model.valueobject.Money;
-import com.henio.algashop.ordering.domain.model.valueobject.Quantity;
-import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
-import com.henio.algashop.ordering.domain.model.valueobject.id.OrderId;
+import com.henio.algashop.ordering.domain.model.order.Order;
+import com.henio.algashop.ordering.domain.model.order.OrderStatus;
+import com.henio.algashop.ordering.domain.model.order.PaymentMethod;
+import com.henio.algashop.ordering.domain.model.commons.Money;
+import com.henio.algashop.ordering.domain.model.commons.Quantity;
+import com.henio.algashop.ordering.domain.model.customer.CustomerId;
+import com.henio.algashop.ordering.domain.model.order.OrderId;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntityTestDataBuilder;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import io.hypersistence.tsid.TSID;

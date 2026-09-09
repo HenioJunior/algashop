@@ -1,0 +1,19 @@
+package com.henio.algashop.ordering.domain.model.order;
+
+import com.henio.algashop.ordering.domain.model.commons.Address;
+import com.henio.algashop.ordering.domain.model.commons.Money;
+import lombok.Builder;
+
+import java.time.LocalDate;
+import java.util.Objects;
+
+@Builder(toBuilder = true)
+public record Shipping(Recipient recipient, Address address, Money cost, LocalDate expectedDate) {
+
+    public Shipping {
+    Objects.requireNonNull(recipient, "Shipping recipient is required");
+    Objects.requireNonNull(address, "Shipping address is required");
+    Objects.requireNonNull(cost, "Shipping cost is required");
+    Objects.requireNonNull(expectedDate, "Expected date is required");
+    }
+}

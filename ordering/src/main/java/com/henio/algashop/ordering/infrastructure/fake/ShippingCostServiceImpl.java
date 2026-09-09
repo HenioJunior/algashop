@@ -1,9 +1,8 @@
 package com.henio.algashop.ordering.infrastructure.fake;
 
-import com.henio.algashop.ordering.domain.model.service.ShippingCostService;
-import com.henio.algashop.ordering.domain.model.valueobject.Money;
+import com.henio.algashop.ordering.domain.model.order.shipping.ShippingCostService;
+import com.henio.algashop.ordering.domain.model.commons.Money;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

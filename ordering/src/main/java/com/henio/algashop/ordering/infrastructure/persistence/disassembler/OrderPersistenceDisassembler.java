@@ -1,11 +1,8 @@
 package com.henio.algashop.ordering.infrastructure.persistence.disassembler;
 
-import com.henio.algashop.ordering.domain.model.entity.Order;
-import com.henio.algashop.ordering.domain.model.entity.OrderStatus;
-import com.henio.algashop.ordering.domain.model.entity.PaymentMethod;
-import com.henio.algashop.ordering.domain.model.valueobject.*;
-import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
-import com.henio.algashop.ordering.domain.model.valueobject.id.OrderId;
+import com.henio.algashop.ordering.domain.model.commons.*;
+import com.henio.algashop.ordering.domain.model.order.*;
+import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.AddressEmbeddable;
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.RecipientEmbeddable;

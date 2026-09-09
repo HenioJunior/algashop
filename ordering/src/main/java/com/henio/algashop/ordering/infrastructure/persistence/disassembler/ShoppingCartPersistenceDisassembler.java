@@ -1,14 +1,14 @@
 package com.henio.algashop.ordering.infrastructure.persistence.disassembler;
 
-import com.henio.algashop.ordering.domain.model.entity.ShoppingCart;
-import com.henio.algashop.ordering.domain.model.entity.ShoppingCartItem;
-import com.henio.algashop.ordering.domain.model.valueobject.Money;
-import com.henio.algashop.ordering.domain.model.valueobject.ProductName;
-import com.henio.algashop.ordering.domain.model.valueobject.Quantity;
-import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
-import com.henio.algashop.ordering.domain.model.valueobject.id.ProductId;
-import com.henio.algashop.ordering.domain.model.valueobject.id.ShoppingCartId;
-import com.henio.algashop.ordering.domain.model.valueobject.id.ShoppingCartItemId;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartItem;
+import com.henio.algashop.ordering.domain.model.commons.Money;
+import com.henio.algashop.ordering.domain.model.product.ProductName;
+import com.henio.algashop.ordering.domain.model.commons.Quantity;
+import com.henio.algashop.ordering.domain.model.customer.CustomerId;
+import com.henio.algashop.ordering.domain.model.product.ProductId;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartItemId;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.ShoppingCartItemPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.ShoppingCartPersistenceEntity;
 import io.hypersistence.tsid.TSID;

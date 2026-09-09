@@ -1,9 +1,9 @@
 package com.henio.algashop.ordering.infrastructure.persistence.adapter;
 
-import com.henio.algashop.ordering.domain.model.entity.Customer;
-import com.henio.algashop.ordering.domain.model.repository.Customers;
-import com.henio.algashop.ordering.domain.model.valueobject.Email;
-import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
+import com.henio.algashop.ordering.domain.model.customer.Customer;
+import com.henio.algashop.ordering.domain.model.customer.Customers;
+import com.henio.algashop.ordering.domain.model.commons.Email;
+import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.infrastructure.persistence.AggregateVersionUpdater;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.disassembler.CustomerPersistenceDisassembler;

@@ -1,10 +1,10 @@
 package com.henio.algashop.ordering.infrastructure.fake;
 
-import com.henio.algashop.ordering.domain.model.service.ProductCatalogService;
-import com.henio.algashop.ordering.domain.model.valueobject.Money;
-import com.henio.algashop.ordering.domain.model.valueobject.Product;
-import com.henio.algashop.ordering.domain.model.valueobject.ProductName;
-import com.henio.algashop.ordering.domain.model.valueobject.id.ProductId;
+import com.henio.algashop.ordering.domain.model.product.ProductCatalogService;
+import com.henio.algashop.ordering.domain.model.commons.Money;
+import com.henio.algashop.ordering.domain.model.product.Product;
+import com.henio.algashop.ordering.domain.model.product.ProductName;
+import com.henio.algashop.ordering.domain.model.product.ProductId;
 
 import java.util.Optional;
 

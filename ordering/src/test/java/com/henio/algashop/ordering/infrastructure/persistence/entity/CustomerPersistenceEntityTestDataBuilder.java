@@ -5,7 +5,7 @@ import com.henio.algashop.ordering.infrastructure.persistence.embeddable.Address
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
-import static com.henio.algashop.ordering.domain.model.entity.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+import static com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 
 public class CustomerPersistenceEntityTestDataBuilder {
 

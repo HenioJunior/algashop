@@ -1,6 +1,6 @@
 package com.henio.algashop.ordering.infrastructure.persistence.repository;
 
-import com.henio.algashop.ordering.domain.model.entity.CustomerTestDataBuilder;
+import com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.henio.algashop.ordering.infrastructure.persistence.config.SpringDataAuditingConfig;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntityTestDataBuilder;

@@ -1,10 +1,10 @@
 package com.henio.algashop.ordering.infrastructure.persistence.assembler;
 
-import com.henio.algashop.ordering.domain.model.entity.Order;
-import com.henio.algashop.ordering.domain.model.valueobject.Address;
-import com.henio.algashop.ordering.domain.model.valueobject.Billing;
-import com.henio.algashop.ordering.domain.model.valueobject.Recipient;
-import com.henio.algashop.ordering.domain.model.valueobject.Shipping;
+import com.henio.algashop.ordering.domain.model.order.Order;
+import com.henio.algashop.ordering.domain.model.commons.Address;
+import com.henio.algashop.ordering.domain.model.order.Billing;
+import com.henio.algashop.ordering.domain.model.order.Recipient;
+import com.henio.algashop.ordering.domain.model.order.Shipping;
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.AddressEmbeddable;
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.RecipientEmbeddable;

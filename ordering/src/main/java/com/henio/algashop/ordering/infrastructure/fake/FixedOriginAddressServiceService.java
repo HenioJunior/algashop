@@ -1,9 +1,9 @@
 package com.henio.algashop.ordering.infrastructure.fake;
 
-import com.henio.algashop.ordering.domain.model.valueobject.Address;
-import com.henio.algashop.ordering.domain.model.valueobject.ZipCode;
+import com.henio.algashop.ordering.domain.model.commons.Address;
+import com.henio.algashop.ordering.domain.model.commons.ZipCode;
 import org.springframework.stereotype.Component;
-import com.henio.algashop.ordering.domain.model.service.OriginAddressService;
+import com.henio.algashop.ordering.domain.model.order.shipping.OriginAddressService;
 
 @Component
 public class FixedOriginAddressServiceService implements OriginAddressService {

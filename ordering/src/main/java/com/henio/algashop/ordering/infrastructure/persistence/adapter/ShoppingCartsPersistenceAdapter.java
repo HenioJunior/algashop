@@ -1,9 +1,9 @@
 package com.henio.algashop.ordering.infrastructure.persistence.adapter;
 
-import com.henio.algashop.ordering.domain.model.entity.ShoppingCart;
-import com.henio.algashop.ordering.domain.model.repository.ShoppingCarts;
-import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
-import com.henio.algashop.ordering.domain.model.valueobject.id.ShoppingCartId;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCarts;
+import com.henio.algashop.ordering.domain.model.customer.CustomerId;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
 import com.henio.algashop.ordering.infrastructure.persistence.AggregateVersionUpdater;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.ShoppingCartPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.disassembler.ShoppingCartPersistenceDisassembler;

@@ -1,7 +1,7 @@
 package com.henio.algashop.ordering.infrastructure.persistence.assembler;
 
-import com.henio.algashop.ordering.domain.model.entity.ShoppingCart;
-import com.henio.algashop.ordering.domain.model.entity.ShoppingCartItem;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartItem;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.ShoppingCartItemPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.ShoppingCartPersistenceEntity;

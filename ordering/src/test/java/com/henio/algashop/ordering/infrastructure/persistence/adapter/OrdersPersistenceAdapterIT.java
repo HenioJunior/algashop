@@ -1,10 +1,10 @@
 package com.henio.algashop.ordering.infrastructure.persistence.adapter;
 
 
-import com.henio.algashop.ordering.domain.model.entity.CustomerTestDataBuilder;
-import com.henio.algashop.ordering.domain.model.entity.Order;
-import com.henio.algashop.ordering.domain.model.entity.OrderStatus;
-import com.henio.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
+import com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
+import com.henio.algashop.ordering.domain.model.order.Order;
+import com.henio.algashop.ordering.domain.model.order.OrderStatus;
+import com.henio.algashop.ordering.domain.model.order.OrderTestDataBuilder;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.OrderItemPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceAssembler;

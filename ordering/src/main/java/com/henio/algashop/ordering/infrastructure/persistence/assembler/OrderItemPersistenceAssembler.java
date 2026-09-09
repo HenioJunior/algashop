@@ -1,7 +1,7 @@
 package com.henio.algashop.ordering.infrastructure.persistence.assembler;
 
-import com.henio.algashop.ordering.domain.model.entity.Order;
-import com.henio.algashop.ordering.domain.model.entity.OrderItem;
+import com.henio.algashop.ordering.domain.model.order.Order;
+import com.henio.algashop.ordering.domain.model.order.OrderItem;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderItemPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import org.springframework.stereotype.Component;

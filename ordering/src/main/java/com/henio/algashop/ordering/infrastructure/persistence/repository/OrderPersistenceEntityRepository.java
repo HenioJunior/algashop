@@ -1,14 +1,11 @@
 package com.henio.algashop.ordering.infrastructure.persistence.repository;
 
-import com.henio.algashop.ordering.domain.model.valueobject.Money;
-import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
-import java.time.Year;
 import java.util.List;
 
 public interface OrderPersistenceEntityRepository extends JpaRepository<OrderPersistenceEntity, Long> {

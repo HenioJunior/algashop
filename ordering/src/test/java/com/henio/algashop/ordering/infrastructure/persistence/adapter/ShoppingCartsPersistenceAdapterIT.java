@@ -1,11 +1,11 @@
 package com.henio.algashop.ordering.infrastructure.persistence.adapter;
 
 
-import com.henio.algashop.ordering.domain.model.entity.Customer;
-import com.henio.algashop.ordering.domain.model.entity.CustomerTestDataBuilder;
-import com.henio.algashop.ordering.domain.model.entity.ShoppingCart;
-import com.henio.algashop.ordering.domain.model.entity.ShoppingCartTestDataBuilder;
-import com.henio.algashop.ordering.domain.model.valueobject.id.CustomerId;
+import com.henio.algashop.ordering.domain.model.customer.Customer;
+import com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
+import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.assembler.ShoppingCartPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.config.SpringDataAuditingConfig;

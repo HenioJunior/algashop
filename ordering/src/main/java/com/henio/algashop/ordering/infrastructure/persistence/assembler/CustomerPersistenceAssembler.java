@@ -1,7 +1,7 @@
 package com.henio.algashop.ordering.infrastructure.persistence.assembler;
 
-import com.henio.algashop.ordering.domain.model.entity.Customer;
-import com.henio.algashop.ordering.domain.model.valueobject.Address;
+import com.henio.algashop.ordering.domain.model.customer.Customer;
+import com.henio.algashop.ordering.domain.model.commons.Address;
 import com.henio.algashop.ordering.infrastructure.persistence.embeddable.AddressEmbeddable;
 import com.henio.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;
 import org.springframework.stereotype.Component;
