@@ -1,5 +1,6 @@
-package com.henio.algashop.ordering.application.model;
+package com.henio.algashop.ordering.application.customer.management;
 
+import com.henio.algashop.ordering.application.commons.AddressData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

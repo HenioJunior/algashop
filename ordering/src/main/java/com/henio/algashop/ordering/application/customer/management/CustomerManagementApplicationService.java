@@ -1,8 +1,6 @@
-package com.henio.algashop.ordering.application.service;
+package com.henio.algashop.ordering.application.customer.management;
 
-import com.henio.algashop.ordering.application.model.AddressData;
-import com.henio.algashop.ordering.application.model.CustomerInput;
-import com.henio.algashop.ordering.application.model.CustomerOutput;
+import com.henio.algashop.ordering.application.commons.AddressData;
 import com.henio.algashop.ordering.domain.model.commons.*;
 import com.henio.algashop.ordering.domain.model.customer.*;
 import io.hypersistence.tsid.TSID;
@@ -75,5 +73,37 @@ public class CustomerManagementApplicationService {
                         .zipCode(customer.address().zipCode().value())
                         .build())
                 .build();
+    }
+
+    @Transactional
+    public void update(String rawCustomerId, CustomerUpdateInput input) {
+        Objects.requireNonNull(input);
+        Objects.requireNonNull(rawCustomerId);
+
+        Customer customer = customers.ofId(new CustomerId(TSID.from(rawCustomerId)))
+                .orElseThrow(() -> new CustomerNotFoundException(new CustomerId(TSID.from(rawCustomerId))));
+
+        customer.changeName(new FullName(input.getFirstName(), input.getLastName()));
+        customer.changePhone(new Phone(input.getPhone()));
+
+        if (Boolean.TRUE.equals(input.getPromotionNotificationsAllowed())) {
+            customer.enablePromotionNotifications();
+        } else {
+            customer.disablePromotionNotifications();
+        }
+
+        AddressData address = input.getAddress();
+
+        customer.changeAddress(Address.builder()
+                .zipCode(new ZipCode(address.getZipCode()))
+                .state(address.getState())
+                .city(address.getCity())
+                .neighborhood(address.getNeighborhood())
+                .street(address.getStreet())
+                .number(address.getNumber())
+                .complement(address.getComplement())
+                .build());
+
+        customers.add(customer);
     }
 }

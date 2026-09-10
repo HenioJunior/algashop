@@ -1,4 +1,4 @@
-package com.henio.algashop.ordering.application.model;
+package com.henio.algashop.ordering.application.commons;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

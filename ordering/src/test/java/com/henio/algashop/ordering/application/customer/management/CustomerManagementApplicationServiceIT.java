@@ -1,8 +1,6 @@
-package com.henio.algashop.ordering.application.service;
+package com.henio.algashop.ordering.application.customer.management;
 
-import com.henio.algashop.ordering.application.model.AddressData;
-import com.henio.algashop.ordering.application.model.CustomerInput;
-import com.henio.algashop.ordering.application.model.CustomerOutput;
+import com.henio.algashop.ordering.application.commons.AddressData;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import io.hypersistence.tsid.TSID;
 import org.junit.jupiter.api.Test;
@@ -51,6 +49,35 @@ class CustomerManagementApplicationServiceIT {
         assertThat(customerOutput.getEmail()).isEqualTo("johndoe@email.com");
         assertThat(customerOutput.getBirthDate()).isEqualTo(LocalDate.of(1991, 7,5));
         assertThat(customerOutput.getRegisteredAt()).isNotNull();
+    }
 
+    @Test
+    void shouldUpdateCustomer() {
+        CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
+        CustomerUpdateInput customerUpdate = CustomerUpdateInputTestDataBuilder.aCustomerUpdate().build();
+
+        TSID customerId = customerManagementApplicationService.create(customerInput);
+        assertThat(customerId).isNotNull();
+
+        customerManagementApplicationService.update(customerId.toString(), customerUpdate);
+
+        CustomerOutput customerOutput = customerManagementApplicationService.findById(new CustomerId(customerId));
+
+        assertThat(customerOutput)
+                .extracting(
+                        CustomerOutput::getId,
+                        CustomerOutput::getFirstName,
+                        CustomerOutput::getLastName,
+                        CustomerOutput::getEmail,
+                        CustomerOutput::getBirthDate
+                ).containsExactly(
+                        customerId.toString(),
+                        "Matt",
+                        "Damon",
+                        "johndoe@email.com",
+                        LocalDate.of(1991, 7,5)
+                );
+
+        assertThat(customerOutput.getRegisteredAt()).isNotNull();
     }
 }
