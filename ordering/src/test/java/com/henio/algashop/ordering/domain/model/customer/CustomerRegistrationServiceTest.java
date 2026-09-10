@@ -22,7 +22,7 @@ class CustomerRegistrationServiceTest {
 
     @Test
     public void shouldRegister() {
-        Mockito.when(customers.isEmailUnique(Mockito.any(Email.class), Mockito.any(CustomerId.class)))
+        Mockito.when(customers.isEmailUnique(Mockito.any(Email.class)))
                 .thenReturn(true);
 
         Customer customer = customerRegistrationService.register(

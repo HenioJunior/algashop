@@ -63,8 +63,8 @@ public class CustomersPersistenceAdapter implements Customers {
     }
 
     @Override
-    public boolean isEmailUnique(Email email, CustomerId exceptCustomerId) {
-        return !persistenceRepository.existsByEmailAndIdNot(email.value(), exceptCustomerId.value().toLong());
+    public boolean isEmailUnique(Email email) {
+        return !persistenceRepository.existsByEmail(email.value());
     }
 
     private void update(Customer aggregateRoot, CustomerPersistenceEntity entity) {

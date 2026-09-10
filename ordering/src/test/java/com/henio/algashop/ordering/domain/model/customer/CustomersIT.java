@@ -21,6 +21,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @DataJpaTest
 @Import({
         CustomersPersistenceAdapter.class,
@@ -50,7 +52,7 @@ public class CustomersIT {
 
     @BeforeEach
     void cleanup() {
-        newTransaction.executeWithoutResult(status -> repository.deleteAll());
+        newTransaction.executeWithoutResult(_ -> repository.deleteAll());
     }
 
     @Test
@@ -62,37 +64,37 @@ public class CustomersIT {
         Customer persistedCustomer = customers.ofId(customer.id())
                 .orElseThrow();
 
-        Assertions.assertThat(persistedCustomer.id())
+        assertThat(persistedCustomer.id())
                 .isEqualTo(customer.id());
 
-        Assertions.assertThat(persistedCustomer.fullName())
+        assertThat(persistedCustomer.fullName())
                 .isEqualTo(customer.fullName());
 
-        Assertions.assertThat(persistedCustomer.birthDate())
+        assertThat(persistedCustomer.birthDate())
                 .isEqualTo(customer.birthDate());
 
-        Assertions.assertThat(persistedCustomer.email())
+        assertThat(persistedCustomer.email())
                 .isEqualTo(customer.email());
 
-        Assertions.assertThat(persistedCustomer.phone())
+        assertThat(persistedCustomer.phone())
                 .isEqualTo(customer.phone());
 
-        Assertions.assertThat(persistedCustomer.document())
+        assertThat(persistedCustomer.document())
                 .isEqualTo(customer.document());
 
-        Assertions.assertThat(persistedCustomer.isPromotionNotificationsAllowed())
+        assertThat(persistedCustomer.isPromotionNotificationsAllowed())
                 .isEqualTo(customer.isPromotionNotificationsAllowed());
 
-        Assertions.assertThat(persistedCustomer.loyaltyPoints())
+        assertThat(persistedCustomer.loyaltyPoints())
                 .isEqualTo(customer.loyaltyPoints());
 
-        Assertions.assertThat(persistedCustomer.address())
+        assertThat(persistedCustomer.address())
                 .isEqualTo(customer.address());
 
-        Assertions.assertThat(persistedCustomer.registeredAt())
+        assertThat(persistedCustomer.registeredAt())
                 .isEqualTo(customer.registeredAt());
 
-        Assertions.assertThat(persistedCustomer.version())
+        assertThat(persistedCustomer.version())
                 .isNotNull();
     }
 
@@ -100,18 +102,18 @@ public class CustomersIT {
     void shouldCheckIfCustomerExists() {
         Customer customer = CustomerTestDataBuilder.brandNewCustomer();
 
-        Assertions.assertThat(customers.exists(customer.id()))
+        assertThat(customers.exists(customer.id()))
                 .isFalse();
 
         customers.add(customer);
 
-        Assertions.assertThat(customers.exists(customer.id()))
+        assertThat(customers.exists(customer.id()))
                 .isTrue();
     }
 
     @Test
     void shouldCountExistingCustomers() {
-        Assertions.assertThat(customers.count())
+        assertThat(customers.count())
                 .isZero();
 
         Customer customer1 = CustomerTestDataBuilder.brandNewCustomer();
@@ -120,7 +122,7 @@ public class CustomersIT {
         customers.add(customer1);
         customers.add(customer2);
 
-        Assertions.assertThat(customers.count())
+        assertThat(customers.count())
                 .isEqualTo(2L);
     }
 
@@ -136,16 +138,16 @@ public class CustomersIT {
 
         customers.add(customer);
 
-        Assertions.assertThat(customer.version())
+        assertThat(customer.version())
                 .isGreaterThan(previousVersion);
 
         Customer updatedCustomer = customers.ofId(customer.id())
                 .orElseThrow();
 
-        Assertions.assertThat(updatedCustomer.email())
+        assertThat(updatedCustomer.email())
                 .isEqualTo(new Email("new@email.com"));
 
-        Assertions.assertThat(updatedCustomer.version())
+        assertThat(updatedCustomer.version())
                 .isEqualTo(customer.version());
     }
 
@@ -153,19 +155,19 @@ public class CustomersIT {
     void shouldNotAllowStaleUpdates() {
         Customer customer = CustomerTestDataBuilder.brandNewCustomer();
 
-        newTransaction.executeWithoutResult(status ->
+        newTransaction.executeWithoutResult(_ ->
                 customers.add(customer)
         );
 
-        Customer customerT1 = newTransaction.execute(status ->
+        Customer customerT1 = newTransaction.execute(_ ->
                 customers.ofId(customer.id()).orElseThrow()
         );
 
-        Customer customerT2 = newTransaction.execute(status ->
+        Customer customerT2 = newTransaction.execute(_ ->
                 customers.ofId(customer.id()).orElseThrow()
         );
 
-        newTransaction.executeWithoutResult(status -> {
+        newTransaction.executeWithoutResult(_ -> {
             customerT1.changeEmail(new Email("customer1@email.com"));
             customers.add(customerT1);
         });
@@ -173,7 +175,7 @@ public class CustomersIT {
         Assertions.assertThatExceptionOfType(
                 ObjectOptimisticLockingFailureException.class
         ).isThrownBy(() ->
-                newTransaction.executeWithoutResult(status -> {
+                newTransaction.executeWithoutResult(_ -> {
                     customerT2.changeEmail(new Email("customer2@email.com"));
                     customers.add(customerT2);
                 })
@@ -192,17 +194,17 @@ public class CustomersIT {
         Customer archivedCustomer = customers.ofId(customer.id())
                 .orElseThrow();
 
-        Assertions.assertThat(archivedCustomer.isArchived()).isTrue();
-        Assertions.assertThat(archivedCustomer.archivedAt()).isNotNull();
+        assertThat(archivedCustomer.isArchived()).isTrue();
+        assertThat(archivedCustomer.archivedAt()).isNotNull();
 
-        Assertions.assertThat(archivedCustomer.fullName())
+        assertThat(archivedCustomer.fullName())
                 .isEqualTo(new FullName("Anonymous", "Customer"));
 
-        Assertions.assertThat(archivedCustomer.birthDate()).isNull();
-        Assertions.assertThat(archivedCustomer.phone()).isNull();
-        Assertions.assertThat(archivedCustomer.document()).isNull();
+        assertThat(archivedCustomer.birthDate()).isNull();
+        assertThat(archivedCustomer.phone()).isNull();
+        assertThat(archivedCustomer.document()).isNull();
 
-        Assertions.assertThat(archivedCustomer.isPromotionNotificationsAllowed())
+        assertThat(archivedCustomer.isPromotionNotificationsAllowed())
                 .isFalse();
     }
 
@@ -213,24 +215,26 @@ public class CustomersIT {
 
         Optional<Customer> customerOptional = customers.ofEmail(customer.email());
 
-        Assertions.assertThat(customerOptional).isPresent();
+        assertThat(customerOptional).isPresent();
 
     }
 
     @Test
     void shouldNotFindByEmailIfNoCustomerExistsWithEmail() {
         Optional<Customer> customerOptional = customers.ofEmail(new Email(UUID.randomUUID() + "@email.com"));
-        Assertions.assertThat(customerOptional).isNotPresent();
+        assertThat(customerOptional).isNotPresent();
 
     }
 
     @Test
-    void shouldReturnIfEmailExists() {
+    void shouldCheckEmailUniqueness() {
         Customer customer = CustomerTestDataBuilder.brandNewCustomer();
         customers.add(customer);
 
-        Assertions.assertThat(customers.isEmailUnique(customer.email(), customer.id())).isTrue();
-        Assertions.assertThat(customers.isEmailUnique(customer.email(), new CustomerId())).isFalse();
-        Assertions.assertThat(customers.isEmailUnique(new Email("alex@gmail.com"), new CustomerId())).isTrue();
+        assertThat(customers.isEmailUnique(customer.email()))
+                .isFalse();
+
+        assertThat(customers.isEmailUnique(new Email("alex@gmail.com")))
+                .isTrue();
     }
 }

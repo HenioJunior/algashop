@@ -9,6 +9,7 @@ public class CustomerUpdateInputTestDataBuilder {
                 .firstName("Matt")
                 .lastName("Damon")
                 .phone("123-321-1112")
+                .email("matt.damon@email.com")
                 .promotionNotificationsAllowed(true)
                 .address(AddressData.builder()
                         .street("Amphitheatre Parkway")
