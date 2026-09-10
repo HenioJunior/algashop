@@ -10,8 +10,15 @@ public class CustomerRegistrationService {
 
     private final Customers customers;
 
-    public Customer register(FullName fullName, BirthDate birthDate, Email email, Phone phone, Document document,
-                             boolean promotionNotificationsAllowed, Address address) {
+    public Customer register(
+            FullName fullName,
+            BirthDate birthDate,
+            Email email,
+            Phone phone,
+            Document document,
+            boolean promotionNotificationsAllowed,
+            Address address
+    ) {
 
         verifyEmailUniqueness(email);
 

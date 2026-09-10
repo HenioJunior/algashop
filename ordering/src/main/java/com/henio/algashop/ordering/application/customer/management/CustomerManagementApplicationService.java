@@ -30,15 +30,7 @@ public class CustomerManagementApplicationService {
                 new Phone(input.getPhone()),
                 new Document(input.getDocument()),
                 input.getPromotionNotificationsAllowed(),
-                Address.builder()
-                        .zipCode(new ZipCode(address.getZipCode()))
-                        .state(address.getState())
-                        .city(address.getCity())
-                        .neighborhood(address.getNeighborhood())
-                        .street(address.getStreet())
-                        .number(address.getNumber())
-                        .complement(address.getComplement())
-                        .build()
+                toAddress(address)
         );
         customers.add(customer);
 
@@ -86,5 +78,19 @@ public class CustomerManagementApplicationService {
                 .build());
 
         customers.add(customer);
+    }
+
+    private Address toAddress(AddressData address) {
+        Objects.requireNonNull(address, "Address is required");
+
+        return Address.builder()
+                .zipCode(new ZipCode(address.getZipCode()))
+                .state(address.getState())
+                .city(address.getCity())
+                .neighborhood(address.getNeighborhood())
+                .street(address.getStreet())
+                .number(address.getNumber())
+                .complement(address.getComplement())
+                .build();
     }
 }

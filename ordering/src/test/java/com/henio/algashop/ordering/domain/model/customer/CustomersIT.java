@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Optional;
@@ -29,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         CustomerPersistenceAssembler.class,
         CustomerPersistenceDisassembler.class
 })
+@Transactional
 public class CustomersIT {
 
     private final Customers customers;
