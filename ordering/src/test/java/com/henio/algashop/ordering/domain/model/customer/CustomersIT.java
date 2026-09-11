@@ -3,10 +3,10 @@ package com.henio.algashop.ordering.domain.model.customer;
 
 import com.henio.algashop.ordering.domain.model.commons.Email;
 import com.henio.algashop.ordering.domain.model.commons.FullName;
-import com.henio.algashop.ordering.infrastructure.persistence.customer.CustomersPersistenceAdapter;
 import com.henio.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceAssembler;
 import com.henio.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceDisassembler;
 import com.henio.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityRepository;
+import com.henio.algashop.ordering.infrastructure.persistence.customer.CustomersPersistenceAdapter;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Optional;
@@ -30,7 +29,6 @@ import static org.assertj.core.api.Assertions.assertThat;
         CustomerPersistenceAssembler.class,
         CustomerPersistenceDisassembler.class
 })
-@Transactional
 public class CustomersIT {
 
     private final Customers customers;

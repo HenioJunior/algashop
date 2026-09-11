@@ -5,10 +5,13 @@ import com.henio.algashop.ordering.domain.model.commons.Money;
 import com.henio.algashop.ordering.domain.model.product.Product;
 import com.henio.algashop.ordering.domain.model.product.ProductName;
 import com.henio.algashop.ordering.domain.model.product.ProductId;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class ProductCatalogServiceFakeImpl implements ProductCatalogService {
+
     @Override
     public Optional<Product> ofId(ProductId productId) {
         Product product = Product.builder().id(productId)
