@@ -39,7 +39,7 @@ public class CustomerManagementApplicationService {
 
     @Transactional(readOnly = true)
     public CustomerOutput findById(CustomerId customerId) {
-        Objects.requireNonNull(customerId);
+        Objects.requireNonNull(customerId, "Customer ID is required");
         Customer customer = customers
                 .ofId(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(customerId));
@@ -92,5 +92,19 @@ public class CustomerManagementApplicationService {
                 .number(address.getNumber())
                 .complement(address.getComplement())
                 .build();
+    }
+
+    public void archive(String rawCustomerId) {
+        Objects.requireNonNull(rawCustomerId, "Customer ID is required");
+
+        Customer customer = customers.ofId(new CustomerId(TSID.from(rawCustomerId)))
+                .orElseThrow(() -> new CustomerNotFoundException(new CustomerId(TSID.from(rawCustomerId))));
+
+        if(customer.isArchived())
+            throw new CustomerAlreadyArchivedException(new CustomerId(TSID.from(rawCustomerId)));
+
+        customer.archive();
+
+        customers.add(customer);
     }
 }

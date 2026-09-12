@@ -9,13 +9,12 @@ import static com.henio.algashop.ordering.domain.model.validation.ErrorMessages.
 
 public record Document(String value) {
 
-    public Document(String value) {
+    public Document {
         Objects.requireNonNull(value, DOCUMENT_IS_REQUIRED);
 
-        if(value.isBlank()) {
+        if (value.isBlank()) {
             throw new DomainException(DOCUMENT_CANNOT_BE_BLANK);
         }
-        this.value = value;
     }
 
     @Override

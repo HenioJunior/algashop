@@ -1,6 +1,8 @@
 package com.henio.algashop.ordering.application.customer.management;
 
+import com.henio.algashop.ordering.domain.model.customer.CustomerAlreadyArchivedException;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
+import com.henio.algashop.ordering.domain.model.customer.CustomerNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
+import static com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -72,5 +76,57 @@ class CustomerManagementApplicationServiceIT {
                 );
 
         assertThat(customerOutput.getRegisteredAt()).isNotNull();
+    }
+
+    @Test
+    void shouldArchiveCustomer() {
+        CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
+
+        CustomerId customerId = customerManagementApplicationService.create(customerInput);
+
+        customerManagementApplicationService.archive(customerId.toString());
+
+        CustomerOutput customerOutput =
+                customerManagementApplicationService.findById(customerId);
+
+        assertThat(customerOutput).isNotNull();
+        assertThat(customerOutput.getArchived()).isTrue();
+        assertThat(customerOutput.getArchivedAt()).isNotNull();
+
+        assertThat(customerOutput.getFirstName()).isEqualTo("Anonymous");
+        assertThat(customerOutput.getLastName()).isEqualTo("Customer");
+
+        assertThat(customerOutput.getBirthDate()).isNull();
+        assertThat(customerOutput.getPhone()).isNull();
+        assertThat(customerOutput.getDocument()).isNull();
+
+        assertThat(customerOutput.getEmail())
+                .endsWith("@anonymous.invalid");
+
+        assertThat(customerOutput.getPromotionNotificationsAllowed())
+                .isFalse();
+    }
+
+    @Test
+    void shouldThrowExceptionWhenArchivingNonExistingCustomer() {
+        assertThatThrownBy(() -> customerManagementApplicationService.archive(DEFAULT_CUSTOMER_ID.toString()))
+                .isInstanceOf(CustomerNotFoundException.class);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenArchivingExistingCustomerArchived() {
+        CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
+
+        CustomerId customerId = customerManagementApplicationService.create(customerInput);
+
+        customerManagementApplicationService.archive(customerId.toString());
+
+        CustomerOutput customerOutput =
+                customerManagementApplicationService.findById(customerId);
+
+        assertThat(customerOutput.getArchived()).isTrue();
+
+        assertThatThrownBy(() -> customerManagementApplicationService.archive(customerId.toString()))
+                .isInstanceOf(CustomerAlreadyArchivedException.class);
     }
 }

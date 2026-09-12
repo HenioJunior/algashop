@@ -18,8 +18,12 @@ public class CustomerOutputMapper {
                 .firstName(customer.fullName().firstName())
                 .lastName(customer.fullName().lastName())
                 .email(customer.email().value())
-                .document(customer.document().value())
-                .phone(customer.phone().value())
+                .document(customer.document() == null
+                ? null
+                : customer.document().value())
+                .phone(customer.phone() == null
+                ? null
+                : customer.phone().value())
                 .promotionNotificationsAllowed(
                         customer.isPromotionNotificationsAllowed()
                 )
