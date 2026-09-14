@@ -12,7 +12,7 @@ class CustomerPersistenceAssemblerTest {
 
     @Test
     void shouldConvertFromDomain() {
-        Customer newCustomer = CustomerTestDataBuilder.brandNewCustomer();
+        Customer newCustomer = CustomerTestDataBuilder.brandNewCustomer().build();
         CustomerPersistenceEntity customerPersistenceEntity = assembler.fromDomain(newCustomer);
 
         assertThat(customerPersistenceEntity).satisfies(

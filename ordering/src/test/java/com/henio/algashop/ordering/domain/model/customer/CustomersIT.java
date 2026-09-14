@@ -57,7 +57,7 @@ public class CustomersIT {
 
     @Test
     void shouldPersistAndFindCustomer() {
-        Customer customer = CustomerTestDataBuilder.brandNewCustomer();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
 
         customers.add(customer);
 
@@ -100,7 +100,7 @@ public class CustomersIT {
 
     @Test
     void shouldCheckIfCustomerExists() {
-        Customer customer = CustomerTestDataBuilder.brandNewCustomer();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
 
         assertThat(customers.exists(customer.id()))
                 .isFalse();
@@ -116,8 +116,8 @@ public class CustomersIT {
         assertThat(customers.count())
                 .isZero();
 
-        Customer customer1 = CustomerTestDataBuilder.brandNewCustomer();
-        Customer customer2 = CustomerTestDataBuilder.brandNewCustomer();
+        Customer customer1 = CustomerTestDataBuilder.brandNewCustomer().build();
+        Customer customer2 = CustomerTestDataBuilder.brandNewCustomer().build();
 
         customers.add(customer1);
         customers.add(customer2);
@@ -128,7 +128,7 @@ public class CustomersIT {
 
     @Test
     void shouldUpdateCustomerAndIncrementVersion() {
-        Customer customer = CustomerTestDataBuilder.brandNewCustomer();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
 
         customers.add(customer);
 
@@ -153,7 +153,7 @@ public class CustomersIT {
 
     @Test
     void shouldNotAllowStaleUpdates() {
-        Customer customer = CustomerTestDataBuilder.brandNewCustomer();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
 
         newTransaction.executeWithoutResult(_ ->
                 customers.add(customer)
@@ -184,7 +184,7 @@ public class CustomersIT {
 
     @Test
     void shouldPersistArchivedCustomer() {
-        Customer customer = CustomerTestDataBuilder.brandNewCustomer();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
 
         customers.add(customer);
 
@@ -210,7 +210,7 @@ public class CustomersIT {
 
     @Test
     void shouldFindByEmail() {
-        Customer customer = CustomerTestDataBuilder.brandNewCustomer();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
         customers.add(customer);
 
         Optional<Customer> customerOptional = customers.ofEmail(customer.email());
@@ -228,7 +228,7 @@ public class CustomersIT {
 
     @Test
     void shouldCheckEmailUniqueness() {
-        Customer customer = CustomerTestDataBuilder.brandNewCustomer();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
         customers.add(customer);
 
         assertThat(customers.isEmailUnique(customer.email()))

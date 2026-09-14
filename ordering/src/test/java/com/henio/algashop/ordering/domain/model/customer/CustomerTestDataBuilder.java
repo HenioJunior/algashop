@@ -12,15 +12,15 @@ public class CustomerTestDataBuilder {
     private CustomerTestDataBuilder() {
     }
 
-    public static Customer brandNewCustomer() {
-        return Customer.createBrandNew(
-                new FullName("John", "Doe"),
-                new BirthDate(LocalDate.of(1991, 7, 5)),
-                new Email("johndoe@email.com"),
-                new Phone("478-256-2604"),
-                new Document("255-08-0578"),
-                true,
-                Address.builder()
+    public static Customer.BrandNewCustomerBuild brandNewCustomer() {
+        return Customer.brandNew()
+                .fullName(new FullName("John","Doe"))
+                .birthDate(new BirthDate(LocalDate.of(1991, 7,5)))
+                .email(new Email("johndoe@email.com"))
+                .phone(new Phone("478-256-2604"))
+                .document(new Document("255-08-0578"))
+                .promotionNotificationsAllowed(true)
+                .address(Address.builder()
                         .street("Bourbon Street")
                         .number("1134")
                         .neighborhood("North Ville")
@@ -28,8 +28,8 @@ public class CustomerTestDataBuilder {
                         .state("South California")
                         .zipCode(new ZipCode("12345"))
                         .complement("Apt. 114")
-                        .build()
-        );
+                        .build());
+
     }
 
     public static Customer.ExistingCustomerBuilder existingCustomer() {
