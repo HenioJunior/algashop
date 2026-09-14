@@ -1,8 +1,10 @@
 package com.henio.algashop.ordering.application.customer.management;
 
 import com.henio.algashop.ordering.domain.model.customer.CustomerAlreadyArchivedException;
+import com.henio.algashop.ordering.domain.model.customer.CustomerEmailIsInUseException;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.domain.model.customer.CustomerNotFoundException;
+import com.henio.algashop.ordering.domain.model.shared.DomainException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -114,7 +116,7 @@ class CustomerManagementApplicationServiceIT {
     }
 
     @Test
-    void shouldThrowExceptionWhenArchivingExistingCustomerArchived() {
+    void shouldThrowExceptionWhenArchivingAlreadyArchivedCustomer() {
         CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
 
         CustomerId customerId = customerManagementApplicationService.create(customerInput);
@@ -128,5 +130,59 @@ class CustomerManagementApplicationServiceIT {
 
         assertThatThrownBy(() -> customerManagementApplicationService.archive(customerId.toString()))
                 .isInstanceOf(CustomerAlreadyArchivedException.class);
+    }
+
+    @Test
+    void shouldSuccessfullyChangeEmail() {
+        CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
+
+        CustomerId customerId = customerManagementApplicationService.create(customerInput);
+
+        customerManagementApplicationService.changeEmail(customerId.toString(), "new@email.com");
+
+        CustomerOutput customerOutput =
+                customerManagementApplicationService.findById(customerId);
+
+        assertThat(customerOutput.getEmail()).isEqualTo("new@email.com");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenChangingEmailOfNonExistingCustomer() {
+        assertThatThrownBy(() -> customerManagementApplicationService.changeEmail(DEFAULT_CUSTOMER_ID.toString(), "new@email.com"))
+                .isInstanceOf(CustomerNotFoundException.class);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenChangingEmailOfArchivedCustomer() {
+        CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
+
+        CustomerId customerId = customerManagementApplicationService.create(customerInput);
+
+        customerManagementApplicationService.archive(customerId.toString());
+
+        assertThatThrownBy(() -> customerManagementApplicationService.changeEmail(customerId.toString(), "new@email.com"))
+                .isInstanceOf(CustomerAlreadyArchivedException.class);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenChangingEmailWithInvalidFormat() {
+        CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
+
+        CustomerId customerId = customerManagementApplicationService.create(customerInput);
+
+        assertThatThrownBy(() -> customerManagementApplicationService
+                .changeEmail(customerId.toString(), "email.com"))
+                .isInstanceOf(DomainException.class);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenEmailIsInUse() {
+        CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
+
+        CustomerId customerId = customerManagementApplicationService.create(customerInput);
+
+        assertThatThrownBy(() -> customerManagementApplicationService
+                .changeEmail(customerId.toString(), "johndoe@email.com"))
+                .isInstanceOf(CustomerEmailIsInUseException.class);
     }
 }

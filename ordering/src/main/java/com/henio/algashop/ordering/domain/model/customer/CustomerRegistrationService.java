@@ -2,6 +2,7 @@ package com.henio.algashop.ordering.domain.model.customer;
 
 import com.henio.algashop.ordering.domain.model.commons.*;
 import com.henio.algashop.ordering.domain.model.shared.DomainService;
+import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -31,6 +32,11 @@ public class CustomerRegistrationService {
                 .promotionNotificationsAllowed(promotionNotificationsAllowed)
                 .address(address)
                 .build();
+    }
+
+    public void changeEmail(Customer customer, String newEmail) {
+        verifyEmailUniqueness(new Email(newEmail));
+        customer.changeEmail(new Email(newEmail));
     }
 
     private void verifyEmailUniqueness(Email email) {

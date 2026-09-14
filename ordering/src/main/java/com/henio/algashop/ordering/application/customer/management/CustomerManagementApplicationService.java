@@ -107,4 +107,20 @@ public class CustomerManagementApplicationService {
 
         customers.add(customer);
     }
+
+    public void changeEmail(String rawCustomerId, String newEmail) {
+        Objects.requireNonNull(rawCustomerId, "Customer ID is required");
+        Objects.requireNonNull(newEmail, "Email is required");
+
+        Customer customer = customers.ofId(new CustomerId(TSID.from(rawCustomerId)))
+                .orElseThrow(() -> new CustomerNotFoundException(new CustomerId(TSID.from(rawCustomerId))));
+
+        if(customer.isArchived()) {
+            throw new CustomerAlreadyArchivedException(new CustomerId(TSID.from(rawCustomerId)));
+        }
+
+        customerRegistration.changeEmail(customer, newEmail);
+
+        customers.add(customer);
+    }
 }
