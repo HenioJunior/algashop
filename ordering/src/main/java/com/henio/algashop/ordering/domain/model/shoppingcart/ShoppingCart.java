@@ -28,19 +28,21 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
             Money totalAmount,
             Quantity totalItems,
             OffsetDateTime createdAt,
-            Set<ShoppingCartItem> items)
-    {
+            Set<ShoppingCartItem> items,
+            Long version
+    ) {
         this.id = id;
         this.customerId = customerId;
         this.totalAmount = totalAmount;
         this.totalItems = totalItems;
         this.createdAt = createdAt;
         this.items = items;
+        this.version = version;
     }
 
     public static ShoppingCart startShopping(CustomerId customerId) {
         return new ShoppingCart(new ShoppingCartId(), customerId, Money.ZERO,
-                Quantity.ZERO, OffsetDateTime.now(), new HashSet<>());
+                Quantity.ZERO, OffsetDateTime.now(), new HashSet<>(), null);
     }
 
     public void empty() {
