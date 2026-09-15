@@ -24,6 +24,7 @@ public class ShoppingCartPersistenceAssembler {
                 .totalItems(shoppingCart.totalItems().value())
                 .createdAt(shoppingCart.createdAt())
                 .items(toOrderItemsEntities(shoppingCart.items()))
+                .version(shoppingCart.version())
                 .build();
     }
 
@@ -32,8 +33,13 @@ public class ShoppingCartPersistenceAssembler {
         persistenceEntity.setId(shoppingCart.id().value().toLong());
         persistenceEntity.setCustomer(getCustomerById(shoppingCart));
         persistenceEntity.setTotalAmount(shoppingCart.totalAmount().value());
+        persistenceEntity.setTotalItems(shoppingCart.totalItems().value());
         persistenceEntity.setCreatedAt(shoppingCart.createdAt());
-        persistenceEntity.setItems(toOrderItemsEntities(shoppingCart.items()));
+
+        persistenceEntity.replaceItems(
+                toOrderItemsEntities(shoppingCart.items())
+        );
+
         return persistenceEntity;
     }
 
@@ -56,18 +62,4 @@ public class ShoppingCartPersistenceAssembler {
         persistenceEntity.setTotalAmount(shoppingCartItem.totalAmount().value());
         return persistenceEntity;
     }
-
-    private ShoppingCartItemPersistenceEntity toOrderItemsEntities(ShoppingCartItem source) {
-        return ShoppingCartItemPersistenceEntity.builder()
-                .id(source.id().value().toLong())
-                .shoppingCart(ShoppingCartPersistenceEntity.builder().id(source.shoppingCartId().value().toLong()).build())
-                .productId(source.productId().value().toLong())
-                .productName(source.name().value())
-                .price(source.price().value())
-                .quantity(source.quantity().value())
-                .available(source.isAvailable())
-                .totalAmount(source.totalAmount().value())
-                .build();
-    }
-
 }

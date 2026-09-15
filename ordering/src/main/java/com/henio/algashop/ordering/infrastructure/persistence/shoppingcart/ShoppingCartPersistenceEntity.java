@@ -38,7 +38,7 @@ public class ShoppingCartPersistenceEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private Set<ShoppingCartItemPersistenceEntity> items = new HashSet<>();
+    private Set<ShoppingCartItemPersistenceEntity> items;
 
     @CreatedBy
     private UUID createdByUserId;
@@ -59,7 +59,8 @@ public class ShoppingCartPersistenceEntity {
             BigDecimal totalAmount,
             Integer totalItems,
             OffsetDateTime createdAt,
-            Set<ShoppingCartItemPersistenceEntity> items
+            Set<ShoppingCartItemPersistenceEntity> items,
+            Long version
     ) {
         this.id = id;
         this.customer = customer;
@@ -67,21 +68,26 @@ public class ShoppingCartPersistenceEntity {
         this.totalItems = totalItems;
         this.createdAt = createdAt;
         this.addItem(items);
+        this.version = version;
     }
 
     public void addItem(Set<ShoppingCartItemPersistenceEntity> items) {
-        for (ShoppingCartItemPersistenceEntity item : items) {
-            this.addItem(item);
+        if (items == null) {
+            return;
         }
+
+        if (this.items == null) {
+            this.items = new HashSet<>();
+        }
+
+        items.forEach(this::addItem);
     }
 
     public void addItem(ShoppingCartItemPersistenceEntity item) {
         if (item == null) {
             return;
         }
-        if (this.getItems() == null) {
-            this.setItems(new HashSet<>());
-        }
+
         item.setShoppingCart(this);
         this.items.add(item);
     }
@@ -91,5 +97,13 @@ public class ShoppingCartPersistenceEntity {
             return null;
         }
         return customer.getId();
+    }
+
+    public void replaceItems(Set<ShoppingCartItemPersistenceEntity> items) {
+        this.items.clear();
+
+        if (items != null) {
+            items.forEach(this::addItem);
+        }
     }
 }

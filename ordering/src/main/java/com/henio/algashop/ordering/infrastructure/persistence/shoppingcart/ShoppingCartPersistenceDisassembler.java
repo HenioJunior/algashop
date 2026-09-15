@@ -25,6 +25,7 @@ public class ShoppingCartPersistenceDisassembler {
                 .createdAt(source.getCreatedAt())
                 .items(toItemsDomainEntities(source.getItems()))
                 .totalItems(new Quantity(source.getTotalItems()))
+                .version(source.getVersion())
                 .build();
     }
 
