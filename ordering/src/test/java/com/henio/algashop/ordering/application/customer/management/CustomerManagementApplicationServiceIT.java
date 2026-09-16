@@ -1,5 +1,6 @@
 package com.henio.algashop.ordering.application.customer.management;
 
+import com.henio.algashop.ordering.application.customer.notification.CustomerNotificationService;
 import com.henio.algashop.ordering.domain.model.customer.*;
 import com.henio.algashop.ordering.domain.model.shared.DomainException;
 import com.henio.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
@@ -22,6 +23,9 @@ class CustomerManagementApplicationServiceIT {
 
     @MockitoSpyBean
     private CustomerEventListener customerEventListener;
+
+    @MockitoSpyBean
+    private CustomerNotificationService customerNotificationService;
 
     @Autowired
     private CustomerManagementApplicationService customerManagementApplicationService;
@@ -54,6 +58,9 @@ class CustomerManagementApplicationServiceIT {
 
         Mockito.verify(customerEventListener)
                 .listen(Mockito.any(CustomerRegisteredEvent.class));
+
+        Mockito.verify(customerNotificationService)
+                .notifyNewRegistration(Mockito.any(String.class));
     }
 
     @Test
