@@ -1,13 +1,13 @@
 package com.henio.algashop.ordering.application.customer.management;
 
-import com.henio.algashop.ordering.domain.model.customer.CustomerAlreadyArchivedException;
-import com.henio.algashop.ordering.domain.model.customer.CustomerEmailIsInUseException;
-import com.henio.algashop.ordering.domain.model.customer.CustomerId;
-import com.henio.algashop.ordering.domain.model.customer.CustomerNotFoundException;
+import com.henio.algashop.ordering.domain.model.customer.*;
 import com.henio.algashop.ordering.domain.model.shared.DomainException;
+import com.henio.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -19,6 +19,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SpringBootTest
 @Transactional
 class CustomerManagementApplicationServiceIT {
+
+    @MockitoSpyBean
+    private CustomerEventListener customerEventListener;
 
     @Autowired
     private CustomerManagementApplicationService customerManagementApplicationService;
@@ -48,6 +51,9 @@ class CustomerManagementApplicationServiceIT {
         );
 
         assertThat(customerOutput.getRegisteredAt()).isNotNull();
+
+        Mockito.verify(customerEventListener)
+                .listen(Mockito.any(CustomerRegisteredEvent.class));
     }
 
     @Test
