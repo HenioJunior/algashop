@@ -44,6 +44,7 @@ public class CustomersPersistenceAdapter implements Customers {
                 .ifPresentOrElse(entity -> update(aggregateRoot, entity),
                         () -> insert(aggregateRoot));
 
+        aggregateRoot.clearDomainEvents();
     }
 
     @Override

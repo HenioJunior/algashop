@@ -13,7 +13,7 @@ public class CustomerPersistenceAssembler {
     public CustomerPersistenceEntity fromDomain(Customer customer) {
         Objects.requireNonNull(customer, "Customer is required");
 
-        return CustomerPersistenceEntity.builder()
+        CustomerPersistenceEntity entity = CustomerPersistenceEntity.builder()
                 .id(customer.id().value().toLong())
                 .firstName(customer.fullName().firstName())
                 .lastName(customer.fullName().lastName())
@@ -29,9 +29,11 @@ public class CustomerPersistenceAssembler {
                 .address(toAddressEmbeddable(customer.address()))
                 .version(customer.version())
                 .build();
+        entity.addEvents(customer.domainEvents());
+        return entity;
     }
 
-    public CustomerPersistenceEntity merge(CustomerPersistenceEntity entity, Customer customer) {
+    public void merge(CustomerPersistenceEntity entity, Customer customer) {
         Objects.requireNonNull(entity, "Customer persistence entity is required");
         Objects.requireNonNull(customer, "Customer is required");
 
@@ -48,8 +50,7 @@ public class CustomerPersistenceAssembler {
         entity.setArchivedAt(customer.archivedAt());
         entity.setLoyaltyPoints(customer.loyaltyPoints().value());
         entity.setAddress(toAddressEmbeddable(customer.address()));
-
-        return entity;
+        entity.addEvents(customer.domainEvents());
     }
 
     private AddressEmbeddable toAddressEmbeddable(Address address) {
