@@ -3,6 +3,7 @@ package com.henio.algashop.ordering.infrastructure.listener.customer;
 import com.henio.algashop.ordering.application.customer.notification.CustomerNotificationService;
 import com.henio.algashop.ordering.domain.model.customer.CustomerArchivedEvent;
 import com.henio.algashop.ordering.domain.model.customer.CustomerRegisteredEvent;
+import com.henio.algashop.ordering.application.customer.notification.CustomerNotificationService.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -18,8 +19,12 @@ public class CustomerEventListener {
     @EventListener
     public void listen(CustomerRegisteredEvent event) {
         log.info("CustomerRegisteredEvent");
-        customerNotificationService
-                .notifyNewRegistration((event.customerId().value().toString()));
+        NotifyNewRegistrationInput input = new NotifyNewRegistrationInput(
+                event.customerId().toString(),
+                event.fullName().firstName(),
+                event.email().toString()
+        );
+        customerNotificationService.notifyNewRegistration(input);
     }
 
     @EventListener

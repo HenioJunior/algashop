@@ -61,7 +61,12 @@ class CustomerTest {
         Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
 
         assertThat(customer.domainEvents())
-                .containsExactly(new CustomerRegisteredEvent(customer.id(), customer.registeredAt()));
+                .containsExactly(new CustomerRegisteredEvent(
+                        customer.id(),
+                        customer.registeredAt(),
+                        customer.fullName(),
+                        customer.email())
+                );
     }
 
     @Test
