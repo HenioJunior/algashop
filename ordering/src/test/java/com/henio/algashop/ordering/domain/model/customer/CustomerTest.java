@@ -5,6 +5,8 @@ import com.henio.algashop.ordering.domain.model.commons.Email;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 class CustomerTest {
 
     @Test
@@ -33,7 +35,7 @@ class CustomerTest {
         customer.addLoyaltyPoints(new LoyaltyPoints(10));
         customer.addLoyaltyPoints(new LoyaltyPoints(20));
 
-        Assertions.assertThat(customer.loyaltyPoints()).isEqualTo(new LoyaltyPoints(30));
+        assertThat(customer.loyaltyPoints()).isEqualTo(new LoyaltyPoints(30));
     }
 
     @Test
@@ -44,7 +46,7 @@ class CustomerTest {
 
         customer.addLoyaltyPoints(LoyaltyPoints.ZERO);
 
-        Assertions.assertThat(customer.loyaltyPoints())
+        assertThat(customer.loyaltyPoints())
                 .isEqualTo(currentPoints);
     }
 
@@ -58,7 +60,22 @@ class CustomerTest {
     void givenValidData_whenCreateBrandNewCostumer_shouldGenerateCustomerRegisteredEvent() {
         Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
 
-        Assertions.assertThat(customer.domainEvents())
+        assertThat(customer.domainEvents())
                 .containsExactly(new CustomerRegisteredEvent(customer.id(), customer.registeredAt()));
+    }
+
+    @Test
+    void givenUnarchivedCustomer_whenArchive_shouldGenerateCustomerArchivedEvent() {
+        Customer customer = CustomerTestDataBuilder
+                .existingCustomer()
+                .archived(false)
+                .archivedAt(null)
+                .build();
+
+        customer.archive();
+
+        CustomerArchivedEvent event = new CustomerArchivedEvent(customer.id(), customer.archivedAt());
+
+        assertThat(customer.domainEvents()).contains(event);
     }
 }

@@ -130,6 +130,7 @@ public class Customer
         this.address = this.address().toBuilder()
                 .number("Anonymized")
                 .complement(null).build();
+        this.publishDomainEvent(new CustomerArchivedEvent(this.id, this.archivedAt));
     }
 
     public void enablePromotionNotifications() {
@@ -252,7 +253,7 @@ public class Customer
             return false;
         }
 
-        return id != null && id.equals(customer.id);
+        return id.equals(customer.id);
     }
 
     @Override
