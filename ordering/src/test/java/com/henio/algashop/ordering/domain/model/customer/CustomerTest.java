@@ -53,4 +53,12 @@ class CustomerTest {
         Assertions.assertThatExceptionOfType(DomainException.class)
                 .isThrownBy(() -> new LoyaltyPoints(-10));
     }
+
+    @Test
+    void givenValidData_whenCreateBrandNewCostumer_shouldGenerateCustomerRegisteredEvent() {
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
+
+        Assertions.assertThat(customer.domainEvents())
+                .containsExactly(new CustomerRegisteredEvent(customer.id(), customer.registeredAt()));
+    }
 }

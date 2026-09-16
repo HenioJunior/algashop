@@ -1,5 +1,6 @@
 package com.henio.algashop.ordering.domain.model.customer;
 
+import com.henio.algashop.ordering.domain.model.shared.AbstractEventSourceEntity;
 import com.henio.algashop.ordering.domain.model.shared.AggregateRoot;
 import com.henio.algashop.ordering.domain.model.commons.*;
 import lombok.Builder;
@@ -8,14 +9,16 @@ import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Customer implements AggregateRoot<CustomerId> {
+public class Customer
+        extends AbstractEventSourceEntity
+        implements AggregateRoot<CustomerId> {
 
     private static final FullName ANONYMIZED_CUSTOMER_NAME = new FullName("Anonymous", "Customer");
 
     private static final String ANONYMIZED_EMAIL_DOMAIN =
             "@anonymous.invalid";
 
-    private CustomerId id;
+    private final CustomerId id;
     private FullName fullName;
     private BirthDate birthDate;
     private Email email;
@@ -23,7 +26,7 @@ public class Customer implements AggregateRoot<CustomerId> {
     private Document document;
     private boolean promotionNotificationsAllowed;
     private boolean archived;
-    private OffsetDateTime registeredAt;
+    private final OffsetDateTime registeredAt;
     private OffsetDateTime archivedAt;
     private LoyaltyPoints loyaltyPoints;
     private Address address;
@@ -84,7 +87,7 @@ public class Customer implements AggregateRoot<CustomerId> {
             boolean promotionNotificationsAllowed,
             Address address
     ) {
-        return new Customer(
+        Customer customer = new Customer(
                 CustomerId.generate(),
                 Objects.requireNonNull(fullName, "Full name is required"),
                 Objects.requireNonNull(birthDate, "Birth date is required"),
@@ -99,6 +102,10 @@ public class Customer implements AggregateRoot<CustomerId> {
                 Objects.requireNonNull(address, "Address is required"),
                 null
         );
+
+        customer.publishDomainEvent(new CustomerRegisteredEvent(customer.id, customer.registeredAt));
+
+        return customer;
     }
 
     public void addLoyaltyPoints(LoyaltyPoints loyaltyPointsAdded) {

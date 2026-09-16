@@ -1,6 +1,7 @@
 package com.henio.algashop.ordering.domain.model.order;
 
 import com.henio.algashop.ordering.domain.model.order.shipping.Shipping;
+import com.henio.algashop.ordering.domain.model.shared.AbstractEventSourceEntity;
 import com.henio.algashop.ordering.domain.model.shared.AggregateRoot;
 import com.henio.algashop.ordering.domain.model.commons.Money;
 import com.henio.algashop.ordering.domain.model.commons.Quantity;
@@ -16,7 +17,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class Order implements AggregateRoot<OrderId> {
+public class Order
+        extends AbstractEventSourceEntity
+        implements AggregateRoot<OrderId> {
 
     private final OrderId id;
     private final CustomerId customerId;

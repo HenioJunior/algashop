@@ -1,5 +1,6 @@
 package com.henio.algashop.ordering.domain.model.shoppingcart;
 
+import com.henio.algashop.ordering.domain.model.shared.AbstractEventSourceEntity;
 import com.henio.algashop.ordering.domain.model.shared.AggregateRoot;
 import com.henio.algashop.ordering.domain.model.product.Product;
 import com.henio.algashop.ordering.domain.model.commons.Quantity;
@@ -11,7 +12,9 @@ import lombok.Builder;
 import java.time.OffsetDateTime;
 import java.util.*;
 
-public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
+public class ShoppingCart
+        extends AbstractEventSourceEntity
+        implements AggregateRoot<ShoppingCartId> {
 
     private final ShoppingCartId id;
     private final CustomerId customerId;
