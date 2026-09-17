@@ -138,21 +138,25 @@ public class Order
         verifyIfCanChangeToPlaced();
         changeStatus(OrderStatus.PLACED);
         placedAt = OffsetDateTime.now();
+        publishDomainEvent(new OrderPlacedEvent(id, customerId, placedAt));
     }
 
     public void markAsPaid() {
         changeStatus(OrderStatus.PAID);
         paidAt = OffsetDateTime.now();
+        publishDomainEvent(new OrderPaidEvent(id, customerId, paidAt));
     }
 
     public void markAsReady() {
         changeStatus(OrderStatus.READY);
         readyAt = OffsetDateTime.now();
+        publishDomainEvent(new OrderReadyEvent(id, customerId, readyAt));
     }
 
     public void cancel() {
         changeStatus(OrderStatus.CANCELED);
         canceledAt = OffsetDateTime.now();
+        publishDomainEvent(new OrderCanceledEvent(id, customerId, canceledAt));
     }
 
     public void changePaymentMethod(PaymentMethod newPaymentMethod) {

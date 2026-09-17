@@ -61,18 +61,6 @@ public class CustomerPersistenceEntity
     @Version
     private Long version;
 
-    public Collection<Object> getEvents() {
-        return super.domainEvents();
-    }
-
-    public void addEvents(Collection<Object> events) {
-        if(events != null) {
-            for(Object event : events) {
-                this.registerEvent(event);
-            }
-        }
-    }
-
     @Builder
     public CustomerPersistenceEntity(Long id, String firstName, String lastName, LocalDate birthDate, String email, String phone,
                                      String document, boolean promotionNotificationsAllowed, boolean archived,
@@ -96,5 +84,17 @@ public class CustomerPersistenceEntity
         this.lastModifiedAt = lastModifiedAt;
         this.lastModifiedByUserId = lastModifiedByUserId;
         this.version = version;
+    }
+
+    public Collection<Object> getEvents() {
+        return super.domainEvents();
+    }
+
+    public void addEvents(Collection<Object> events) {
+        if(events != null) {
+            for(Object event : events) {
+                this.registerEvent(event);
+            }
+        }
     }
 }

@@ -41,12 +41,14 @@ public class OrderPersistenceAssembler {
                 .shipping(toShippingEmbeddable(order.shipping()))
                 .build();
 
-                entity.replaceItems(itemAssembler.toItemsEntity(order.items()));
+        entity.addEvents(order.domainEvents());
+
+        entity.replaceItems(itemAssembler.toItemsEntity(order.items()));
 
         return entity;
     }
 
-    public OrderPersistenceEntity merge(
+    public void merge(
             OrderPersistenceEntity entity,
             Order order
     ) {
@@ -58,6 +60,7 @@ public class OrderPersistenceAssembler {
         entity.setTotalAmount(order.totalAmount().value());
         entity.setTotalItems(order.totalItems().value());
         entity.setStatus(order.status().name());
+
         entity.setPaymentMethod(
                 order.paymentMethod() == null
                         ? null
@@ -74,7 +77,7 @@ public class OrderPersistenceAssembler {
         Set<OrderItemPersistenceEntity> mergedItems = itemAssembler.mergeItems(order, entity);
         entity.replaceItems(mergedItems);
 
-        return entity;
+        entity.addEvents(order.domainEvents());
     }
 
     private CustomerPersistenceEntity toCustomerEntity(long customerId) {

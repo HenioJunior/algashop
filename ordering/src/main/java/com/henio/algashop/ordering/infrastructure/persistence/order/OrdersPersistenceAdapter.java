@@ -51,7 +51,10 @@ public class OrdersPersistenceAdapter implements Orders {
         persistenceRepository.findById(orderId)
                 .ifPresentOrElse(
                         entity -> update(aggregateRoot, entity),
-                        () -> insert(aggregateRoot));
+                        () -> insert(aggregateRoot)
+                );
+
+        aggregateRoot.clearDomainEvents();
     }
 
     @Override
