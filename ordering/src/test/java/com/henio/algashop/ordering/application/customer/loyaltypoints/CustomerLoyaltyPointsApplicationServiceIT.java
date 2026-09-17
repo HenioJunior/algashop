@@ -39,6 +39,7 @@ public class CustomerLoyaltyPointsApplicationServiceIT {
                 .status(OrderStatus.DRAFT)
                 .withItems(false)
                 .build();
+
         Product product = ProductTestDataBuilder.aProduct().price(new Money("2500")).build();
 
         order.addItem(product, new Quantity(1));
@@ -47,8 +48,6 @@ public class CustomerLoyaltyPointsApplicationServiceIT {
         order.markAsReady();
 
         orders.add(order);
-
-        loyaltyPointsService.addLoyaltyPoints(customer.id().value().toString(), order.id().toString());
 
         Customer updatedCustomer = customers.ofId(customer.id()).orElseThrow();
         Assertions.assertThat(updatedCustomer).isNotNull();
@@ -84,19 +83,21 @@ public class CustomerLoyaltyPointsApplicationServiceIT {
 
     @Test
     void shouldThrowCustomerArchivedExceptionWhenCustomerIsArchived() {
-        Customer customer = CustomerTestDataBuilder.existingCustomer().build();
-        customers.add(customer);
-        customer.archive();
+        Customer customer = CustomerTestDataBuilder
+                .existingCustomer()
+                .archived(true)
+                .build();
+
         customers.add(customer);
 
         Order order = OrderTestDataBuilder.anOrder()
                 .customerId(customer.id())
                 .status(OrderStatus.READY)
                 .build();
-        orders.add(order);
 
         Assertions.assertThatExceptionOfType(CustomerArchivedException.class)
-                .isThrownBy(() -> loyaltyPointsService.addLoyaltyPoints(customer.id().value().toString(), order.id().toString()));
+                .isThrownBy(() -> orders.add(order)
+                );
     }
 
     @Test

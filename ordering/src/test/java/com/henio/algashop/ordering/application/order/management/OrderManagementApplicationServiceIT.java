@@ -1,5 +1,6 @@
 package com.henio.algashop.ordering.application.order.management;
 
+import com.henio.algashop.ordering.application.customer.loyaltypoints.CustomerLoyaltyPointsApplicationService;
 import com.henio.algashop.ordering.application.order.notification.*;
 import com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.customer.Customers;
@@ -27,6 +28,9 @@ class OrderManagementApplicationServiceIT {
 
     @MockitoSpyBean
     private OrderNotificationService orderNotificationService;
+
+    @MockitoSpyBean
+    private CustomerLoyaltyPointsApplicationService customerLoyaltyPointsApplicationService;
 
     @Autowired
     private OrderManagementApplicationService service;
@@ -159,6 +163,9 @@ class OrderManagementApplicationServiceIT {
 
         Mockito.verify(orderEventListener)
                 .handleOrder(Mockito.any(OrderReadyEvent.class));
+
+        Mockito.verify(customerLoyaltyPointsApplicationService)
+                .addLoyaltyPoints(order.customerId().toString(), order.id().toString());
     }
 
     @Test
