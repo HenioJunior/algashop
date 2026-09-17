@@ -18,7 +18,7 @@ public class OrderEventListener {
     private final OrderNotificationService service;
 
     @EventListener
-    public void handleOrderPlaced(OrderPlacedEvent event) {
+    public void handleOrder(OrderPlacedEvent event) {
         log.info("Order placed event received: {}", event);
 
         NotifyOrderPlacedInput input = new NotifyOrderPlacedInput(
@@ -27,13 +27,11 @@ public class OrderEventListener {
                 event.placedAt().toLocalDateTime()
         );
 
-        log.info("Order placed notification sent: {}", input);
-
-        service.notifyOrderPlaced(input);
+        service.notifyOrder(input);
     }
 
     @EventListener
-    public void handleOrderPaid(OrderPaidEvent event) {
+    public void handleOrder(OrderPaidEvent event) {
         log.info("Order paid event received: {}", event);
 
         NotifyOrderPaidInput input = new NotifyOrderPaidInput(
@@ -42,13 +40,11 @@ public class OrderEventListener {
                 event.paidAt().toLocalDateTime()
         );
 
-        log.info("Order paid notification sent: {}", input);
-
-        service.notifyOrderPaid(input);
+        service.notifyOrder(input);
     }
 
     @EventListener
-    public void handleOrderReady(OrderReadyEvent event) {
+    public void handleOrder(OrderReadyEvent event) {
         log.info("Order ready event received: {}", event);
 
         NotifyOrderReadyInput input = new NotifyOrderReadyInput(
@@ -57,13 +53,11 @@ public class OrderEventListener {
                 event.readyAt().toLocalDateTime()
         );
 
-        log.info("Order ready notification sent: {}", input);
-
-        service.notifyOrderReady(input);
+        service.notifyOrder(input);
     }
 
     @EventListener
-    public void handleOrderCanceled(OrderCanceledEvent event) {
+    public void handleOrder(OrderCanceledEvent event) {
         log.info("Order canceled event received: {}", event);
 
         NotifyOrderCanceledInput input = new NotifyOrderCanceledInput(
@@ -72,8 +66,6 @@ public class OrderEventListener {
                 event.canceledAt().toLocalDateTime()
         );
 
-        log.info("Order canceled notification sent: {}", input);
-
-        service.notifyOrderCanceled(input);
+        service.notifyOrder(input);
     }
 }

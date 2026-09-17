@@ -9,23 +9,22 @@ import org.springframework.stereotype.Service;
 public class OrderNotificationServiceFakeImpl implements OrderNotificationService {
 
     @Override
-    public void notifyOrderPlaced(NotifyOrderPlacedInput input) {
+    public void notifyOrder(NotifyOrderPlacedInput input) {
         log.info("Order placed notification sent: {}", input);
-
     }
 
     @Override
-    public void notifyOrderPaid(NotifyOrderPaidInput input) {
+    public void notifyOrder(NotifyOrderPaidInput input) {
         log.info("Order paid notification sent: {}", input);
     }
 
     @Override
-    public void notifyOrderReady(NotifyOrderReadyInput input) {
+    public void notifyOrder(NotifyOrderReadyInput input) {
         log.info("Order ready notification sent: {}", input);
     }
 
     @Override
-    public void notifyOrderCanceled(NotifyOrderCanceledInput input) {
+    public void notifyOrder(NotifyOrderCanceledInput input) {
         log.info("Order canceled notification sent: {}", input);
     }
 }

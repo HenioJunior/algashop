@@ -90,7 +90,7 @@ public class OrdersPersistenceAdapter implements Orders {
 
         assembler.merge(entity, aggregateRoot);
 
-        persistenceRepository.flush();
+        persistenceRepository.saveAndFlush(entity);
 
         AggregateVersionUpdater.update(
                 aggregateRoot,

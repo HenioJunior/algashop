@@ -1,17 +1,17 @@
 package com.henio.algashop.ordering.application.checkout;
 
+import com.henio.algashop.ordering.application.order.notification.NotifyOrderPlacedInput;
+import com.henio.algashop.ordering.application.order.notification.OrderNotificationService;
 import com.henio.algashop.ordering.domain.model.commons.Money;
 import com.henio.algashop.ordering.domain.model.commons.Quantity;
 import com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.customer.Customers;
-import com.henio.algashop.ordering.domain.model.order.Order;
-import com.henio.algashop.ordering.domain.model.order.OrderId;
-import com.henio.algashop.ordering.domain.model.order.OrderStatus;
-import com.henio.algashop.ordering.domain.model.order.Orders;
+import com.henio.algashop.ordering.domain.model.order.*;
 import com.henio.algashop.ordering.domain.model.order.shipping.ShippingCostService;
 import com.henio.algashop.ordering.domain.model.product.Product;
 import com.henio.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.shoppingcart.*;
+import com.henio.algashop.ordering.infrastructure.listener.order.OrderEventListener;
 import io.hypersistence.tsid.TSID;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +20,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -32,6 +33,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 class CheckoutApplicationServiceIT {
+
+    @MockitoSpyBean
+    private OrderEventListener orderEventListener;
+
+    @MockitoSpyBean
+    private OrderNotificationService orderNotificationService;
 
     @Autowired
     private CheckoutApplicationService service;
@@ -81,6 +88,7 @@ class CheckoutApplicationServiceIT {
         assertThat(orders.exists(createdOrderId)).isTrue();
 
         Optional<Order> createdOrder = orders.ofId(createdOrderId);
+
         assertThat(createdOrder)
                 .isPresent()
                 .get()
@@ -96,6 +104,14 @@ class CheckoutApplicationServiceIT {
                 .isPresent()
                 .get()
                 .satisfies(cart -> assertThat(cart.isEmpty()).isTrue());
+
+        Mockito.verify(orderNotificationService)
+                .notifyOrder(
+                        Mockito.any(NotifyOrderPlacedInput.class)
+                );
+
+        Mockito.verify(orderEventListener)
+                .handleOrder(Mockito.any(OrderPlacedEvent.class));
     }
 
     @Test

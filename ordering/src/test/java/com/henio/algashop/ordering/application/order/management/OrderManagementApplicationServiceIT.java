@@ -1,20 +1,32 @@
 package com.henio.algashop.ordering.application.order.management;
 
+import com.henio.algashop.ordering.application.order.notification.*;
 import com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.customer.Customers;
 import com.henio.algashop.ordering.domain.model.order.*;
+import com.henio.algashop.ordering.infrastructure.listener.order.OrderEventListener;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest
 @Transactional
 class OrderManagementApplicationServiceIT {
+
+    @MockitoSpyBean
+    private OrderEventListener orderEventListener;
+
+    @MockitoSpyBean
+    private OrderNotificationService orderNotificationService;
 
     @Autowired
     private OrderManagementApplicationService service;
@@ -34,15 +46,32 @@ class OrderManagementApplicationServiceIT {
 
     @Test
     void shouldCancelOrderSuccessfully() {
-        Order order = OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build();
+        Order order = OrderTestDataBuilder.anOrder().build();
+
         orders.add(order);
 
         service.cancel(order.id().toString());
 
         Optional<Order> updatedOrder = orders.ofId(order.id());
-        Assertions.assertThat(updatedOrder).isPresent();
-        Assertions.assertThat(updatedOrder.get().status()).isEqualTo(OrderStatus.CANCELED);
-        Assertions.assertThat(updatedOrder.get().canceledAt()).isNotNull();
+
+        assertThat(updatedOrder)
+                .isPresent()
+                .get()
+                .satisfies(updated -> {
+                    Assertions.assertThat(updated.status())
+                            .isEqualTo(OrderStatus.CANCELED);
+
+                    Assertions.assertThat(updated.canceledAt())
+                            .isNotNull();
+                });
+
+        Mockito.verify(orderNotificationService)
+                .notifyOrder(
+                        Mockito.any(NotifyOrderCanceledInput.class)
+                );
+
+        Mockito.verify(orderEventListener)
+                .handleOrder(Mockito.any(OrderCanceledEvent.class));
     }
 
     @Test
@@ -70,9 +99,18 @@ class OrderManagementApplicationServiceIT {
         service.markAsPaid(order.id().toString());
 
         Optional<Order> updatedOrder = orders.ofId(order.id());
-        Assertions.assertThat(updatedOrder).isPresent();
-        Assertions.assertThat(updatedOrder.get().status()).isEqualTo(OrderStatus.PAID);
-        Assertions.assertThat(updatedOrder.get().paidAt()).isNotNull();
+
+        assertThat(updatedOrder).isPresent();
+        assertThat(updatedOrder.get().status()).isEqualTo(OrderStatus.PAID);
+        assertThat(updatedOrder.get().paidAt()).isNotNull();
+
+        Mockito.verify(orderNotificationService)
+                .notifyOrder(
+                        Mockito.any(NotifyOrderPaidInput.class)
+                );
+
+        Mockito.verify(orderEventListener)
+                .handleOrder(Mockito.any(OrderPaidEvent.class));
     }
 
     @Test
@@ -109,9 +147,18 @@ class OrderManagementApplicationServiceIT {
         service.markAsReady(order.id().toString());
 
         Optional<Order> updatedOrder = orders.ofId(order.id());
-        Assertions.assertThat(updatedOrder).isPresent();
-        Assertions.assertThat(updatedOrder.get().status()).isEqualTo(OrderStatus.READY);
-        Assertions.assertThat(updatedOrder.get().readyAt()).isNotNull();
+
+        assertThat(updatedOrder).isPresent();
+        assertThat(updatedOrder.get().status()).isEqualTo(OrderStatus.READY);
+        assertThat(updatedOrder.get().readyAt()).isNotNull();
+
+        Mockito.verify(orderNotificationService)
+                .notifyOrder(
+                        Mockito.any(NotifyOrderReadyInput.class)
+                );
+
+        Mockito.verify(orderEventListener)
+                .handleOrder(Mockito.any(OrderReadyEvent.class));
     }
 
     @Test

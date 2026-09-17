@@ -11,10 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "tb_order")
@@ -140,10 +137,7 @@ public class OrderPersistenceEntity
     }
 
     public void addEvents(Collection<Object> events) {
-        if(events != null) {
-            for(Object event : events) {
-                this.registerEvent(event);
-            }
-        }
+        Objects.requireNonNull(events, "Events must not be null");
+        events.forEach(this::registerEvent);
     }
 }
