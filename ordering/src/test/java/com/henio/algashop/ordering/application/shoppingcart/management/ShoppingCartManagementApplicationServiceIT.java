@@ -1,11 +1,13 @@
 package com.henio.algashop.ordering.application.shoppingcart.management;
 
 import com.henio.algashop.ordering.domain.model.customer.*;
+import com.henio.algashop.ordering.domain.model.customer.exception.CustomerAlreadyHaveShoppingCartException;
+import com.henio.algashop.ordering.domain.model.customer.exception.CustomerNotFoundException;
 import com.henio.algashop.ordering.domain.model.product.*;
 import com.henio.algashop.ordering.domain.model.shared.IdGenerator;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
-import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartNotFoundException;
+import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartNotFoundException;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCarts;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

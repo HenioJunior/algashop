@@ -1,6 +1,9 @@
 package com.henio.algashop.ordering.domain.model.order;
 
 import com.henio.algashop.ordering.domain.model.commons.*;
+import com.henio.algashop.ordering.domain.model.order.exception.OrderCannotBeEditedException;
+import com.henio.algashop.ordering.domain.model.order.exception.OrderInvalidShippingDeliveryDateException;
+import com.henio.algashop.ordering.domain.model.order.exception.OrderStatusCannotBeChangedException;
 import com.henio.algashop.ordering.domain.model.order.shipping.Recipient;
 import com.henio.algashop.ordering.domain.model.order.shipping.Shipping;
 import com.henio.algashop.ordering.domain.model.order.shipping.ShippingTestDataBuilder;

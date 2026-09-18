@@ -5,6 +5,7 @@ import com.henio.algashop.ordering.domain.model.product.Product;
 import com.henio.algashop.ordering.domain.model.product.ProductName;
 import com.henio.algashop.ordering.domain.model.commons.Quantity;
 import com.henio.algashop.ordering.domain.model.product.ProductId;
+import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartItemIncompatibleProductException;
 import lombok.Builder;
 
 import java.util.Objects;

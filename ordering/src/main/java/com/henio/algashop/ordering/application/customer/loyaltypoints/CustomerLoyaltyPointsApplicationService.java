@@ -1,16 +1,17 @@
 package com.henio.algashop.ordering.application.customer.loyaltypoints;
 
 import com.henio.algashop.ordering.domain.model.customer.*;
+import com.henio.algashop.ordering.domain.model.customer.exception.CustomerNotFoundException;
+import com.henio.algashop.ordering.domain.model.customer.service.CustomerLoyaltyPointsService;
 import com.henio.algashop.ordering.domain.model.order.Order;
 import com.henio.algashop.ordering.domain.model.order.OrderId;
-import com.henio.algashop.ordering.domain.model.order.OrderNotFoundException;
+import com.henio.algashop.ordering.domain.model.order.exception.OrderNotFoundException;
 import com.henio.algashop.ordering.domain.model.order.Orders;
 import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

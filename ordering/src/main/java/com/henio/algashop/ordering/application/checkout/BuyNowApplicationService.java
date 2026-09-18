@@ -4,6 +4,7 @@ import com.henio.algashop.ordering.domain.model.commons.Quantity;
 import com.henio.algashop.ordering.domain.model.commons.ZipCode;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.domain.model.order.*;
+import com.henio.algashop.ordering.domain.model.order.service.BuyNowService;
 import com.henio.algashop.ordering.domain.model.order.shipping.OriginAddressService;
 import com.henio.algashop.ordering.domain.model.order.shipping.Shipping;
 import com.henio.algashop.ordering.domain.model.order.shipping.ShippingCostService;

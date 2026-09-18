@@ -1,5 +1,8 @@
 package com.henio.algashop.ordering.domain.model.customer;
 
+import com.henio.algashop.ordering.domain.model.customer.event.CustomerArchivedEvent;
+import com.henio.algashop.ordering.domain.model.customer.event.CustomerRegisteredEvent;
+import com.henio.algashop.ordering.domain.model.customer.exception.CustomerArchivedException;
 import com.henio.algashop.ordering.domain.model.shared.AbstractEventSourceEntity;
 import com.henio.algashop.ordering.domain.model.shared.AggregateRoot;
 import com.henio.algashop.ordering.domain.model.commons.*;

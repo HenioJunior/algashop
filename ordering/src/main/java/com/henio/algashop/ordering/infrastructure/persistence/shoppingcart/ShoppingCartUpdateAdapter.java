@@ -1,6 +1,6 @@
 package com.henio.algashop.ordering.infrastructure.persistence.shoppingcart;
 
-import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartProductAdjustmentService;
+import com.henio.algashop.ordering.domain.model.shoppingcart.service.ShoppingCartProductAdjustmentService;
 import com.henio.algashop.ordering.domain.model.commons.Money;
 import com.henio.algashop.ordering.domain.model.product.ProductId;
 import lombok.RequiredArgsConstructor;

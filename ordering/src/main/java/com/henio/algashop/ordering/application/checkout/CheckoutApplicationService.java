@@ -1,7 +1,7 @@
 package com.henio.algashop.ordering.application.checkout;
 
 import com.henio.algashop.ordering.domain.model.commons.ZipCode;
-import com.henio.algashop.ordering.domain.model.order.CheckoutService;
+import com.henio.algashop.ordering.domain.model.order.service.CheckoutService;
 import com.henio.algashop.ordering.domain.model.order.Order;
 import com.henio.algashop.ordering.domain.model.order.Orders;
 import com.henio.algashop.ordering.domain.model.order.PaymentMethod;
@@ -9,7 +9,7 @@ import com.henio.algashop.ordering.domain.model.order.shipping.OriginAddressServ
 import com.henio.algashop.ordering.domain.model.order.shipping.ShippingCostService;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
-import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartNotFoundException;
+import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartNotFoundException;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCarts;
 import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;

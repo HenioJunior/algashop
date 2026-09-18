@@ -6,6 +6,7 @@ import com.henio.algashop.ordering.domain.model.product.Product;
 import com.henio.algashop.ordering.domain.model.commons.Quantity;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.domain.model.product.ProductId;
+import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartDoesNotContainItemException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

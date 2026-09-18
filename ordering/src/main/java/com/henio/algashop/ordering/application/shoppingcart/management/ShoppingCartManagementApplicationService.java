@@ -7,6 +7,8 @@ import com.henio.algashop.ordering.domain.model.product.ProductCatalogService;
 import com.henio.algashop.ordering.domain.model.product.ProductId;
 import com.henio.algashop.ordering.domain.model.product.ProductNotFoundException;
 import com.henio.algashop.ordering.domain.model.shoppingcart.*;
+import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartNotFoundException;
+import com.henio.algashop.ordering.domain.model.shoppingcart.service.ShoppingService;
 import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

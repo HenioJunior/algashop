@@ -1,6 +1,7 @@
 package com.henio.algashop.ordering.domain.model.customer;
 
 
+import com.henio.algashop.ordering.domain.model.customer.service.CustomerLoyaltyPointsService;
 import com.henio.algashop.ordering.domain.model.order.Order;
 import com.henio.algashop.ordering.domain.model.order.OrderStatus;
 import com.henio.algashop.ordering.domain.model.order.OrderTestDataBuilder;

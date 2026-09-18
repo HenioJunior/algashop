@@ -1,5 +1,7 @@
 package com.henio.algashop.ordering.domain.model.customer;
 
+import com.henio.algashop.ordering.domain.model.customer.event.CustomerArchivedEvent;
+import com.henio.algashop.ordering.domain.model.customer.event.CustomerRegisteredEvent;
 import com.henio.algashop.ordering.domain.model.shared.DomainException;
 import com.henio.algashop.ordering.domain.model.commons.Email;
 import org.assertj.core.api.Assertions;

@@ -6,9 +6,9 @@ import com.henio.algashop.ordering.application.customer.notification.NotifyNewRe
 import com.henio.algashop.ordering.domain.model.commons.Email;
 import com.henio.algashop.ordering.domain.model.commons.FullName;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
-import com.henio.algashop.ordering.domain.model.customer.CustomerRegisteredEvent;
+import com.henio.algashop.ordering.domain.model.customer.event.CustomerRegisteredEvent;
 import com.henio.algashop.ordering.domain.model.order.OrderId;
-import com.henio.algashop.ordering.domain.model.order.OrderReadyEvent;
+import com.henio.algashop.ordering.domain.model.order.event.OrderReadyEvent;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

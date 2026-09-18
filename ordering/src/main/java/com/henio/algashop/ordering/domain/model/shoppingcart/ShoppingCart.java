@@ -7,6 +7,8 @@ import com.henio.algashop.ordering.domain.model.commons.Quantity;
 import com.henio.algashop.ordering.domain.model.product.ProductId;
 import com.henio.algashop.ordering.domain.model.commons.Money;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
+import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartDoesNotContainItemException;
+import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartDoesNotContainProductException;
 import lombok.Builder;
 
 import java.time.OffsetDateTime;

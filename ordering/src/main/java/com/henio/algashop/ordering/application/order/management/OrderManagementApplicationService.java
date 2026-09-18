@@ -2,7 +2,7 @@ package com.henio.algashop.ordering.application.order.management;
 
 import com.henio.algashop.ordering.domain.model.order.Order;
 import com.henio.algashop.ordering.domain.model.order.OrderId;
-import com.henio.algashop.ordering.domain.model.order.OrderNotFoundException;
+import com.henio.algashop.ordering.domain.model.order.exception.OrderNotFoundException;
 import com.henio.algashop.ordering.domain.model.order.Orders;
 import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;

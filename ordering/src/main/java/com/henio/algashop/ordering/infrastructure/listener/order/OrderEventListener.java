@@ -1,10 +1,10 @@
 package com.henio.algashop.ordering.infrastructure.listener.order;
 
 import com.henio.algashop.ordering.application.order.notification.*;
-import com.henio.algashop.ordering.domain.model.order.OrderCanceledEvent;
-import com.henio.algashop.ordering.domain.model.order.OrderPaidEvent;
-import com.henio.algashop.ordering.domain.model.order.OrderPlacedEvent;
-import com.henio.algashop.ordering.domain.model.order.OrderReadyEvent;
+import com.henio.algashop.ordering.domain.model.order.event.OrderCanceledEvent;
+import com.henio.algashop.ordering.domain.model.order.event.OrderPaidEvent;
+import com.henio.algashop.ordering.domain.model.order.event.OrderPlacedEvent;
+import com.henio.algashop.ordering.domain.model.order.event.OrderReadyEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;

@@ -1,6 +1,7 @@
 package com.henio.algashop.ordering.domain.model.customer;
 
 import com.henio.algashop.ordering.domain.model.commons.*;
+import com.henio.algashop.ordering.domain.model.customer.service.CustomerRegistrationService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
