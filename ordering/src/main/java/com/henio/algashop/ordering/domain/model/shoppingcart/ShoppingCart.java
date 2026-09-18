@@ -7,6 +7,7 @@ import com.henio.algashop.ordering.domain.model.commons.Quantity;
 import com.henio.algashop.ordering.domain.model.product.ProductId;
 import com.henio.algashop.ordering.domain.model.commons.Money;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
+import com.henio.algashop.ordering.domain.model.shoppingcart.event.ShoppingCartItemAddedEvent;
 import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartDoesNotContainItemException;
 import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartDoesNotContainProductException;
 import lombok.Builder;
@@ -81,6 +82,13 @@ public class ShoppingCart
                 .ifPresentOrElse(i -> updateItem(i, product, quantity), () -> insertItem(shoppingCartItem));
 
         this.recalculateTotal();
+
+        publishDomainEvent(new ShoppingCartItemAddedEvent(
+                this.id(),
+                this.customerId,
+                product.id(),
+                OffsetDateTime.now())
+        );
     }
 
     public ShoppingCartItem findItem(ShoppingCartItemId shoppingCartItemId) {

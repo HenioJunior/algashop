@@ -1,9 +1,9 @@
 package com.henio.algashop.ordering.application.order.notification;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public record NotifyOrderPlacedInput(
         String orderId,
         String customerId,
-        LocalDateTime placedAt){
+        OffsetDateTime placedAt){
 }
