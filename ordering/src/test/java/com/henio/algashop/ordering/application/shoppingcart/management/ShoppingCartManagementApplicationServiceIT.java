@@ -1,5 +1,7 @@
 package com.henio.algashop.ordering.application.shoppingcart.management;
 
+import com.henio.algashop.ordering.application.shoppingcart.notification.NotifyShoppingCartItemAddedInput;
+import com.henio.algashop.ordering.application.shoppingcart.notification.ShoppingCartNotificationService;
 import com.henio.algashop.ordering.domain.model.customer.*;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerAlreadyHaveShoppingCartException;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerNotFoundException;
@@ -7,13 +9,16 @@ import com.henio.algashop.ordering.domain.model.product.*;
 import com.henio.algashop.ordering.domain.model.shared.IdGenerator;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
+import com.henio.algashop.ordering.domain.model.shoppingcart.event.ShoppingCartItemAddedEvent;
 import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartNotFoundException;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCarts;
+import com.henio.algashop.ordering.infrastructure.listener.shoppingcart.ShoppingCartEventListener;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -25,6 +30,12 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 @SpringBootTest
 @Transactional
 class ShoppingCartManagementApplicationServiceIT {
+
+    @MockitoSpyBean
+    private ShoppingCartEventListener shoppingCartEventListener;
+
+    @MockitoBean
+    private ShoppingCartNotificationService shoppingCartNotificationService;
 
     @Autowired
     private ShoppingCartManagementApplicationService service;
@@ -44,6 +55,7 @@ class ShoppingCartManagementApplicationServiceIT {
         customers.add(customer);
 
         ShoppingCart shoppingCart = ShoppingCart.startShopping(customer.id());
+
         shoppingCarts.add(shoppingCart);
 
         Product product = ProductTestDataBuilder.aProduct().inStock(true).build();
@@ -61,6 +73,14 @@ class ShoppingCartManagementApplicationServiceIT {
         assertThat(updatedCart.items()).hasSize(1);
         assertThat(updatedCart.items().iterator().next().productId()).isEqualTo(product.id());
         assertThat(updatedCart.items().iterator().next().quantity().value()).isEqualTo(2);
+
+        Mockito.verify(shoppingCartNotificationService)
+                .notifyShoppingCartItemAdded(
+                        Mockito.any(NotifyShoppingCartItemAddedInput.class)
+                );
+
+        Mockito.verify(shoppingCartEventListener)
+                .handleShoppingCartEvent(Mockito.any(ShoppingCartItemAddedEvent.class));
     }
 
     @Test

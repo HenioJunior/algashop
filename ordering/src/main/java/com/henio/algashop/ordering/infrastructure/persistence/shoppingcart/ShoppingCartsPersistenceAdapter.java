@@ -78,7 +78,7 @@ public class ShoppingCartsPersistenceAdapter implements ShoppingCarts {
 
         assembler.merge(entity, aggregateRoot);
 
-        persistenceRepository.flush();
+        persistenceRepository.saveAndFlush(entity);
 
         AggregateVersionUpdater.update(
                 aggregateRoot,

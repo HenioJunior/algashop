@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class ShoppingCartListener {
+public class ShoppingCartEventListener {
 
-    private ShoppingCartNotificationService service;
+    private final ShoppingCartNotificationService service;
 
     @EventListener
     public void handleShoppingCartEvent(ShoppingCartCreatedEvent event) {

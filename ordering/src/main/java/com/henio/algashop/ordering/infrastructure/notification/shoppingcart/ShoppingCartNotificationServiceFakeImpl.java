@@ -1,13 +1,17 @@
 package com.henio.algashop.ordering.infrastructure.notification.shoppingcart;
 
 import com.henio.algashop.ordering.application.shoppingcart.notification.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
+@Service
+@Slf4j
 public class ShoppingCartNotificationServiceFakeImpl implements ShoppingCartNotificationService {
 
     @Override
     public void notifyShoppingCartCreated(NotifyShoppingCartCreatedInput input) {
-        System.out.printf(
-                "Shopping cart %s was created for customer %s at %s%n",
+        log.info(
+                "Shopping cart {} was created for customer {} at {}",
                 input.shoppingCartId(),
                 input.customerId(),
                 input.createdAt()
@@ -16,8 +20,8 @@ public class ShoppingCartNotificationServiceFakeImpl implements ShoppingCartNoti
 
     @Override
     public void notifyShoppingCartItemAdded(NotifyShoppingCartItemAddedInput input) {
-        System.out.printf(
-                "Product %s was added to shopping cart %s for customer %s at %s%n",
+        log.info(
+                "Product {} was added to shopping cart {} for customer {} at {}",
                 input.productId(),
                 input.shoppingCartId(),
                 input.customerId(),
@@ -27,8 +31,8 @@ public class ShoppingCartNotificationServiceFakeImpl implements ShoppingCartNoti
 
     @Override
     public void notifyShoppingCartItemRemoved(NotifyShoppingCartItemRemovedInput input) {
-        System.out.printf(
-                "Product %s was removed from shopping cart %s for customer %s at %s%n",
+        log.info(
+                "Product {} was removed from shopping cart {} for customer {} at {}",
                 input.productId(),
                 input.shoppingCartId(),
                 input.customerId(),
@@ -38,8 +42,8 @@ public class ShoppingCartNotificationServiceFakeImpl implements ShoppingCartNoti
 
     @Override
     public void notifyShoppingCartEmptied(NotifyShoppingCartEmptiedInput input) {
-        System.out.printf(
-                "Shopping cart %s for customer %s was emptied at %s%n",
+        log.info(
+                "Shopping cart {} for customer {} was emptied at {}",
                 input.shoppingCartId(),
                 input.customerId(),
                 input.emptiedAt()
