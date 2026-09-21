@@ -186,6 +186,7 @@ public class Order
         verifyIfChangeable();
 
         this.shipping = newShipping;
+        this.recalculateTotal();
     }
 
     private void recalculateTotal() {

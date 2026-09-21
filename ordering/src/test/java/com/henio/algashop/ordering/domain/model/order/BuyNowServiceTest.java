@@ -3,8 +3,7 @@ package com.henio.algashop.ordering.domain.model.order;
 
 import com.henio.algashop.ordering.domain.model.commons.Money;
 import com.henio.algashop.ordering.domain.model.commons.Quantity;
-import com.henio.algashop.ordering.domain.model.customer.Customer;
-import com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
+import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.domain.model.order.service.BuyNowService;
 import com.henio.algashop.ordering.domain.model.order.shipping.Shipping;
 import com.henio.algashop.ordering.domain.model.order.shipping.ShippingTestDataBuilder;
@@ -12,7 +11,6 @@ import com.henio.algashop.ordering.domain.model.product.Product;
 import com.henio.algashop.ordering.domain.model.product.ProductName;
 import com.henio.algashop.ordering.domain.model.product.ProductOutOfStockException;
 import com.henio.algashop.ordering.domain.model.product.ProductTestDataBuilder;
-import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
@@ -23,11 +21,11 @@ class BuyNowServiceTest {
 
     @Test
     void shouldBuyNow() {
-        Customer customer = CustomerTestDataBuilder.existingCustomer().build();
-        CustomerId customerId = customer.id();
         Product product = ProductTestDataBuilder.aProduct().build();
+        CustomerId customerId = new CustomerId();
         Billing billing = BillingTestDataBuilder.aBilling().build();
         Shipping shipping = ShippingTestDataBuilder.aShipping().build();
+        Quantity quantity = new Quantity(2);
         PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
 
         Order order = buyNowService.buyNow(
@@ -35,7 +33,7 @@ class BuyNowServiceTest {
                 customerId,
                 billing,
                 shipping,
-                new Quantity(2),
+                quantity,
                 paymentMethod
         );
 
@@ -62,6 +60,10 @@ class BuyNowServiceTest {
                                 new Quantity(2)
                         )
                 );
+
+        Money expectedTotalAmount = product.price().multiply(quantity).add(shipping.cost());
+        assertThat(order.totalAmount()).isEqualTo(expectedTotalAmount);
+        assertThat(order.totalItems()).isEqualTo(quantity);
     }
 
     @Test

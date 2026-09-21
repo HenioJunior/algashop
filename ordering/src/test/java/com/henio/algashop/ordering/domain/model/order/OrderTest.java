@@ -134,6 +134,20 @@ class OrderTest {
     }
 
     @Test
+    void givenDraftOrder_whenChangeShipping_shouldAllowChange() {
+        Shipping shipping = ShippingTestDataBuilder.aShipping().build();
+        Order order = Order.draft(CustomerId.generate());
+        Money expectedTotalAmount = order.totalAmount().add(shipping.cost());
+
+        order.changeShipping(shipping);
+
+        Assertions.assertWith(order,
+                o -> assertThat(order.shipping()).isEqualTo(shipping),
+                o -> assertThat(order.totalAmount()).isEqualTo(expectedTotalAmount)
+        );
+    }
+
+    @Test
     void givenOrderWithItems_whenTryToModifyReturnedCollection_thenShouldThrowException() {
         Order order = Order.draft(CustomerId.generate());
 
