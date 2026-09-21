@@ -75,9 +75,13 @@ class ShoppingCartManagementApplicationServiceIT {
         service.addItem(input);
 
         ShoppingCart updatedCart = shoppingCarts.ofId(shoppingCart.id()).orElseThrow();
-        assertThat(updatedCart.items()).hasSize(1);
-        assertThat(updatedCart.items().iterator().next().productId()).isEqualTo(product.id());
-        assertThat(updatedCart.items().iterator().next().quantity().value()).isEqualTo(2);
+
+        assertThat(updatedCart.items())
+                .singleElement()
+                .satisfies(item -> {
+                    assertThat(item.productId()).isEqualTo(product.id());
+                    assertThat(item.quantity()).isEqualTo(new Quantity(2));
+                });
 
         Mockito.verify(shoppingCartNotificationService)
                 .notifyShoppingCartItemAdded(
@@ -185,7 +189,7 @@ class ShoppingCartManagementApplicationServiceIT {
     }
 
     @Test
-    void shouldRemoveShoppingCartSuccessfully() {
+    void shouldRemoveItemFromShoppingCartSuccessfully() {
         Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
         customers.add(customer);
 
