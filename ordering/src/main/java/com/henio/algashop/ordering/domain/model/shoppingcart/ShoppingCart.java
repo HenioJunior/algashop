@@ -7,7 +7,10 @@ import com.henio.algashop.ordering.domain.model.commons.Quantity;
 import com.henio.algashop.ordering.domain.model.product.ProductId;
 import com.henio.algashop.ordering.domain.model.commons.Money;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
+import com.henio.algashop.ordering.domain.model.shoppingcart.event.ShoppingCartCreatedEvent;
+import com.henio.algashop.ordering.domain.model.shoppingcart.event.ShoppingCartEmptiedEvent;
 import com.henio.algashop.ordering.domain.model.shoppingcart.event.ShoppingCartItemAddedEvent;
+import com.henio.algashop.ordering.domain.model.shoppingcart.event.ShoppingCartItemRemovedEvent;
 import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartDoesNotContainItemException;
 import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartDoesNotContainProductException;
 import lombok.Builder;
@@ -47,20 +50,41 @@ public class ShoppingCart
     }
 
     public static ShoppingCart startShopping(CustomerId customerId) {
-        return new ShoppingCart(new ShoppingCartId(), customerId, Money.ZERO,
-                Quantity.ZERO, OffsetDateTime.now(), new HashSet<>(), null);
+        ShoppingCartId shoppingCartId = new ShoppingCartId();
+        OffsetDateTime createdAt = OffsetDateTime.now();
+        ShoppingCart shoppingCart = new ShoppingCart(
+                shoppingCartId,
+                customerId,
+                Money.ZERO,
+                Quantity.ZERO,
+                createdAt,
+                new HashSet<>(),
+                null
+        );
+
+        shoppingCart.publishDomainEvent(new ShoppingCartCreatedEvent(shoppingCartId, customerId, createdAt));
+
+        return shoppingCart;
     }
 
     public void empty() {
         items.clear();
         totalAmount = Money.ZERO;
         totalItems = Quantity.ZERO;
+
+        publishDomainEvent(new ShoppingCartEmptiedEvent(this.id, this.customerId, this.createdAt));
     }
 
     public void removeItem(ShoppingCartItemId shoppingCartItemId) {
         ShoppingCartItem shoppingCartItem = this.findItem(shoppingCartItemId);
+
+        ProductId productId = shoppingCartItem.productId();
+
         this.items.remove(shoppingCartItem);
+
         this.recalculateTotal();
+
+        publishDomainEvent(new ShoppingCartItemRemovedEvent(this.id, customerId, productId, OffsetDateTime.now()));
     }
 
     public void addItem(Product product, Quantity quantity) {

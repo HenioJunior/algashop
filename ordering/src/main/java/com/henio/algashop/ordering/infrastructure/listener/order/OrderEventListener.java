@@ -24,7 +24,7 @@ public class OrderEventListener {
         NotifyOrderPlacedInput input = new NotifyOrderPlacedInput(
                 event.orderId().toString(),
                 event.customerId().toString(),
-                event.placedAt().toLocalDateTime()
+                event.placedAt()
         );
 
         service.notifyOrder(input);
@@ -37,7 +37,7 @@ public class OrderEventListener {
         NotifyOrderPaidInput input = new NotifyOrderPaidInput(
                 event.orderId().toString(),
                 event.customerId().toString(),
-                event.paidAt().toLocalDateTime()
+                event.paidAt()
         );
 
         service.notifyOrder(input);
@@ -50,7 +50,7 @@ public class OrderEventListener {
         NotifyOrderReadyInput input = new NotifyOrderReadyInput(
                 event.orderId().toString(),
                 event.customerId().toString(),
-                event.readyAt().toLocalDateTime()
+                event.readyAt()
         );
 
         service.notifyOrder(input);
@@ -63,7 +63,7 @@ public class OrderEventListener {
         NotifyOrderCanceledInput input = new NotifyOrderCanceledInput(
                 event.orderId().toString(),
                 event.customerId().toString(),
-                event.canceledAt().toLocalDateTime()
+                event.canceledAt()
         );
 
         service.notifyOrder(input);
