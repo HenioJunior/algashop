@@ -6,17 +6,26 @@ import com.henio.algashop.ordering.domain.model.commons.Money;
 import com.henio.algashop.ordering.domain.model.commons.Quantity;
 import com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.customer.Customers;
-import com.henio.algashop.ordering.domain.model.order.*;
+import com.henio.algashop.ordering.domain.model.order.Order;
+import com.henio.algashop.ordering.domain.model.order.OrderId;
+import com.henio.algashop.ordering.domain.model.order.OrderStatus;
+import com.henio.algashop.ordering.domain.model.order.Orders;
 import com.henio.algashop.ordering.domain.model.order.event.OrderPlacedEvent;
 import com.henio.algashop.ordering.domain.model.order.shipping.ShippingCostService;
 import com.henio.algashop.ordering.domain.model.product.Product;
 import com.henio.algashop.ordering.domain.model.product.ProductTestDataBuilder;
-import com.henio.algashop.ordering.domain.model.shoppingcart.*;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCarts;
 import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartCantProceedToCheckoutException;
 import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartNotFoundException;
 import com.henio.algashop.ordering.infrastructure.listener.order.OrderEventListener;
+import com.henio.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityRepository;
+import com.henio.algashop.ordering.infrastructure.persistence.order.OrderPersistenceEntityRepository;
+import com.henio.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceEntityRepository;
 import io.hypersistence.tsid.TSID;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -24,7 +33,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -34,7 +42,6 @@ import static com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCart
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Transactional
 class CheckoutApplicationServiceIT {
 
     @MockitoSpyBean
@@ -55,8 +62,24 @@ class CheckoutApplicationServiceIT {
     @Autowired
     private Customers customers;
 
+    @Autowired
+    private OrderPersistenceEntityRepository orderRepository;
+
+    @Autowired
+    private ShoppingCartPersistenceEntityRepository shoppingCartRepository;
+
+    @Autowired
+    private CustomerPersistenceEntityRepository customerRepository;
+
     @MockitoBean
     private ShippingCostService shippingCostService;
+
+    @AfterEach
+    void cleanup() {
+        orderRepository.deleteAll();
+        shoppingCartRepository.deleteAll();
+        customerRepository.deleteAll();
+    }
 
     @BeforeEach
     public void setup() {

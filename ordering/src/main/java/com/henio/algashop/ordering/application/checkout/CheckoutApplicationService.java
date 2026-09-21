@@ -12,6 +12,7 @@ import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
 import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartNotFoundException;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCarts;
 import io.hypersistence.tsid.TSID;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,7 @@ public class CheckoutApplicationService {
     private final ShippingCostService shippingCostService;
     private final OriginAddressService originAddressService;
 
+    @Transactional
     public String checkout(CheckoutInput input) {
         Objects.requireNonNull(input, "CheckoutInput must not be null");
         ShoppingCartId shoppingCartId = new ShoppingCartId(TSID.from(input.getShoppingCartId()));

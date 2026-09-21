@@ -23,10 +23,10 @@ public class ShoppingCartPersistenceAssembler {
                 .totalAmount(shoppingCart.totalAmount().value())
                 .totalItems(shoppingCart.totalItems().value())
                 .createdAt(shoppingCart.createdAt())
-                .items(toOrderItemsEntities(shoppingCart.items()))
                 .version(shoppingCart.version())
                 .build();
 
+        entity.addItem(toItemsEntities(shoppingCart.items()));
         entity.addEvents(shoppingCart.domainEvents());
 
         return entity;
@@ -40,19 +40,57 @@ public class ShoppingCartPersistenceAssembler {
         entity.setTotalItems(shoppingCart.totalItems().value());
         entity.setCreatedAt(shoppingCart.createdAt());
 
-        entity.replaceItems(
-                toOrderItemsEntities(shoppingCart.items())
-        );
+        mergeItems(entity, shoppingCart);
 
         entity.addEvents(shoppingCart.domainEvents());
+    }
+
+    private void mergeItems(
+            ShoppingCartPersistenceEntity entity,
+            ShoppingCart shoppingCart
+    ) {
+        Set<Long> domainItemIds = shoppingCart.items().stream()
+                .map(item -> item.id().value().toLong())
+                .collect(Collectors.toSet());
+
+        entity.getItems().removeIf(
+                persistenceItem -> !domainItemIds.contains(persistenceItem.getId())
+        );
+
+        shoppingCart.items().forEach(domainItem -> {
+            entity.getItems().stream()
+                    .filter(persistenceItem ->
+                            persistenceItem.getId().equals(
+                                    domainItem.id().value().toLong()
+                            )
+                    )
+                    .findFirst()
+                    .ifPresentOrElse(
+                            persistenceItem ->
+                                    mergeItem(persistenceItem, domainItem),
+                            () -> entity.addItem(
+                                    mergeItem(
+                                            new ShoppingCartItemPersistenceEntity(),
+                                            domainItem
+                                    )
+                            )
+                    );
+        });
     }
 
     private CustomerPersistenceEntity getCustomerById(ShoppingCart shoppingCart) {
         return customerPersistenceEntityRepository.getReferenceById(shoppingCart.customerId().value().toLong());
     }
 
-    private Set<ShoppingCartItemPersistenceEntity> toOrderItemsEntities(Set<ShoppingCartItem> source) {
-        return source.stream().map(i -> this.mergeItem(new ShoppingCartItemPersistenceEntity(), i)).collect(Collectors.toSet());
+    private Set<ShoppingCartItemPersistenceEntity> toItemsEntities(
+            Set<ShoppingCartItem> source
+    ) {
+        return source.stream()
+                .map(item -> this.mergeItem(
+                        new ShoppingCartItemPersistenceEntity(),
+                        item
+                ))
+                .collect(Collectors.toSet());
     }
 
     private ShoppingCartItemPersistenceEntity mergeItem(ShoppingCartItemPersistenceEntity persistenceEntity, ShoppingCartItem shoppingCartItem
