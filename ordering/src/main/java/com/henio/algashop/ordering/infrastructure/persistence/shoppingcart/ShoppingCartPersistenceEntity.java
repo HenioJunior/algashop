@@ -7,22 +7,22 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "tb_shopping_cart")
 @Data
 @NoArgsConstructor
 @ToString(of = "id")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @EntityListeners(AuditingEntityListener.class)
-public class ShoppingCartPersistenceEntity {
+public class ShoppingCartPersistenceEntity
+        extends AbstractAggregateRoot<ShoppingCartPersistenceEntity> {
 
     @Id
     @EqualsAndHashCode.Include
@@ -105,5 +105,14 @@ public class ShoppingCartPersistenceEntity {
         if (items != null) {
             items.forEach(this::addItem);
         }
+    }
+
+    public Collection<Object> getEvents() {
+        return super.domainEvents();
+    }
+
+    public void addEvents(Collection<Object> events) {
+        Objects.requireNonNull(events, "Events must not be null");
+        events.forEach(this::registerEvent);
     }
 }

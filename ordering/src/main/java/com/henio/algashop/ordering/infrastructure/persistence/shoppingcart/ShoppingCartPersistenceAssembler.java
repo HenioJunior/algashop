@@ -17,7 +17,7 @@ public class ShoppingCartPersistenceAssembler {
     private final CustomerPersistenceEntityRepository customerPersistenceEntityRepository;
 
     public ShoppingCartPersistenceEntity fromDomain(ShoppingCart shoppingCart) {
-        return ShoppingCartPersistenceEntity.builder()
+        ShoppingCartPersistenceEntity entity = ShoppingCartPersistenceEntity.builder()
                 .id(shoppingCart.id().value().toLong())
                 .customer(getCustomerById(shoppingCart))
                 .totalAmount(shoppingCart.totalAmount().value())
@@ -26,21 +26,25 @@ public class ShoppingCartPersistenceAssembler {
                 .items(toOrderItemsEntities(shoppingCart.items()))
                 .version(shoppingCart.version())
                 .build();
+
+        entity.addEvents(shoppingCart.domainEvents());
+
+        return entity;
     }
 
-    public ShoppingCartPersistenceEntity merge(ShoppingCartPersistenceEntity persistenceEntity,
-                                               ShoppingCart shoppingCart) {
-        persistenceEntity.setId(shoppingCart.id().value().toLong());
-        persistenceEntity.setCustomer(getCustomerById(shoppingCart));
-        persistenceEntity.setTotalAmount(shoppingCart.totalAmount().value());
-        persistenceEntity.setTotalItems(shoppingCart.totalItems().value());
-        persistenceEntity.setCreatedAt(shoppingCart.createdAt());
+    public void merge(ShoppingCartPersistenceEntity entity,
+                      ShoppingCart shoppingCart) {
+        entity.setId(shoppingCart.id().value().toLong());
+        entity.setCustomer(getCustomerById(shoppingCart));
+        entity.setTotalAmount(shoppingCart.totalAmount().value());
+        entity.setTotalItems(shoppingCart.totalItems().value());
+        entity.setCreatedAt(shoppingCart.createdAt());
 
-        persistenceEntity.replaceItems(
+        entity.replaceItems(
                 toOrderItemsEntities(shoppingCart.items())
         );
 
-        return persistenceEntity;
+        entity.addEvents(shoppingCart.domainEvents());
     }
 
     private CustomerPersistenceEntity getCustomerById(ShoppingCart shoppingCart) {

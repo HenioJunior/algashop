@@ -1,6 +1,6 @@
 package com.henio.algashop.ordering.application.shoppingcart.notification;
 
-public interface ShoppingNotificationService {
+public interface ShoppingCartNotificationService {
     void notifyShoppingCartCreated(NotifyShoppingCartCreatedInput input);
     void notifyShoppingCartItemAdded(NotifyShoppingCartItemAddedInput input);
     void notifyShoppingCartItemRemoved(NotifyShoppingCartItemRemovedInput input);

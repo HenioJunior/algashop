@@ -36,13 +36,15 @@ public class ShoppingCartsPersistenceAdapter implements ShoppingCarts {
     @Override
     @Transactional
     public void add(ShoppingCart aggregateRoot) {
-        Long ShoppingCartId = aggregateRoot.id().value().toLong();
+        Long shoppingCartId = aggregateRoot.id().value().toLong();
 
-        persistenceRepository.findById(ShoppingCartId)
+        persistenceRepository.findById(shoppingCartId)
                 .ifPresentOrElse(
                         (persistenceEntity) -> update(aggregateRoot, persistenceEntity),
                         ()-> insert(aggregateRoot)
                 );
+
+        aggregateRoot.clearDomainEvents();
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.henio.algashop.ordering.application.shoppingcart.notification;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public record NotifyShoppingCartCreatedInput(
         String shoppingCartId,
         String customerId,
-        LocalDateTime createdAt
+        OffsetDateTime createdAt
 ) {}
