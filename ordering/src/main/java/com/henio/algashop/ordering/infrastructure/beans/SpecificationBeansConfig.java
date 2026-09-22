@@ -1,5 +1,6 @@
 package com.henio.algashop.ordering.infrastructure.beans;
 
+import com.henio.algashop.ordering.domain.model.customer.LoyaltyPoints;
 import com.henio.algashop.ordering.domain.model.order.CustomerHaveFreeShippingSpecification;
 import com.henio.algashop.ordering.domain.model.order.Orders;
 import org.springframework.context.annotation.Bean;
@@ -11,10 +12,10 @@ public class SpecificationBeansConfig {
     @Bean
     public CustomerHaveFreeShippingSpecification customerHaveFreeShippingSpecification(Orders orders) {
         return new CustomerHaveFreeShippingSpecification(
+                new LoyaltyPoints(100),
                 orders,
-                100,
                 2,
-                2000
+                new LoyaltyPoints(2000)
         );
     }
 }
