@@ -143,6 +143,7 @@ class BuyNowServiceTest {
 
         Money expectedTotalAmount = product.price().multiply(quantity);
         assertThat(order.totalAmount()).isEqualTo(expectedTotalAmount);
+        assertThat(order.shipping().cost()).isEqualTo(Money.ZERO);
         assertThat(order.totalItems()).isEqualTo(quantity);
     }
 }
