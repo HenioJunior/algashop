@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BuyNowService {
 
-    private final CustomerHaveFreeShippingSpecification customerHaveFreeShippingSpecification;
+    private final CustomerHaveFreeShippingSpecification customerHaveFreeShipping;
 
     public Order buyNow(
             Product product,
@@ -48,6 +48,6 @@ public class BuyNowService {
     }
 
     private boolean isHaveFreeShipping(Customer customer) {
-        return customerHaveFreeShippingSpecification.isSatisfiedBy(customer);
+        return customerHaveFreeShipping.isSatisfiedBy(customer);
     }
 }

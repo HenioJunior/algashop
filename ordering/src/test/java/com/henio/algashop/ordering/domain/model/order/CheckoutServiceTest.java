@@ -2,6 +2,9 @@ package com.henio.algashop.ordering.domain.model.order;
 
 import com.henio.algashop.ordering.domain.model.commons.Money;
 import com.henio.algashop.ordering.domain.model.commons.Quantity;
+import com.henio.algashop.ordering.domain.model.customer.Customer;
+import com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
+import com.henio.algashop.ordering.domain.model.customer.LoyaltyPoints;
 import com.henio.algashop.ordering.domain.model.order.service.CheckoutService;
 import com.henio.algashop.ordering.domain.model.order.shipping.Shipping;
 import com.henio.algashop.ordering.domain.model.order.shipping.ShippingTestDataBuilder;
@@ -13,22 +16,44 @@ import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingC
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.product.ProductId;
 import org.assertj.core.api.ThrowableAssert;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 class CheckoutServiceTest {
 
-    CheckoutService checkoutService = new CheckoutService();
+    CheckoutService checkoutService;
+
+    @Mock
+    private Orders orders;
+
+    @BeforeEach
+    void setUp() {
+        var customerHaveFreeShippingSpecification = new CustomerHaveFreeShippingSpecification(
+                new LoyaltyPoints(100),
+                orders,
+                2,
+                new LoyaltyPoints(2000)
+
+        );
+        checkoutService = new CheckoutService(customerHaveFreeShippingSpecification);
+    }
 
     @Test
     void shouldCheckoutShoppingCart() {
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
         Billing billing = BillingTestDataBuilder.aBilling().build();
         Shipping shipping = ShippingTestDataBuilder.aShipping().build();
         PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
 
         Order order = checkoutService.checkout(
+                customer,
                 shoppingCart,
                 billing,
                 shipping,
@@ -64,6 +89,7 @@ class CheckoutServiceTest {
 
     @Test
     void shouldNotCheckoutWithUnavailableItems() {
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
         ShoppingCart shoppingCart =
                 ShoppingCartTestDataBuilder.aShoppingCart()
                         .withItems(false)
@@ -93,6 +119,7 @@ class CheckoutServiceTest {
         PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
 
         ThrowableAssert.ThrowingCallable checkoutTask = () -> checkoutService.checkout(
+                customer,
                 shoppingCart,
                 billing,
                 shipping,
@@ -106,6 +133,7 @@ class CheckoutServiceTest {
 
     @Test
     void shouldNotCheckoutWithZeroItems() {
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
         ShoppingCart shoppingCart =
                 ShoppingCartTestDataBuilder.aShoppingCart()
                         .withItems(false).build();
@@ -115,6 +143,7 @@ class CheckoutServiceTest {
         PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
 
         ThrowableAssert.ThrowingCallable checkoutTask = () -> checkoutService.checkout(
+                customer,
                 shoppingCart,
                 billing,
                 shipping,
