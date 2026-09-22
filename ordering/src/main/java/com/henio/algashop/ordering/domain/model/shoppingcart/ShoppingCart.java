@@ -132,6 +132,7 @@ public class ShoppingCart
     }
 
     public void refreshItem(Product product) {
+        Objects.requireNonNull(product, "Product cannot be null");
         ShoppingCartItem shoppingCartItem = this.findItem(product.id());
         shoppingCartItem.refresh(product);
         this.recalculateTotal();
