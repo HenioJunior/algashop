@@ -1,6 +1,5 @@
 package com.henio.algashop.ordering.domain.model.order;
 
-
 import com.henio.algashop.ordering.domain.model.commons.Money;
 import com.henio.algashop.ordering.domain.model.commons.Quantity;
 import com.henio.algashop.ordering.domain.model.customer.Customer;
@@ -13,9 +12,9 @@ import com.henio.algashop.ordering.domain.model.order.shipping.ShippingTestDataB
 import com.henio.algashop.ordering.domain.model.product.Product;
 import com.henio.algashop.ordering.domain.model.product.ProductOutOfStockException;
 import com.henio.algashop.ordering.domain.model.product.ProductTestDataBuilder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -27,11 +26,21 @@ import static org.assertj.core.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class BuyNowServiceTest {
 
-    @InjectMocks
     private BuyNowService buyNowService;
 
     @Mock
     private Orders orders;
+
+    @BeforeEach
+    void setUp() {
+        var customerHaveFreeShippingSpecification = new CustomerHaveFreeShippingSpecification(
+                orders,
+                100,
+                2,
+                2000
+        );
+        buyNowService = new BuyNowService(customerHaveFreeShippingSpecification);
+    }
 
     @Test
     void givenValidProductAndDetails_whenBuyNow_shouldReturnPlacedOrder() {
