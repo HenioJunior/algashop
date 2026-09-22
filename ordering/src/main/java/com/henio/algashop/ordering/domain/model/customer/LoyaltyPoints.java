@@ -7,7 +7,7 @@ import java.util.Objects;
 import static com.henio.algashop.ordering.domain.model.validation.ErrorMessages.LOYALTY_POINTS_CANNOT_BE_NEGATIVE;
 import static com.henio.algashop.ordering.domain.model.validation.ErrorMessages.LOYALTY_POINTS_TO_ADD_MUST_BE_GREATER_THAN_ZERO;
 
-public record LoyaltyPoints(int value) {
+public record LoyaltyPoints(Integer value) implements Comparable<LoyaltyPoints> {
 
     public static final LoyaltyPoints ZERO = new LoyaltyPoints(0);
 
@@ -44,5 +44,11 @@ public record LoyaltyPoints(int value) {
     @Override
     public String toString() {
         return String.valueOf(value);
+    }
+
+
+    @Override
+    public int compareTo(LoyaltyPoints o) {
+        return this.value().compareTo(o.value());
     }
 }

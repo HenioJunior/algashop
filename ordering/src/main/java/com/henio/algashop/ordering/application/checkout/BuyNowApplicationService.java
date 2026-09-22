@@ -2,7 +2,10 @@ package com.henio.algashop.ordering.application.checkout;
 
 import com.henio.algashop.ordering.domain.model.commons.Quantity;
 import com.henio.algashop.ordering.domain.model.commons.ZipCode;
+import com.henio.algashop.ordering.domain.model.customer.Customer;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
+import com.henio.algashop.ordering.domain.model.customer.Customers;
+import com.henio.algashop.ordering.domain.model.customer.exception.CustomerNotFoundException;
 import com.henio.algashop.ordering.domain.model.order.*;
 import com.henio.algashop.ordering.domain.model.order.service.BuyNowService;
 import com.henio.algashop.ordering.domain.model.order.shipping.OriginAddressService;
@@ -31,6 +34,7 @@ public class BuyNowApplicationService {
     private final OriginAddressService originAddressService;
 
     private final Orders orders;
+    private final Customers customers;
 
     private final BillingInputDisassembler billingInputDisassembler;
     private final ShippingInputDisassembler shippingInputDisassembler;
@@ -40,7 +44,11 @@ public class BuyNowApplicationService {
         Objects.requireNonNull(input, "Buy now input is required");
 
         PaymentMethod paymentMethod = PaymentMethod.valueOf(input.getPaymentMethod());
+
         CustomerId customerId = new CustomerId(TSID.from(input.getCustomerId()));
+        Customer customer = customers.ofId(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(customerId));
+
         Quantity quantity = new Quantity(input.getQuantity());
 
         Product product = findProduct(new ProductId(TSID.from(input.getProductId())));
@@ -53,7 +61,7 @@ public class BuyNowApplicationService {
 
         Order order = buyNowService.buyNow(
                 product,
-                customerId,
+                customer,
                 billing,
                 shipping,
                 quantity,
