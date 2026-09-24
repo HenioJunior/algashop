@@ -18,6 +18,14 @@ public record OrderId(TSID value) {
         this(IdGenerator.generateTSID());
     }
 
+    public OrderId(Long value) {
+        this(TSID.from(value));
+    }
+
+    public OrderId(String value) {
+        this(TSID.from(value));
+    }
+
     public static OrderId generate() {
         return new OrderId(
                 IdGenerator.generateTSID()
