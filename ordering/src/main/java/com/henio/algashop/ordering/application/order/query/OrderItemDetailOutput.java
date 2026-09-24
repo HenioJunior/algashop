@@ -15,7 +15,7 @@ import java.util.UUID;
 public class OrderItemDetailOutput {
     private String id;
     private String orderId;
-    private UUID productId;
+    private String productId;
     private String productName;
     private BigDecimal price;
     private Integer quantity;
