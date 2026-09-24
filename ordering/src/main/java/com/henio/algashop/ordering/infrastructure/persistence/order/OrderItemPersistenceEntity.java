@@ -25,7 +25,10 @@ public class OrderItemPersistenceEntity {
     private BigDecimal totalAmount;
 
     @JoinColumn
-    @ManyToOne(optional = false)
+    @ManyToOne(
+            optional = false,
+            fetch = FetchType.LAZY
+    )
     private OrderPersistenceEntity order;
 
     public Long getOrderId() {
