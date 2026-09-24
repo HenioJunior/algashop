@@ -1,8 +1,12 @@
 package com.henio.algashop.ordering.application.customer.management;
 
 import com.henio.algashop.ordering.application.commons.AddressData;
+import com.henio.algashop.ordering.application.customer.query.CustomerOutput;
 import com.henio.algashop.ordering.domain.model.commons.Address;
 import com.henio.algashop.ordering.domain.model.customer.Customer;
+import com.henio.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddable;
+import com.henio.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity;
+import io.hypersistence.tsid.TSID;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -40,10 +44,44 @@ public class CustomerOutputMapper {
                 .build();
     }
 
+    public CustomerOutput fromPersistence(CustomerPersistenceEntity entity) {
+        Objects.requireNonNull(entity, "Customer persistence entity is required");
+
+        return CustomerOutput.builder()
+                .id(TSID.from(entity.getId()).toString())
+                .firstName(entity.getFirstName())
+                .lastName(entity.getLastName())
+                .birthDate(entity.getBirthDate())
+                .email(entity.getEmail())
+                .phone(entity.getPhone())
+                .document(entity.getDocument())
+                .promotionNotificationsAllowed(
+                        entity.isPromotionNotificationsAllowed()
+                )
+                .loyaltyPoints(entity.getLoyaltyPoints())
+                .registeredAt(entity.getRegisteredAt())
+                .archived(entity.isArchived())
+                .archivedAt(entity.getArchivedAt())
+                .address(toAddressData(entity.getAddress()))
+                .build();
+    }
+
+    private AddressData toAddressData(AddressEmbeddable address) {
+        Objects.requireNonNull(address, "AddressEmbeddable is required");
+
+        return AddressData.builder()
+                .street(address.getStreet())
+                .number(address.getNumber())
+                .complement(address.getComplement())
+                .neighborhood(address.getNeighborhood())
+                .city(address.getCity())
+                .state(address.getState())
+                .zipCode(address.getZipCode())
+                .build();
+    }
+
     private AddressData toAddressData(Address address) {
-        if (address == null) {
-            return null;
-        }
+        Objects.requireNonNull(address, "Address is required");
 
         return AddressData.builder()
                 .street(address.street())

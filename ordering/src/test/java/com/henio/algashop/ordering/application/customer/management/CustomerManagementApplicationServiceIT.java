@@ -2,6 +2,8 @@ package com.henio.algashop.ordering.application.customer.management;
 
 import com.henio.algashop.ordering.application.customer.notification.CustomerNotificationApplicationService;
 import com.henio.algashop.ordering.application.customer.notification.NotifyNewRegistrationInput;
+import com.henio.algashop.ordering.application.customer.query.CustomerOutput;
+import com.henio.algashop.ordering.application.customer.query.CustomerQueryService;
 import com.henio.algashop.ordering.domain.model.customer.*;
 import com.henio.algashop.ordering.domain.model.customer.event.CustomerRegisteredEvent;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerAlreadyArchivedException;
@@ -35,6 +37,9 @@ class CustomerManagementApplicationServiceIT {
     @Autowired
     private CustomerManagementApplicationService customerManagementApplicationService;
 
+    @Autowired
+    private CustomerQueryService customerQueryService;
+
     @Test
     void shouldGenerateNewCustomer() {
         CustomerInput input = CustomerInputTestDataBuilder.aCustomer().build();
@@ -42,8 +47,7 @@ class CustomerManagementApplicationServiceIT {
         CustomerId customerId = customerManagementApplicationService.create(input);
         assertThat(customerId).isNotNull();
 
-        CustomerOutput customerOutput = customerManagementApplicationService
-                .findById(customerId);
+        CustomerOutput customerOutput = customerQueryService.findById(customerId.toString());
 
         assertThat(customerOutput).extracting(
                 CustomerOutput::getId,
@@ -78,7 +82,7 @@ class CustomerManagementApplicationServiceIT {
 
         customerManagementApplicationService.update(customerId.toString(), customerUpdate);
 
-        CustomerOutput customerOutput = customerManagementApplicationService.findById(customerId);
+        CustomerOutput customerOutput = customerQueryService.findById(customerId.toString());
 
         assertThat(customerOutput)
                 .extracting(
@@ -107,7 +111,7 @@ class CustomerManagementApplicationServiceIT {
         customerManagementApplicationService.archive(customerId.toString());
 
         CustomerOutput customerOutput =
-                customerManagementApplicationService.findById(customerId);
+                customerQueryService.findById(customerId.toString());
 
         assertThat(customerOutput).isNotNull();
         assertThat(customerOutput.getArchived()).isTrue();
@@ -142,7 +146,7 @@ class CustomerManagementApplicationServiceIT {
         customerManagementApplicationService.archive(customerId.toString());
 
         CustomerOutput customerOutput =
-                customerManagementApplicationService.findById(customerId);
+                customerQueryService.findById(customerId.toString());
 
         assertThat(customerOutput.getArchived()).isTrue();
 
@@ -159,7 +163,7 @@ class CustomerManagementApplicationServiceIT {
         customerManagementApplicationService.changeEmail(customerId.toString(), "new@email.com");
 
         CustomerOutput customerOutput =
-                customerManagementApplicationService.findById(customerId);
+                customerQueryService.findById(customerId.toString());
 
         assertThat(customerOutput.getEmail()).isEqualTo("new@email.com");
     }

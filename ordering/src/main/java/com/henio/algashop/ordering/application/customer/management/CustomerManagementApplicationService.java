@@ -2,7 +2,10 @@ package com.henio.algashop.ordering.application.customer.management;
 
 import com.henio.algashop.ordering.application.commons.AddressData;
 import com.henio.algashop.ordering.domain.model.commons.*;
-import com.henio.algashop.ordering.domain.model.customer.*;
+import com.henio.algashop.ordering.domain.model.customer.BirthDate;
+import com.henio.algashop.ordering.domain.model.customer.Customer;
+import com.henio.algashop.ordering.domain.model.customer.CustomerId;
+import com.henio.algashop.ordering.domain.model.customer.Customers;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerAlreadyArchivedException;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerNotFoundException;
 import com.henio.algashop.ordering.domain.model.customer.service.CustomerRegistrationService;
@@ -19,7 +22,6 @@ public class CustomerManagementApplicationService {
 
     private final CustomerRegistrationService customerRegistration;
     private final Customers customers;
-    private final CustomerOutputMapper customerOutputMapper;
 
     @Transactional
     public CustomerId create(CustomerInput input) {
@@ -38,16 +40,6 @@ public class CustomerManagementApplicationService {
         customers.add(customer);
 
         return customer.id();
-    }
-
-    @Transactional(readOnly = true)
-    public CustomerOutput findById(CustomerId customerId) {
-        Objects.requireNonNull(customerId, "Customer ID is required");
-        Customer customer = customers
-                .ofId(customerId)
-                .orElseThrow(() -> new CustomerNotFoundException(customerId));
-
-        return customerOutputMapper.fromDomain(customer);
     }
 
     @Transactional
