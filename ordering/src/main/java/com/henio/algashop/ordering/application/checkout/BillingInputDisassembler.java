@@ -1,6 +1,7 @@
 package com.henio.algashop.ordering.application.checkout;
 
 import com.henio.algashop.ordering.application.commons.AddressData;
+import com.henio.algashop.ordering.application.order.query.BillingData;
 import com.henio.algashop.ordering.domain.model.commons.*;
 import com.henio.algashop.ordering.domain.model.order.Billing;
 import org.springframework.stereotype.Component;

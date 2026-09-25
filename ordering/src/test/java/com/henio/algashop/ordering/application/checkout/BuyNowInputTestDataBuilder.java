@@ -1,6 +1,8 @@
 package com.henio.algashop.ordering.application.checkout;
 
 import com.henio.algashop.ordering.application.commons.AddressData;
+import com.henio.algashop.ordering.application.order.query.BillingData;
+import com.henio.algashop.ordering.application.order.query.RecipientData;
 import com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 

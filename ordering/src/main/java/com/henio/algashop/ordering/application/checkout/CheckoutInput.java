@@ -1,5 +1,6 @@
 package com.henio.algashop.ordering.application.checkout;
 
+import com.henio.algashop.ordering.application.order.query.BillingData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

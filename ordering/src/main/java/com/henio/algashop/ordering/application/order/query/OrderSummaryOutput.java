@@ -7,14 +7,12 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderDetailOutput {
+public class OrderSummaryOutput {
     private String id;
     private CustomerMinimalOutput customer;
     private Integer totalItems;
@@ -25,8 +23,4 @@ public class OrderDetailOutput {
     private OffsetDateTime readyAt;
     private String status;
     private String paymentMethod;
-    private ShippingData shipping;
-    private BillingData billing;
-
-    private List<OrderItemDetailOutput> items = new ArrayList<>();
 }
