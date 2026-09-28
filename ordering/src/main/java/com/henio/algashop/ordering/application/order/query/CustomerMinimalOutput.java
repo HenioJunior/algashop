@@ -5,14 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class CustomerMinimalOutput {
-    private String id;
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;

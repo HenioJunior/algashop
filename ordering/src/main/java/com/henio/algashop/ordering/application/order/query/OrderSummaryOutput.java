@@ -13,7 +13,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @Builder
 public class OrderSummaryOutput {
-    private String id;
+    private Long id;
     private CustomerMinimalOutput customer;
     private Integer totalItems;
     private BigDecimal totalAmount;
