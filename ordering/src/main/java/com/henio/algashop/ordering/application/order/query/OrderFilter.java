@@ -26,7 +26,7 @@ public class OrderFilter extends SortablePageFilter<OrderFilter.SortyType> {
     }
 
     @Override
-    public SortyType getSortPropertyOrDefault() {
+    public SortyType getSortByPropertyOrDefault() {
         return getSortByProperty() == null ? SortyType.PLACED_AT : getSortByProperty() ;
     }
 

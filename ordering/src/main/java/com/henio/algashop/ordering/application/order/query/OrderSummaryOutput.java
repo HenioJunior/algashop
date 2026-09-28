@@ -14,7 +14,6 @@ import java.time.OffsetDateTime;
 @Builder
 public class OrderSummaryOutput {
     private Long id;
-    private CustomerMinimalOutput customer;
     private Integer totalItems;
     private BigDecimal totalAmount;
     private OffsetDateTime placedAt;
@@ -23,4 +22,5 @@ public class OrderSummaryOutput {
     private OffsetDateTime readyAt;
     private String status;
     private String paymentMethod;
+    private CustomerMinimalOutput customer;
 }

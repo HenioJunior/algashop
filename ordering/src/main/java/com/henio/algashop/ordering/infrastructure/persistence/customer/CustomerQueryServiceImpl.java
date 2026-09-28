@@ -1,16 +1,27 @@
 package com.henio.algashop.ordering.infrastructure.persistence.customer;
 
+import com.henio.algashop.ordering.application.customer.query.CustomerFilter;
 import com.henio.algashop.ordering.application.customer.query.CustomerOutput;
 import com.henio.algashop.ordering.application.customer.query.CustomerQueryService;
+import com.henio.algashop.ordering.application.customer.query.CustomerSummaryOutput;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerNotFoundException;
 import io.hypersistence.tsid.TSID;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 
 @Component
 @RequiredArgsConstructor
@@ -56,5 +67,61 @@ public class CustomerQueryServiceImpl implements CustomerQueryService {
         } catch (NoResultException e) {
             throw new CustomerNotFoundException(new CustomerId(TSID.from(customerId)));
         }
+    }
+
+    @Override
+    public Page<CustomerSummaryOutput> filter(CustomerFilter filter) {
+        Long totalQueryResult = countTotalQueryResults(filter);
+        if(totalQueryResult.equals(0L)) {
+            PageRequest pageRequest = PageRequest.of(filter.getPage(), filter.getSize());
+            return new PageImpl<>(new ArrayList<>(), pageRequest, totalQueryResult);
+        }
+        return filterQuery(filter, totalQueryResult);
+    }
+
+    private Long countTotalQueryResults(CustomerFilter filter) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = builder.createQuery(Long.class);
+        Root<CustomerPersistenceEntity> root = criteriaQuery.from(CustomerPersistenceEntity.class);
+
+        Expression<Long> count = builder.count(root);
+
+        criteriaQuery.select(count);
+
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
+    }
+
+    private Page<CustomerSummaryOutput> filterQuery(CustomerFilter filter, Long totalQueryResult) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<CustomerSummaryOutput> criteriaQuery = builder.createQuery(CustomerSummaryOutput.class);
+        Root<CustomerPersistenceEntity> root = criteriaQuery.from(CustomerPersistenceEntity.class);
+
+        criteriaQuery.select(
+                builder.construct(
+                        CustomerSummaryOutput.class,
+                        root.get("id"),
+                        root.get("firstName"),
+                        root.get("lastName"),
+                        root.get("email"),
+                        root.get("document"),
+                        root.get("phone"),
+                        root.get("birthDate"),
+                        root.get("loyaltyPoints"),
+                        root.get("registeredAt"),
+                        root.get("archivedAt"),
+                        root.get("promotionNotificationsAllowed"),
+                        root.get("archived")
+                )
+        );
+
+        TypedQuery<CustomerSummaryOutput> typedQuery = entityManager
+                .createQuery(criteriaQuery);
+
+        typedQuery.setFirstResult(filter.getSize() * filter.getPage());
+        typedQuery.setMaxResults(filter.getSize());
+
+        PageRequest pageRequest = PageRequest.of(filter.getPage(), filter.getSize());
+
+        return new PageImpl<>(typedQuery.getResultList(), pageRequest, totalQueryResult);
     }
 }
