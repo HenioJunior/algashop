@@ -101,18 +101,8 @@ public class CustomerQueryServiceImpl implements CustomerQueryService {
         criteriaQuery.select(
                 builder.construct(
                         CustomerSummaryOutput.class,
-                        root.get("id"),
                         root.get("firstName"),
-                        root.get("lastName"),
-                        root.get("email"),
-                        root.get("document"),
-                        root.get("phone"),
-                        root.get("birthDate"),
-                        root.get("loyaltyPoints"),
-                        root.get("registeredAt"),
-                        root.get("archivedAt"),
-                        root.get("promotionNotificationsAllowed"),
-                        root.get("archived")
+                        root.get("email")
                 )
         );
 
@@ -144,11 +134,21 @@ public class CustomerQueryServiceImpl implements CustomerQueryService {
         List<Predicate> predicates = new ArrayList<>();
 
         if(filter.getFirstName() != null && !filter.getFirstName().isBlank()) {
-            predicates.add(builder.equal(root.get("firstName"), filter.getFirstName()));
+            predicates.add(
+                    builder.like(
+                            builder.lower(root.get("firstName")),
+                            "%" + filter.getFirstName().toLowerCase() + "%"
+                    )
+            );
         }
 
         if(filter.getEmail() != null && !filter.getEmail().isBlank()) {
-            predicates.add(builder.equal(root.get("email"), filter.getEmail()));
+            predicates.add(
+                    builder.like(
+                            builder.lower(root.get("email")),
+                            "%" + filter.getEmail().toLowerCase() + "%"
+                    )
+            );
         }
 
         return predicates.toArray(Predicate[]::new);
