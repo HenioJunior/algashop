@@ -113,16 +113,18 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         return new PageImpl<>(typedQuery.getResultList(), pageRequest, totalQueryResults);
     }
 
-    private Order toSortOrder(CriteriaBuilder builder, Root<OrderPersistenceEntity> root, OrderFilter filter) {
+    private Order toSortOrder(
+            CriteriaBuilder builder,
+            Root<OrderPersistenceEntity> root,
+            OrderFilter filter
+    ) {
+        var property = root.get(filter.getSortByPropertyOrDefault().getPropertyName());
+
         if(filter.getSortDirectionOrDefault() == Sort.Direction.ASC) {
-            return builder.asc(root.get(filter.getSortByPropertyOrDefault().getPropertyName()));
+            return builder.asc(property);
         }
 
-        if(filter.getSortDirectionOrDefault() == Sort.Direction.DESC) {
-            return builder.desc(root.get(filter.getSortByPropertyOrDefault().getPropertyName()));
-        }
-
-        return null;
+        return builder.desc(property);
     }
 
     private Predicate[] toPredicates(

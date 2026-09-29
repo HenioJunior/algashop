@@ -159,14 +159,11 @@ public class CustomerQueryServiceImpl implements CustomerQueryService {
             Root<CustomerPersistenceEntity> root,
             CustomerFilter filter
     ) {
+        var property = root.get(filter.getSortByPropertyOrDefault().getPropertyName());
+
         if(filter.getSortDirectionOrDefault() == Sort.Direction.ASC) {
-            return builder.asc(root.get(filter.getSortByPropertyOrDefault().getPropertyName()));
+            return builder.asc(property);
         }
-
-        if(filter.getSortDirectionOrDefault() == Sort.Direction.DESC) {
-            return builder.desc(root.get(filter.getSortByPropertyOrDefault().getPropertyName()));
-        }
-
-        return null;
+        return builder.desc(property);
     }
 }
