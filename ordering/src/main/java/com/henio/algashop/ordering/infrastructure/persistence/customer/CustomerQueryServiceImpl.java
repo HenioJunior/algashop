@@ -10,10 +10,7 @@ import io.hypersistence.tsid.TSID;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Expression;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -87,6 +85,9 @@ public class CustomerQueryServiceImpl implements CustomerQueryService {
         Expression<Long> count = builder.count(root);
 
         criteriaQuery.select(count);
+        criteriaQuery.where(
+                toPredicates(builder, root, filter)
+        );
 
         return entityManager.createQuery(criteriaQuery).getSingleResult();
     }
@@ -114,6 +115,10 @@ public class CustomerQueryServiceImpl implements CustomerQueryService {
                 )
         );
 
+        criteriaQuery.where(
+                toPredicates(builder, root, filter)
+        );
+
         TypedQuery<CustomerSummaryOutput> typedQuery = entityManager
                 .createQuery(criteriaQuery);
 
@@ -123,5 +128,23 @@ public class CustomerQueryServiceImpl implements CustomerQueryService {
         PageRequest pageRequest = PageRequest.of(filter.getPage(), filter.getSize());
 
         return new PageImpl<>(typedQuery.getResultList(), pageRequest, totalQueryResult);
+    }
+
+    private Predicate[] toPredicates(
+            CriteriaBuilder builder,
+            Root<CustomerPersistenceEntity> root,
+            CustomerFilter filter
+    ) {
+        List<Predicate> predicates = new ArrayList<>();
+
+        if(filter.getFirstName() != null && !filter.getFirstName().isBlank()) {
+            predicates.add(builder.equal(root.get("firstName"), filter.getFirstName()));
+        }
+
+        if(filter.getEmail() != null) {
+            predicates.add(builder.equal(root.get("email"), filter.getEmail()));
+        }
+
+        return predicates.toArray(Predicate[]::new);
     }
 }
