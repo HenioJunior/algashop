@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,7 +73,7 @@ public class CustomerQueryServiceImpl implements CustomerQueryService {
         Long totalQueryResult = countTotalQueryResults(filter);
         if(totalQueryResult.equals(0L)) {
             PageRequest pageRequest = PageRequest.of(filter.getPage(), filter.getSize());
-            return new PageImpl<>(new ArrayList<>(), pageRequest, totalQueryResult);
+            return Page.empty(pageRequest);
         }
         return filterQuery(filter, totalQueryResult);
     }
@@ -118,6 +119,11 @@ public class CustomerQueryServiceImpl implements CustomerQueryService {
         criteriaQuery.where(
                 toPredicates(builder, root, filter)
         );
+        Order sortOrder = toOrder(builder, root, filter);
+
+        if(sortOrder != null) {
+            criteriaQuery.orderBy(sortOrder);
+        }
 
         TypedQuery<CustomerSummaryOutput> typedQuery = entityManager
                 .createQuery(criteriaQuery);
@@ -141,10 +147,26 @@ public class CustomerQueryServiceImpl implements CustomerQueryService {
             predicates.add(builder.equal(root.get("firstName"), filter.getFirstName()));
         }
 
-        if(filter.getEmail() != null) {
+        if(filter.getEmail() != null && !filter.getEmail().isBlank()) {
             predicates.add(builder.equal(root.get("email"), filter.getEmail()));
         }
 
         return predicates.toArray(Predicate[]::new);
+    }
+
+    private Order toOrder(
+            CriteriaBuilder builder,
+            Root<CustomerPersistenceEntity> root,
+            CustomerFilter filter
+    ) {
+        if(filter.getSortDirectionOrDefault() == Sort.Direction.ASC) {
+            return builder.asc(root.get(filter.getSortByPropertyOrDefault().getPropertyName()));
+        }
+
+        if(filter.getSortDirectionOrDefault() == Sort.Direction.DESC) {
+            return builder.desc(root.get(filter.getSortByPropertyOrDefault().getPropertyName()));
+        }
+
+        return null;
     }
 }
