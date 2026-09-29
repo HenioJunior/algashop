@@ -21,8 +21,8 @@ public class OrderFilter extends SortablePageFilter<OrderFilter.SortyType> {
     private BigDecimal totalAmountFrom;
     private BigDecimal totalAmountTo;
 
-    public OrderFilter(int size, int page) {
-        super(size, page);
+    public OrderFilter(int page, int size) {
+        super(page, size);
     }
 
     @Override

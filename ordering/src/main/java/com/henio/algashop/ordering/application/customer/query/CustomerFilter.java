@@ -12,8 +12,8 @@ public class CustomerFilter extends SortablePageFilter<CustomerFilter.SortType> 
     private String email;
     private String firstName;
 
-    public CustomerFilter(int size, int page) {
-        super(size, page);
+    public CustomerFilter(int page, int size) {
+        super(page, size);
     }
 
     @Override
