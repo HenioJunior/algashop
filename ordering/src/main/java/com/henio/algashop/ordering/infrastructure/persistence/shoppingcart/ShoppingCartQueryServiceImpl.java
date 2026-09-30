@@ -4,7 +4,6 @@ import com.henio.algashop.ordering.application.shoppingcart.query.ShoppingCartOu
 import com.henio.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
 import com.henio.algashop.ordering.application.utility.Mapper;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
-import com.henio.algashop.ordering.domain.model.customer.exception.CustomerNotFoundException;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
 import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartNotFoundException;
 import io.hypersistence.tsid.TSID;
