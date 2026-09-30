@@ -3,12 +3,19 @@ package com.henio.algashop.ordering.infrastructure.utility.mapper;
 import com.henio.algashop.ordering.application.customer.query.CustomerOutput;
 import com.henio.algashop.ordering.application.order.query.OrderDetailOutput;
 import com.henio.algashop.ordering.application.order.query.OrderItemDetailOutput;
+import com.henio.algashop.ordering.application.shoppingcart.query.ShoppingCartItemOutput;
+import com.henio.algashop.ordering.application.shoppingcart.query.ShoppingCartOutput;
 import com.henio.algashop.ordering.application.utility.Mapper;
 import com.henio.algashop.ordering.domain.model.customer.Customer;
 import com.henio.algashop.ordering.infrastructure.persistence.order.OrderItemPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.order.OrderPersistenceEntity;
+import com.henio.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartItemPersistenceEntity;
+import com.henio.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceEntity;
 import io.hypersistence.tsid.TSID;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Set;
 
 @Component
 public class ManualMapper implements Mapper {
@@ -31,6 +38,14 @@ public class ManualMapper implements Mapper {
             case OrderItemPersistenceEntity item
                     when destinationType == OrderItemDetailOutput.class ->
                     toOrderItemDetailOutput(item);
+
+            case ShoppingCartPersistenceEntity shoppingCart
+                    when destinationType == ShoppingCartOutput.class ->
+                    toShoppingCartOutput(shoppingCart);
+
+            case ShoppingCartItemPersistenceEntity item
+                    when destinationType == ShoppingCartItemOutput.class ->
+                    toShoppingCartItemOutput(item);
 
             default -> throw new IllegalArgumentException(
                     "Unsupported mapping: %s -> %s"
@@ -95,6 +110,37 @@ public class ManualMapper implements Mapper {
 
         return output;
     }
+
+    private ShoppingCartOutput toShoppingCartOutput(
+            ShoppingCartPersistenceEntity entity
+    ) {
+        ShoppingCartOutput output = new ShoppingCartOutput();
+        output.setId(toTsidString(entity.getId()));
+        output.setCustomerId(toTsidString(entity.getCustomerId()));
+        output.setTotalItems(entity.getTotalItems());
+        output.setTotalAmount(entity.getTotalAmount());
+        output.setItems(toShoppingCartItemOutputList(entity.getItems()));
+        return output;
+    }
+
+    private List<ShoppingCartItemOutput> toShoppingCartItemOutputList(Set<ShoppingCartItemPersistenceEntity> items) {
+        return items.stream()
+                .map(this::toShoppingCartItemOutput)
+                .toList();
+    }
+
+    private ShoppingCartItemOutput toShoppingCartItemOutput(ShoppingCartItemPersistenceEntity item) {
+        ShoppingCartItemOutput output = new ShoppingCartItemOutput();
+        output.setId(toTsidString(item.getId()));
+        output.setProductId(toTsidString(item.getProductId()));
+        output.setName(item.getProductName());
+        output.setPrice(item.getPrice());
+        output.setQuantity(item.getQuantity());
+        output.setTotalAmount(item.getTotalAmount());
+        output.setAvailable(item.isAvailable());
+        return output;
+    }
+
 
     private String toTsidString(Long value) {
         return value == null
