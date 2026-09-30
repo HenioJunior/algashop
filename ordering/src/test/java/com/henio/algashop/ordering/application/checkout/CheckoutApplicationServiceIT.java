@@ -98,7 +98,10 @@ class CheckoutApplicationServiceIT {
     void shouldCheckout() {
         Product product = ProductTestDataBuilder.aProduct().inStock(true).build();
 
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder
+                .aShoppingCart()
+                .withoutItems()
+                .build();
         shoppingCart.addItem(product, new Quantity(1));
         shoppingCarts.add(shoppingCart);
 
@@ -152,7 +155,10 @@ class CheckoutApplicationServiceIT {
 
     @Test
     void shouldThrowShoppingCartCantProceedToCheckoutExceptionWhenCartIsEmpty() {
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder
+                .aShoppingCart()
+                .withoutItems()
+                .build();
         shoppingCarts.add(shoppingCart);
 
         CheckoutInput input = CheckoutInputTestDataBuilder.aCheckoutInput()
@@ -168,7 +174,10 @@ class CheckoutApplicationServiceIT {
         Product product = ProductTestDataBuilder.aProduct().inStock(true).build();
         Product unavailableProduct = ProductTestDataBuilder.aProduct().id(product.id()).inStock(false).build();
 
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder
+                .aShoppingCart()
+                .withoutItems()
+                .build();
         shoppingCart.addItem(product, new Quantity(1));
         shoppingCart.refreshItem(unavailableProduct);
         shoppingCarts.add(shoppingCart);

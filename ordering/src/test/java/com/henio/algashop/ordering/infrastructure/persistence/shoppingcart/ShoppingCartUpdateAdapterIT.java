@@ -64,7 +64,7 @@ public class ShoppingCartUpdateAdapterIT {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void shouldUpdateItemPriceAndTotalAmount() {
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withoutItems().build();
 
         Product product1 = ProductTestDataBuilder.aProduct().price(new Money("2000")).build();
         Product product2 = ProductTestDataBuilder.aProductAltRamMemory().price(new Money("200")).build();
@@ -96,7 +96,7 @@ public class ShoppingCartUpdateAdapterIT {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void shouldUpdateItemAvailability() {
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withoutItems().build();
 
         Product product1 = ProductTestDataBuilder.aProduct()
                 .price(new Money("2000"))

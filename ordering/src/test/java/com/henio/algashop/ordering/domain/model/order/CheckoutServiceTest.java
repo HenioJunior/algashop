@@ -110,7 +110,7 @@ class CheckoutServiceTest {
         ShoppingCart shoppingCart =
                 ShoppingCartTestDataBuilder.aShoppingCart()
                         .customerId(customer.id())
-                        .withItems(false)
+                        .withoutItems()
                         .build();
         Product product = ProductTestDataBuilder.aProduct().build();
         shoppingCart.addItem(product, new Quantity(1));
@@ -143,9 +143,10 @@ class CheckoutServiceTest {
     @Test
     void givenEmptyShoppingCart_whenCheckout_shouldThrowShoppingCartCantProceedToCheckoutException() {
         Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
-        ShoppingCart shoppingCart =
-                ShoppingCartTestDataBuilder.aShoppingCart()
-                        .withItems(false).build();
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder
+                .aShoppingCart()
+                .withoutItems()
+                .build();
 
         Billing billing = BillingTestDataBuilder.aBilling().build();
         Shipping shipping = ShippingTestDataBuilder.aShipping().build();

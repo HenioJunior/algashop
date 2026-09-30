@@ -33,7 +33,7 @@ class ShoppingCartTest {
 
     @Test
     void givenEmptyCart_whenAddNewItem_shouldContainItemAndRecalculateTotals() {
-        ShoppingCart cart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
+        ShoppingCart cart = ShoppingCartTestDataBuilder.aShoppingCart().withoutItems().build();
         Product product = ProductTestDataBuilder.aProduct().build();
 
         cart.addItem(product, new Quantity(2));
@@ -49,7 +49,7 @@ class ShoppingCartTest {
 
     @Test
     void givenCartWithExistingProduct_whenAddSameProduct_shouldIncrementQuantity() {
-        ShoppingCart cart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
+        ShoppingCart cart = ShoppingCartTestDataBuilder.aShoppingCart().withoutItems().build();
         Product product = ProductTestDataBuilder.aProduct().build();
 
         cart.addItem(product, new Quantity(3));
@@ -98,7 +98,7 @@ class ShoppingCartTest {
 
     @Test
     void givenCartWithItems_whenChangeItemPrice_shouldRecalculateTotalAmount() {
-        ShoppingCart cart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
+        ShoppingCart cart = ShoppingCartTestDataBuilder.aShoppingCart().withoutItems().build();
 
         ProductId productId = new ProductId();
 
