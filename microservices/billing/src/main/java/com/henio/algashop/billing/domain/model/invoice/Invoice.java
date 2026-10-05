@@ -2,6 +2,7 @@ package com.henio.algashop.billing.domain.model.invoice;
 
 import com.henio.algashop.billing.domain.model.IdGenerator;
 import com.henio.algashop.billing.shared.DomainException;
+import io.micrometer.common.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -51,7 +52,23 @@ public class Invoice {
         this.cancelReason = cancelReason;
     }
 
-    public static Invoice issue(String orderId, UUID customerId, Set<LineItem> items, Payer payer) {
+    public static Invoice issue(
+            String orderId,
+            UUID customerId,
+            Set<LineItem> items,
+            Payer payer
+    ) {
+        Objects.requireNonNull(customerId, "Customer ID cannot be null");
+        Objects.requireNonNull(payer, "Payer cannot be null");
+        Objects.requireNonNull(items, "Items cannot be null");
+
+        if (StringUtils.isBlank(orderId)) {
+            throw new DomainException("Order ID cannot be empty");
+        }
+
+        if (items.isEmpty()) {
+            throw new DomainException("Items cannot be empty");
+        }
 
         BigDecimal totalAmount = items.stream().map(LineItem::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -75,52 +92,8 @@ public class Invoice {
         return id;
     }
 
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public UUID getCustomerId() {
-        return customerId;
-    }
-
-    public OffsetDateTime getIssuedAt() {
-        return issuedAt;
-    }
-
-    public OffsetDateTime getPaidAt() {
-        return paidAt;
-    }
-
-    public OffsetDateTime getCanceledAt() {
-        return canceledAt;
-    }
-
-    public OffsetDateTime getExpiresAt() {
-        return expiresAt;
-    }
-
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
-
     public InvoiceStatus getStatus() {
         return status;
-    }
-
-    public PaymentSettings getPaymentSettings() {
-        return paymentSettings;
-    }
-
-    public Set<LineItem> getItems() {
-        return Collections.unmodifiableSet(items);
-    }
-
-    public Payer getPayer() {
-        return payer;
-    }
-
-    public String getCancelReason() {
-        return cancelReason;
     }
 
     public boolean isPaid() {
@@ -130,7 +103,6 @@ public class Invoice {
     public boolean isUnpaid() {
         return InvoiceStatus.UNPAID.equals(this.getStatus());
     }
-
 
     public void markAsPaid() {
         if(!isUnpaid()) {

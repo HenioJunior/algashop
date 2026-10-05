@@ -1,6 +1,8 @@
 package com.henio.algashop.billing.domain.model.creditcard;
 
 import com.henio.algashop.billing.domain.model.IdGenerator;
+import com.henio.algashop.billing.shared.DomainException;
+import io.micrometer.common.util.StringUtils;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -40,6 +42,16 @@ public class CreditCard {
             Integer expYear,
             String gatewayCode
     ) {
+        Objects.requireNonNull(customerId, "Customer ID cannot be null");
+        Objects.requireNonNull(expMonth, "Expiration month cannot be null");
+        Objects.requireNonNull(expYear, "Expiration year cannot be null");
+
+        if (StringUtils.isBlank(lastNumbers)
+                || StringUtils.isBlank(brand)
+                || StringUtils.isBlank(gatewayCode)) {
+            throw new DomainException("Credit card details cannot be blank");
+        }
+
         return new CreditCard(
                 IdGenerator.generateTimeBasedUUID(),
                 OffsetDateTime.now(),
@@ -50,42 +62,6 @@ public class CreditCard {
                 expYear,
                 gatewayCode
         );
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public OffsetDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public UUID getCustomerId() {
-        return customerId;
-    }
-
-    public String getLastNumbers() {
-        return lastNumbers;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public Integer getExpMonth() {
-        return expMonth;
-    }
-
-    public Integer getExpYear() {
-        return expYear;
-    }
-
-    public String getGatewayCode() {
-        return gatewayCode;
-    }
-
-    public void setGatewayCode(String gatewayCode) {
-        this.gatewayCode = gatewayCode;
     }
 
     @Override

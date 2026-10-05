@@ -21,14 +21,6 @@ public class LineItem {
         return new Builder();
     }
 
-    public Integer getNumber() {
-        return number;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public BigDecimal getAmount() {
         return amount;
     }

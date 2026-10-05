@@ -24,26 +24,6 @@ public class Payer {
         return new Builder();
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public String getDocument() {
-        return document;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

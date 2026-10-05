@@ -1,6 +1,8 @@
 package com.henio.algashop.billing.domain.model.invoice;
 
 import com.henio.algashop.billing.domain.model.IdGenerator;
+import com.henio.algashop.billing.shared.DomainException;
+import io.micrometer.common.util.StringUtils;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -22,7 +24,16 @@ public class PaymentSettings {
         this.method = method;
     }
 
-    public static PaymentSettings brandNew(PaymentMethod method, UUID creditCardId) {
+    public static PaymentSettings brandNew(
+            PaymentMethod method,
+            UUID creditCardId
+    ) {
+        Objects.requireNonNull(method, "Payment method cannot be null");
+
+        if (method.equals(PaymentMethod.CREDIT_CARD)) {
+            Objects.requireNonNull(creditCardId, "Credit card cannot be null for credit card payment");
+        }
+
         return new PaymentSettings(
                 IdGenerator.generateTimeBasedUUID(),
                 creditCardId,
@@ -32,26 +43,14 @@ public class PaymentSettings {
     }
 
     void assignGatewayCode(String gatewayCode) {
+        if (StringUtils.isBlank(gatewayCode)) {
+            throw new DomainException("Gateway code cannot be blank");
+        }
+        if (this.gatewayCode != null) {
+            throw new DomainException("Gateway code already assigned");
+        }
         this.gatewayCode = gatewayCode;
     }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public UUID getCreditCardId() {
-        return creditCardId;
-    }
-
-    public String getGatewayCode() {
-        return gatewayCode;
-    }
-
-    public PaymentMethod getMethod() {
-        return method;
-    }
-
-
 
     @Override
     public boolean equals(Object o) {
