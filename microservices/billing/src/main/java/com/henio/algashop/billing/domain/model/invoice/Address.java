@@ -1,5 +1,7 @@
 package com.henio.algashop.billing.domain.model.invoice;
 
+import com.henio.algashop.billing.domain.model.FieldValidations;
+
 import java.util.Objects;
 
 public class Address {
@@ -23,6 +25,13 @@ public class Address {
             String state,
             String zipCode
     ) {
+        FieldValidations.requiresNonBlank(street);
+        FieldValidations.requiresNonBlank(number);
+        FieldValidations.requiresNonBlank(neighborhood);
+        FieldValidations.requiresNonBlank(city);
+        FieldValidations.requiresNonBlank(state);
+        FieldValidations.requiresNonBlank(zipCode);
+
         this.street = street;
         this.number = number;
         this.complement = complement;

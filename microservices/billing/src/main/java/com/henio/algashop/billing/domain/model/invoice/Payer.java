@@ -1,5 +1,7 @@
 package com.henio.algashop.billing.domain.model.invoice;
 
+import com.henio.algashop.billing.domain.model.FieldValidations;
+
 import java.util.Objects;
 
 public class Payer {
@@ -13,6 +15,12 @@ public class Payer {
     }
 
     private Payer(String fullName, String document, String phone, String email, Address address) {
+        FieldValidations.requiresNonBlank(fullName);
+        FieldValidations.requiresNonBlank(document);
+        FieldValidations.requiresNonBlank(phone);
+        FieldValidations.requiresValidEmail(email);
+        Objects.requireNonNull(address, "Address cannot be null");
+
         this.fullName = fullName;
         this.document = document;
         this.phone = phone;
