@@ -31,6 +31,10 @@ public class PaymentSettings {
         );
     }
 
+    void assignGatewayCode(String gatewayCode) {
+        this.gatewayCode = gatewayCode;
+    }
+
     public UUID getId() {
         return id;
     }
