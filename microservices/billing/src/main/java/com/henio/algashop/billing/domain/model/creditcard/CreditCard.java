@@ -1,5 +1,7 @@
 package com.henio.algashop.billing.domain.model.creditcard;
 
+import com.henio.algashop.billing.domain.model.IdGenerator;
+
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -14,6 +16,41 @@ public class CreditCard {
     private Integer expMonth;
     private Integer expYear;
     private String gatewayCode;
+
+    protected CreditCard() {
+    }
+
+    protected CreditCard(UUID id, OffsetDateTime createdAt, UUID customerId, String lastNumbers, String brand,
+                         Integer expMonth, Integer expYear, String gatewayCode) {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.customerId = customerId;
+        this.lastNumbers = lastNumbers;
+        this.brand = brand;
+        this.expMonth = expMonth;
+        this.expYear = expYear;
+        this.gatewayCode = gatewayCode;
+    }
+
+    public static CreditCard brandNew(
+            UUID customerId,
+            String lastNumbers,
+            String brand,
+            Integer expMonth,
+            Integer expYear,
+            String gatewayCode
+    ) {
+        return new CreditCard(
+                IdGenerator.generateTimeBasedUUID(),
+                OffsetDateTime.now(),
+                customerId,
+                lastNumbers,
+                brand,
+                expMonth,
+                expYear,
+                gatewayCode
+        );
+    }
 
     public UUID getId() {
         return id;

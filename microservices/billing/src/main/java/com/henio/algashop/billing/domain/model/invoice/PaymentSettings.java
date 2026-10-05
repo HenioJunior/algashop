@@ -1,5 +1,7 @@
 package com.henio.algashop.billing.domain.model.invoice;
 
+import com.henio.algashop.billing.domain.model.IdGenerator;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -11,6 +13,22 @@ public class PaymentSettings {
     private PaymentMethod method;
 
     protected PaymentSettings() {
+    }
+
+    private PaymentSettings(UUID id, UUID creditCardId, String gatewayCode, PaymentMethod method) {
+        this.id = id;
+        this.creditCardId = creditCardId;
+        this.gatewayCode = gatewayCode;
+        this.method = method;
+    }
+
+    public static PaymentSettings brandNew(PaymentMethod method, UUID creditCardId) {
+        return new PaymentSettings(
+                IdGenerator.generateTimeBasedUUID(),
+                creditCardId,
+                null,
+                method
+        );
     }
 
     public UUID getId() {
@@ -28,6 +46,8 @@ public class PaymentSettings {
     public PaymentMethod getMethod() {
         return method;
     }
+
+
 
     @Override
     public boolean equals(Object o) {

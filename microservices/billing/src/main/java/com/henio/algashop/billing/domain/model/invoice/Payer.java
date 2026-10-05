@@ -12,12 +12,16 @@ public class Payer {
     protected Payer() {
     }
 
-    public Payer(String fullName, String document, String phone, String email, Address address) {
+    private Payer(String fullName, String document, String phone, String email, Address address) {
         this.fullName = fullName;
         this.document = document;
         this.phone = phone;
         this.email = email;
         this.address = address;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public String getFullName() {
@@ -50,5 +54,42 @@ public class Payer {
     @Override
     public int hashCode() {
         return Objects.hash(fullName, document, phone, email, address);
+    }
+
+    public static class Builder {
+        private String fullName;
+        private String document;
+        private String phone;
+        private String email;
+        private Address address;
+
+        public Builder fullName(String fullName) {
+            this.fullName = fullName;
+            return this;
+        }
+
+        public Builder document(String document) {
+            this.document = document;
+            return this;
+        }
+
+        public Builder phone(String phone) {
+            this.phone = phone;
+            return this;
+        }
+
+        public Builder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder address(Address address) {
+            this.address = address;
+            return this;
+        }
+
+        public Payer build() {
+            return new Payer(fullName, document, phone, email, address);
+        }
     }
 }

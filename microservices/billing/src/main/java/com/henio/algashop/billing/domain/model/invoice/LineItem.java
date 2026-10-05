@@ -11,10 +11,14 @@ public class LineItem {
     protected LineItem() {
     }
 
-    public LineItem(Integer number, String name, BigDecimal amount) {
+    private LineItem(Integer number, String name, BigDecimal amount) {
         this.number = number;
         this.name = name;
         this.amount = amount;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public Integer getNumber() {
@@ -39,5 +43,30 @@ public class LineItem {
     @Override
     public int hashCode() {
         return Objects.hash(number, name, amount);
+    }
+
+    public static class Builder {
+        private Integer number;
+        private String name;
+        private BigDecimal amount;
+
+        public Builder number(Integer number) {
+            this.number = number;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder amount(BigDecimal amount) {
+            this.amount = amount;
+            return this;
+        }
+
+         public LineItem build() {
+            return new LineItem(number, name, amount);
+        }
     }
 }
