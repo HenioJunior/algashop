@@ -26,7 +26,7 @@ public class InvoiceTestDataBuilder {
     }
 
     public Invoice build() {
-        Invoice invoice = Invoice.issue(orderId, customerId, items, payer);
+        Invoice invoice = Invoice.issue(orderId, customerId, payer, items);
 
         if (paymentMethod != null) {
             invoice.changePaymentSettings(paymentMethod, creditCardId);

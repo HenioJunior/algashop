@@ -30,11 +30,6 @@ public class Invoice {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private PaymentSettings paymentSettings;
 
-    @ElementCollection
-    @CollectionTable(name = "invoice_line_items",
-            joinColumns = @JoinColumn(name = "invoice_id"))
-    private Set<LineItem> items = new HashSet<>();
-
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(
@@ -84,14 +79,20 @@ public class Invoice {
     })
     private Payer payer;
 
+    @ElementCollection
+    @CollectionTable(name = "invoice_line_items",
+            joinColumns = @JoinColumn(name = "invoice_id"))
+    private Set<LineItem> items = new HashSet<>();
+
     private String cancelReason;
 
     protected Invoice() {
     }
 
-    private Invoice(UUID id, String orderId, UUID customerId, OffsetDateTime issuedAt, OffsetDateTime paidAt,
+    public Invoice(UUID id, String orderId, UUID customerId, OffsetDateTime issuedAt, OffsetDateTime paidAt,
                    OffsetDateTime canceledAt, OffsetDateTime expiresAt, BigDecimal totalAmount, InvoiceStatus status,
-                   PaymentSettings paymentSettings, Set<LineItem> items, Payer payer, String cancelReason) {
+                   PaymentSettings paymentSettings, Payer payer, Set<LineItem> items, String cancelReason
+    ) {
         this.id = id;
         this.orderId = orderId;
         this.customerId = customerId;
@@ -102,16 +103,16 @@ public class Invoice {
         this.totalAmount = totalAmount;
         this.status = status;
         this.paymentSettings = paymentSettings;
-        this.items = items;
         this.payer = payer;
+        this.items = items;
         this.cancelReason = cancelReason;
     }
 
     public static Invoice issue(
             String orderId,
             UUID customerId,
-            Set<LineItem> items,
-            Payer payer
+            Payer payer,
+            Set<LineItem> items
     ) {
         Objects.requireNonNull(customerId, "Customer ID cannot be null");
         Objects.requireNonNull(payer, "Payer cannot be null");
@@ -138,29 +139,13 @@ public class Invoice {
                 totalAmount,
                 InvoiceStatus.UNPAID,
                 null,
-                items,
                 payer,
+                items,
                 null);
     }
 
     public UUID getId() {
         return id;
-    }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public UUID getCustomerId() {
-        return customerId;
-    }
-
-    public Set<LineItem> getItems() {
-        return items;
-    }
-
-    public Payer getPayer() {
-        return payer;
     }
 
     public BigDecimal getTotalAmount() {
@@ -173,10 +158,6 @@ public class Invoice {
 
     public PaymentSettings getPaymentSettings() {
         return paymentSettings;
-    }
-
-    public boolean isPaid() {
-        return InvoiceStatus.PAID.equals(this.getStatus());
     }
 
     public boolean isUnpaid() {
