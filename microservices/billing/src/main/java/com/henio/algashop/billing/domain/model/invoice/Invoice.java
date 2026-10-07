@@ -92,8 +92,32 @@ public class Invoice {
         return id;
     }
 
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public UUID getCustomerId() {
+        return customerId;
+    }
+
+    public Set<LineItem> getItems() {
+        return items;
+    }
+
+    public Payer getPayer() {
+        return payer;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
     public InvoiceStatus getStatus() {
         return status;
+    }
+
+    public PaymentSettings getPaymentSettings() {
+        return paymentSettings;
     }
 
     public boolean isPaid() {

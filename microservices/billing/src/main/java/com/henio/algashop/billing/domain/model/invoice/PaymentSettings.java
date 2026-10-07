@@ -12,25 +12,25 @@ public class PaymentSettings {
     private UUID id;
     private UUID creditCardId;
     private String gatewayCode;
-    private PaymentMethod method;
+    private PaymentMethod paymentMethod;
 
     protected PaymentSettings() {
     }
 
-    private PaymentSettings(UUID id, UUID creditCardId, String gatewayCode, PaymentMethod method) {
+    private PaymentSettings(UUID id, UUID creditCardId, String gatewayCode, PaymentMethod paymentMethod) {
         this.id = id;
         this.creditCardId = creditCardId;
         this.gatewayCode = gatewayCode;
-        this.method = method;
+        this.paymentMethod = paymentMethod;
     }
 
     public static PaymentSettings brandNew(
-            PaymentMethod method,
+            PaymentMethod paymentMethod,
             UUID creditCardId
     ) {
-        Objects.requireNonNull(method, "Payment method cannot be null");
+        Objects.requireNonNull(paymentMethod, "paymentMethod cannot be null");
 
-        if (method.equals(PaymentMethod.CREDIT_CARD)) {
+        if (paymentMethod.equals(PaymentMethod.CREDIT_CARD)) {
             Objects.requireNonNull(creditCardId, "Credit card cannot be null for credit card payment");
         }
 
@@ -38,7 +38,7 @@ public class PaymentSettings {
                 IdGenerator.generateTimeBasedUUID(),
                 creditCardId,
                 null,
-                method
+                paymentMethod
         );
     }
 
@@ -50,6 +50,18 @@ public class PaymentSettings {
             throw new DomainException("Gateway code already assigned");
         }
         this.gatewayCode = gatewayCode;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public UUID getCreditCardId() {
+        return creditCardId;
+    }
+
+    public String getGatewayCode() {
+        return gatewayCode;
     }
 
     @Override
