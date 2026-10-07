@@ -1,8 +1,7 @@
 package com.henio.algashop.billing.domain.model.invoice;
 
 import com.henio.algashop.billing.domain.model.FieldValidations;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 

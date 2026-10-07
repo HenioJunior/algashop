@@ -36,6 +36,52 @@ public class Invoice {
     private Set<LineItem> items = new HashSet<>();
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(
+                    name = "fullName",
+                    column = @Column(name = "payer_full_name")
+            ),
+            @AttributeOverride(
+                    name = "document",
+                    column = @Column(name = "payer_document")
+            ),
+            @AttributeOverride(
+                    name = "phone",
+                    column = @Column(name = "payer_phone")
+            ),
+            @AttributeOverride(
+                    name = "email",
+                    column = @Column(name = "payer_email")
+            ),
+            @AttributeOverride(
+                    name = "address.street",
+                    column = @Column(name = "payer_address_street")
+            ),
+            @AttributeOverride(
+                    name = "address.number",
+                    column = @Column(name = "payer_address_number")
+            ),
+            @AttributeOverride(
+                    name = "address.complement",
+                    column = @Column(name = "payer_address_complement")
+            ),
+            @AttributeOverride(
+                    name = "address.neighborhood",
+                    column = @Column(name = "payer_address_neighborhood")
+            ),
+            @AttributeOverride(
+                    name = "address.city",
+                    column = @Column(name = "payer_address_city")
+            ),
+            @AttributeOverride(
+                    name = "address.state",
+                    column = @Column(name = "payer_address_state")
+            ),
+            @AttributeOverride(
+                    name = "address.zipCode",
+                    column = @Column(name = "payer_address_zip_code")
+            )
+    })
     private Payer payer;
 
     private String cancelReason;
