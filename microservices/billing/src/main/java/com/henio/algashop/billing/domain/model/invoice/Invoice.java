@@ -3,13 +3,16 @@ package com.henio.algashop.billing.domain.model.invoice;
 import com.henio.algashop.billing.domain.model.IdGenerator;
 import com.henio.algashop.billing.shared.DomainException;
 import io.micrometer.common.util.StringUtils;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.*;
 
+@Entity
 public class Invoice {
 
+    @Id
     private UUID id;
     private String orderId;
     private UUID customerId;
@@ -21,12 +24,18 @@ public class Invoice {
 
     private BigDecimal totalAmount;
 
+    @Enumerated(EnumType.STRING)
     private InvoiceStatus status;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private PaymentSettings paymentSettings;
 
+    @ElementCollection
+    @CollectionTable(name = "invoice_line_items",
+            joinColumns = @JoinColumn(name = "invoice_id"))
     private Set<LineItem> items = new HashSet<>();
 
+    @Embedded
     private Payer payer;
 
     private String cancelReason;

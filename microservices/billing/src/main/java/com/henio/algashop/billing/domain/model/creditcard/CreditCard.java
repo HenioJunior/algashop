@@ -3,13 +3,17 @@ package com.henio.algashop.billing.domain.model.creditcard;
 import com.henio.algashop.billing.domain.model.IdGenerator;
 import com.henio.algashop.billing.shared.DomainException;
 import io.micrometer.common.util.StringUtils;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity
 public class CreditCard {
 
+    @Id
     private UUID id;
     private OffsetDateTime createdAt;
     private UUID customerId;

@@ -3,15 +3,23 @@ package com.henio.algashop.billing.domain.model.invoice;
 import com.henio.algashop.billing.domain.model.IdGenerator;
 import com.henio.algashop.billing.shared.DomainException;
 import io.micrometer.common.util.StringUtils;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
 
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity
 public class PaymentSettings {
 
+    @Id
     private UUID id;
     private UUID creditCardId;
     private String gatewayCode;
+
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
     protected PaymentSettings() {
