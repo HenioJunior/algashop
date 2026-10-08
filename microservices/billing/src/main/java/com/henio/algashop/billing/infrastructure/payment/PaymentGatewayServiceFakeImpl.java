@@ -5,9 +5,11 @@ import com.henio.algashop.billing.domain.model.invoice.payment.Payment;
 import com.henio.algashop.billing.domain.model.invoice.payment.PaymentGatewayService;
 import com.henio.algashop.billing.domain.model.invoice.payment.PaymentRequest;
 import com.henio.algashop.billing.domain.model.invoice.payment.PaymentStatus;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Service
 public class PaymentGatewayServiceFakeImpl implements PaymentGatewayService {
     @Override
     public Payment capture(PaymentRequest request) {

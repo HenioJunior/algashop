@@ -5,11 +5,13 @@ import com.henio.algashop.billing.shared.DomainException;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.Getter;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
+@Getter
 @Entity
 public class CreditCard {
 

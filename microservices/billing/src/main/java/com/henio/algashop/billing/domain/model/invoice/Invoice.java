@@ -4,11 +4,13 @@ import com.henio.algashop.billing.domain.model.IdGenerator;
 import com.henio.algashop.billing.shared.DomainException;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.*;
 
+@Getter
 @Entity
 public class Invoice {
 
@@ -144,22 +146,6 @@ public class Invoice {
                 null);
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
-
-    public InvoiceStatus getStatus() {
-        return status;
-    }
-
-    public PaymentSettings getPaymentSettings() {
-        return paymentSettings;
-    }
-
     public boolean isUnpaid() {
         return InvoiceStatus.UNPAID.equals(this.getStatus());
     }
@@ -167,19 +153,19 @@ public class Invoice {
     public void markAsPaid() {
         if(!isUnpaid()) {
             throw new DomainException(String.format("Invoice %s with status %s cannot be marked as paid",
-                            this.getId(), this.getStatus().toString().toLowerCase()));
+                            this.id, this.status.toString().toLowerCase()));
         }
         this.paidAt = OffsetDateTime.now();
         this.status = InvoiceStatus.PAID;
     }
 
     private boolean isCanceled() {
-        return InvoiceStatus.CANCELED.equals(this.getStatus());
+        return InvoiceStatus.CANCELED.equals(this.status);
     }
 
     public void cancel(String cancelReason) {
         if(isCanceled()) {
-            throw new DomainException(String.format("Invoice %s is canceled", this.getId()));
+            throw new DomainException(String.format("Invoice %s is canceled", this.id));
         }
         this.cancelReason = cancelReason;
         this.canceledAt = OffsetDateTime.now();
@@ -189,7 +175,7 @@ public class Invoice {
     public void assignPaymentGatewayCode(String code) {
         if(!isUnpaid()) {
             throw new DomainException(String.format("Invoice %s with status %s cannot be edited",
-                            this.getId(), this.getStatus().toString().toLowerCase()));
+                            this.id, this.status.toString().toLowerCase()));
         }
         this.paymentSettings.assignGatewayCode(code);
     }
@@ -197,7 +183,7 @@ public class Invoice {
     public void changePaymentSettings(PaymentMethod method, UUID creditCardId) {
         if(!isUnpaid()) {
             throw new DomainException(String.format("Invoice %s with status %s cannot be edited",
-                    this.getId(), this.getStatus().toString().toLowerCase()));
+                    this.id, this.status.toString().toLowerCase()));
         }
         this.paymentSettings = PaymentSettings.brandNew(method, creditCardId);
     }
