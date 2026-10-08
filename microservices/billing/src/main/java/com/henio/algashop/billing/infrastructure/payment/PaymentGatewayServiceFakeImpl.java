@@ -1,0 +1,31 @@
+package com.henio.algashop.billing.infrastructure.payment;
+
+import com.henio.algashop.billing.domain.model.invoice.PaymentMethod;
+import com.henio.algashop.billing.domain.model.invoice.payment.Payment;
+import com.henio.algashop.billing.domain.model.invoice.payment.PaymentGatewayService;
+import com.henio.algashop.billing.domain.model.invoice.payment.PaymentRequest;
+import com.henio.algashop.billing.domain.model.invoice.payment.PaymentStatus;
+
+import java.util.UUID;
+
+public class PaymentGatewayServiceFakeImpl implements PaymentGatewayService {
+    @Override
+    public Payment capture(PaymentRequest request) {
+        return Payment.builder()
+                .invoiceId(request.getInvoiceId())
+                .status(PaymentStatus.PAID)
+                .method(request.getPaymentMethod())
+                .gatewayCode(UUID.randomUUID().toString())
+                .build();
+    }
+
+    @Override
+    public Payment findByCode(String gatewayCode) {
+        return Payment.builder()
+                .invoiceId(UUID.randomUUID())
+                .status(PaymentStatus.PAID)
+                .method(PaymentMethod.GATEWAY_BALANCE)
+                .gatewayCode(UUID.randomUUID().toString())
+                .build();
+    }
+}
