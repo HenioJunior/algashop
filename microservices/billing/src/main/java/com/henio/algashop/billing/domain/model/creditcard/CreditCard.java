@@ -5,17 +5,21 @@ import com.henio.algashop.billing.shared.DomainException;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class CreditCard {
 
     @Id
+    @EqualsAndHashCode.Include
     private UUID id;
     private OffsetDateTime createdAt;
     private UUID customerId;
@@ -24,21 +28,6 @@ public class CreditCard {
     private Integer expMonth;
     private Integer expYear;
     private String gatewayCode;
-
-    protected CreditCard() {
-    }
-
-    protected CreditCard(UUID id, OffsetDateTime createdAt, UUID customerId, String lastNumbers, String brand,
-                         Integer expMonth, Integer expYear, String gatewayCode) {
-        this.id = id;
-        this.createdAt = createdAt;
-        this.customerId = customerId;
-        this.lastNumbers = lastNumbers;
-        this.brand = brand;
-        this.expMonth = expMonth;
-        this.expYear = expYear;
-        this.gatewayCode = gatewayCode;
-    }
 
     public static CreditCard brandNew(
             UUID customerId,
@@ -68,17 +57,5 @@ public class CreditCard {
                 expYear,
                 gatewayCode
         );
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        CreditCard that = (CreditCard) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
     }
 }

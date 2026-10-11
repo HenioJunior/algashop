@@ -7,23 +7,25 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import lombok.*;
 
 import java.util.Objects;
 import java.util.UUID;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class PaymentSettings {
 
     @Id
+    @EqualsAndHashCode.Include
     private UUID id;
     private UUID creditCardId;
     private String gatewayCode;
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
-
-    protected PaymentSettings() {
-    }
 
     private PaymentSettings(UUID id, UUID creditCardId, String gatewayCode, PaymentMethod paymentMethod) {
         this.id = id;
@@ -58,29 +60,5 @@ public class PaymentSettings {
             throw new DomainException("Gateway code already assigned");
         }
         this.gatewayCode = gatewayCode;
-    }
-
-    public PaymentMethod getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public UUID getCreditCardId() {
-        return creditCardId;
-    }
-
-    public String getGatewayCode() {
-        return gatewayCode;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        PaymentSettings that = (PaymentSettings) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
     }
 }

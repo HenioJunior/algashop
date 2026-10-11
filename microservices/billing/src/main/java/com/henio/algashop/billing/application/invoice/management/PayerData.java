@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class PayerData {
     private String fullName;
     private String document;
-    private String email;
     private String phone;
+    private String email;
     private AddressData address;
 }

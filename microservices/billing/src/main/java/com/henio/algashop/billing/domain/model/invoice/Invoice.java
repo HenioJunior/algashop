@@ -4,17 +4,21 @@ import com.henio.algashop.billing.domain.model.IdGenerator;
 import com.henio.algashop.billing.shared.DomainException;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.*;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class Invoice {
 
     @Id
+    @EqualsAndHashCode.Include
     private UUID id;
     private String orderId;
     private UUID customerId;
@@ -87,28 +91,6 @@ public class Invoice {
     private Set<LineItem> items = new HashSet<>();
 
     private String cancelReason;
-
-    protected Invoice() {
-    }
-
-    public Invoice(UUID id, String orderId, UUID customerId, OffsetDateTime issuedAt, OffsetDateTime paidAt,
-                   OffsetDateTime canceledAt, OffsetDateTime expiresAt, BigDecimal totalAmount, InvoiceStatus status,
-                   PaymentSettings paymentSettings, Payer payer, Set<LineItem> items, String cancelReason
-    ) {
-        this.id = id;
-        this.orderId = orderId;
-        this.customerId = customerId;
-        this.issuedAt = issuedAt;
-        this.paidAt = paidAt;
-        this.canceledAt = canceledAt;
-        this.expiresAt = expiresAt;
-        this.totalAmount = totalAmount;
-        this.status = status;
-        this.paymentSettings = paymentSettings;
-        this.payer = payer;
-        this.items = items;
-        this.cancelReason = cancelReason;
-    }
 
     public static Invoice issue(
             String orderId,
@@ -190,17 +172,5 @@ public class Invoice {
                     this.id, this.status.toString().toLowerCase()));
         }
         this.paymentSettings = PaymentSettings.brandNew(method, creditCardId);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Invoice invoice = (Invoice) o;
-        return Objects.equals(id, invoice.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
     }
 }
