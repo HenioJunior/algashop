@@ -3,7 +3,9 @@ package com.henio.algashop.billing.application.invoice.management;
 import com.henio.algashop.billing.domain.model.creditcard.CreditCardNotFoundException;
 import com.henio.algashop.billing.domain.model.creditcard.CreditCardRepository;
 import com.henio.algashop.billing.domain.model.invoice.*;
+import com.henio.algashop.billing.domain.model.invoice.payment.Payment;
 import com.henio.algashop.billing.domain.model.invoice.payment.PaymentGatewayService;
+import com.henio.algashop.billing.domain.model.invoice.payment.PaymentRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +39,38 @@ public class InvoiceManagementApplicationService {
         invoiceRepository.save(invoice);
 
         return invoice.getId();
+    }
+
+    @Transactional
+    public void processPayment(UUID invoiceId) {
+        Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(
+                () -> new InvoiceNotFoundException("Invoice not found"));
+
+        PaymentRequest paymentRequest = toPaymentRequest(invoice);
+
+        Payment payment;
+
+        try {
+            payment = paymentGatewayService.capture(paymentRequest);
+        } catch (Exception e) {
+            String errorMessage = "Payment capture failed";
+            log.error(errorMessage);
+            invoice.cancel(errorMessage);
+            invoiceRepository.save(invoice);
+            return;
+        }
+        invoicingService.assignPayment(invoice, payment);
+        invoiceRepository.save(invoice);
+    }
+
+    private PaymentRequest toPaymentRequest(Invoice invoice) {
+            return PaymentRequest.builder()
+                    .invoiceId(invoice.getId())
+                    .amount(invoice.getTotalAmount())
+                    .creditCardId(invoice.getPaymentSettings().getCreditCardId())
+                    .payer(invoice.getPayer())
+                    .invoiceId(invoice.getId())
+                    .build();
     }
 
     private Set<LineItem> convertToLineItems(Set<LineItemInput> itemsInput) {

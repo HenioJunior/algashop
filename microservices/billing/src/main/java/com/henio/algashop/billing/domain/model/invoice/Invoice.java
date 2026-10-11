@@ -146,6 +146,10 @@ public class Invoice {
                 null);
     }
 
+    public boolean isPaid() {
+        return InvoiceStatus.PAID.equals(this.getStatus());
+    }
+
     public boolean isUnpaid() {
         return InvoiceStatus.UNPAID.equals(this.getStatus());
     }
