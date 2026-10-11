@@ -65,11 +65,11 @@ public class InvoiceManagementApplicationService {
 
     private PaymentRequest toPaymentRequest(Invoice invoice) {
             return PaymentRequest.builder()
-                    .invoiceId(invoice.getId())
+                    .paymentMethod(invoice.getPaymentSettings().getPaymentMethod())
                     .amount(invoice.getTotalAmount())
+                    .invoiceId(invoice.getId())
                     .creditCardId(invoice.getPaymentSettings().getCreditCardId())
                     .payer(invoice.getPayer())
-                    .invoiceId(invoice.getId())
                     .build();
     }
 

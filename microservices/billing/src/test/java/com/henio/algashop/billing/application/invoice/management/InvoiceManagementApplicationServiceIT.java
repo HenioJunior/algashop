@@ -8,7 +8,6 @@ import com.henio.algashop.billing.domain.model.invoice.payment.Payment;
 import com.henio.algashop.billing.domain.model.invoice.payment.PaymentGatewayService;
 import com.henio.algashop.billing.domain.model.invoice.payment.PaymentRequest;
 import com.henio.algashop.billing.domain.model.invoice.payment.PaymentStatus;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
