@@ -1,5 +1,6 @@
 package com.henio.algashop.billing.domain.model.invoice;
 
+import com.henio.algashop.billing.domain.model.AbstractAuditableEntity;
 import com.henio.algashop.billing.domain.model.IdGenerator;
 import com.henio.algashop.billing.shared.DomainException;
 import io.micrometer.common.util.StringUtils;
@@ -13,9 +14,9 @@ import java.util.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
-public class Invoice {
+public class Invoice extends AbstractAuditableEntity {
 
     @Id
     @EqualsAndHashCode.Include

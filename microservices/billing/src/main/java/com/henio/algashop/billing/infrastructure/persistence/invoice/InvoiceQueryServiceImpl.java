@@ -1,5 +1,7 @@
-package com.henio.algashop.billing.application.invoice.query;
+package com.henio.algashop.billing.infrastructure.persistence.invoice;
 
+import com.henio.algashop.billing.application.invoice.query.InvoiceOutput;
+import com.henio.algashop.billing.application.invoice.query.InvoiceQueryService;
 import com.henio.algashop.billing.application.utility.Mapper;
 import com.henio.algashop.billing.domain.model.invoice.Invoice;
 import com.henio.algashop.billing.domain.model.invoice.InvoiceNotFoundException;

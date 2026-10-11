@@ -36,7 +36,7 @@ public class InvoiceManagementApplicationService {
         Invoice invoice = invoicingService.issue(input.getOrderId(), input.getCustomerId(), payer, items);
         invoice.changePaymentSettings(paymentSettings.getMethod(), paymentSettings.getCreditCardId());
 
-        invoiceRepository.save(invoice);
+        invoiceRepository.saveAndFlush(invoice);
 
         return invoice.getId();
     }
@@ -60,7 +60,7 @@ public class InvoiceManagementApplicationService {
             return;
         }
         invoicingService.assignPayment(invoice, payment);
-        invoiceRepository.save(invoice);
+        invoiceRepository.saveAndFlush(invoice);
     }
 
     private PaymentRequest toPaymentRequest(Invoice invoice) {

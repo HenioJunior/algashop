@@ -41,10 +41,20 @@ class InvoiceManagementApplicationServiceIT {
     private PaymentGatewayService paymentGatewayService;
 
     @Test
+    void shouldPopulateAuditingFields() {
+        Invoice invoice = InvoiceTestDataBuilder.anInvoice().build();
+
+        invoiceRepository.saveAndFlush(invoice);
+
+        assertThat(invoice.getVersion()).isNotNull();
+        assertThat(invoice.getCreatedAt()).isNotNull();
+        assertThat(invoice.getCreatedByUserId()).isNotNull();
+    }
+
+    @Test
     public void shouldGenerateInvoiceWithCreditCardAsPayment() {
-        UUID customerId = UUID.randomUUID();
         CreditCard creditCard = CreditCardTestDataBuilder.aCreditCard().build();
-        creditCardRepository.saveAndFlush(creditCard);
+        creditCardRepository.save(creditCard);
 
         GenerateInvoiceInput input = GenerateInvoiceInputTestDataBuilder.anInput().build();
 
@@ -59,15 +69,24 @@ class InvoiceManagementApplicationServiceIT {
 
         Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow();
 
+        assertThat(invoice.getPaymentSettings().getPaymentMethod())
+                .isEqualTo(PaymentMethod.CREDIT_CARD);
+
+        assertThat(invoice.getPaymentSettings().getCreditCardId())
+                .isEqualTo(creditCard.getId());
+
         assertThat(invoice.getStatus()).isEqualTo(InvoiceStatus.UNPAID);
         assertThat(invoice.getOrderId()).isEqualTo(input.getOrderId());
+
+        assertThat(invoice.getVersion()).isZero();
+        assertThat(invoice.getCreatedAt()).isNotNull();
+        assertThat(invoice.getCreatedByUserId()).isNotNull();
 
         Mockito.verify(invoicingService).issue(any(), any(), any(), any());
     }
 
     @Test
     public void shouldGenerateInvoiceWithGatewayBalanceAsPayment() {
-        UUID customerId = UUID.randomUUID();
         GenerateInvoiceInput input = GenerateInvoiceInputTestDataBuilder.anInput().build();
 
         input.setPaymentSettings(
