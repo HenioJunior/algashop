@@ -1,0 +1,187 @@
+package com.henio.algashop.billing.domain.model.invoice;
+
+import com.henio.algashop.billing.domain.model.AbstractAuditableAggregateRoot;
+import com.henio.algashop.billing.domain.model.IdGenerator;
+import com.henio.algashop.billing.shared.DomainException;
+import io.micrometer.common.util.StringUtils;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.util.*;
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@Entity
+public class Invoice extends AbstractAuditableAggregateRoot<Invoice> {
+
+    @Id
+    @EqualsAndHashCode.Include
+    private UUID id;
+    private String orderId;
+    private UUID customerId;
+
+    private OffsetDateTime issuedAt;
+    private OffsetDateTime paidAt;
+    private OffsetDateTime canceledAt;
+    private OffsetDateTime expiresAt;
+
+    private BigDecimal totalAmount;
+
+    @Enumerated(EnumType.STRING)
+    private InvoiceStatus status;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private PaymentSettings paymentSettings;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(
+                    name = "fullName",
+                    column = @Column(name = "payer_full_name")
+            ),
+            @AttributeOverride(
+                    name = "document",
+                    column = @Column(name = "payer_document")
+            ),
+            @AttributeOverride(
+                    name = "phone",
+                    column = @Column(name = "payer_phone")
+            ),
+            @AttributeOverride(
+                    name = "email",
+                    column = @Column(name = "payer_email")
+            ),
+            @AttributeOverride(
+                    name = "address.street",
+                    column = @Column(name = "payer_address_street")
+            ),
+            @AttributeOverride(
+                    name = "address.number",
+                    column = @Column(name = "payer_address_number")
+            ),
+            @AttributeOverride(
+                    name = "address.complement",
+                    column = @Column(name = "payer_address_complement")
+            ),
+            @AttributeOverride(
+                    name = "address.neighborhood",
+                    column = @Column(name = "payer_address_neighborhood")
+            ),
+            @AttributeOverride(
+                    name = "address.city",
+                    column = @Column(name = "payer_address_city")
+            ),
+            @AttributeOverride(
+                    name = "address.state",
+                    column = @Column(name = "payer_address_state")
+            ),
+            @AttributeOverride(
+                    name = "address.zipCode",
+                    column = @Column(name = "payer_address_zip_code")
+            )
+    })
+    private Payer payer;
+
+    @ElementCollection
+    @CollectionTable(name = "invoice_line_items",
+            joinColumns = @JoinColumn(name = "invoice_id"))
+    private Set<LineItem> items = new HashSet<>();
+
+    private String cancelReason;
+
+    public static Invoice issue(
+            String orderId,
+            UUID customerId,
+            Payer payer,
+            Set<LineItem> items
+    ) {
+        Objects.requireNonNull(customerId, "Customer ID cannot be null");
+        Objects.requireNonNull(payer, "Payer cannot be null");
+        Objects.requireNonNull(items, "Items cannot be null");
+
+        if (StringUtils.isBlank(orderId)) {
+            throw new DomainException("Order ID cannot be empty");
+        }
+
+        if (items.isEmpty()) {
+            throw new DomainException("Items cannot be empty");
+        }
+
+        BigDecimal totalAmount = items.stream().map(LineItem::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        Invoice invoice = new Invoice(
+                IdGenerator.generateTimeBasedUUID(),
+                orderId,
+                customerId,
+                OffsetDateTime.now(),
+                null,
+                null,
+                OffsetDateTime.now().plusDays(3),
+                totalAmount,
+                InvoiceStatus.UNPAID,
+                null,
+                payer,
+                items,
+                null
+        );
+        invoice.registerEvent(new InvoiceIssuedEvent(
+                invoice.id,
+                invoice.customerId,
+                invoice.orderId,
+                invoice.issuedAt)
+        );
+        return invoice;
+    }
+
+    public boolean isPaid() {
+        return InvoiceStatus.PAID.equals(this.getStatus());
+    }
+
+    public boolean isUnpaid() {
+        return InvoiceStatus.UNPAID.equals(this.getStatus());
+    }
+
+    public void markAsPaid() {
+        if(!isUnpaid()) {
+            throw new DomainException(String.format("Invoice %s with status %s cannot be marked as paid",
+                            this.id, this.status.toString().toLowerCase()));
+        }
+        this.paidAt = OffsetDateTime.now();
+        this.status = InvoiceStatus.PAID;
+        this.registerEvent(new InvoicePaidEvent(this.id, this.customerId, this.orderId, this.paidAt));
+    }
+
+    public boolean isCanceled() {
+        return InvoiceStatus.CANCELED.equals(this.status);
+    }
+
+    public void cancel(String cancelReason) {
+        if(isCanceled()) {
+            throw new DomainException(String.format("Invoice %s is canceled", this.id));
+        }
+        this.cancelReason = cancelReason;
+        this.canceledAt = OffsetDateTime.now();
+        this.status = InvoiceStatus.CANCELED;
+        this.registerEvent(new InvoiceCanceledEvent(this.id, this.customerId, this.orderId, this.canceledAt));
+    }
+
+    public void assignPaymentGatewayCode(String code) {
+        if(!isUnpaid()) {
+            throw new DomainException(String.format("Invoice %s with status %s cannot be edited",
+                            this.id, this.status.toString().toLowerCase()));
+        }
+        this.paymentSettings.assignGatewayCode(code);
+    }
+
+    public void changePaymentSettings(PaymentMethod method, UUID creditCardId) {
+        if(!isUnpaid()) {
+            throw new DomainException(String.format("Invoice %s with status %s cannot be edited",
+                    this.id, this.status.toString().toLowerCase()));
+        }
+        this.paymentSettings = PaymentSettings.brandNew(method, creditCardId);
+    }
+}

@@ -1,0 +1,115 @@
+package com.henio.algashop.billing.application.invoice.management;
+
+import com.henio.algashop.billing.domain.model.creditcard.CreditCardNotFoundException;
+import com.henio.algashop.billing.domain.model.creditcard.CreditCardRepository;
+import com.henio.algashop.billing.domain.model.invoice.*;
+import com.henio.algashop.billing.domain.model.invoice.payment.Payment;
+import com.henio.algashop.billing.domain.model.invoice.payment.PaymentGatewayService;
+import com.henio.algashop.billing.domain.model.invoice.payment.PaymentRequest;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.UUID;
+
+@RequiredArgsConstructor
+@Slf4j
+@Service
+public class InvoiceManagementApplicationService {
+
+    private final PaymentGatewayService paymentGatewayService;
+    private final InvoicingService invoicingService;
+    private final InvoiceRepository invoiceRepository;
+    private final CreditCardRepository creditCardRepository;
+
+    @Transactional
+    public UUID generate(GenerateInvoiceInput input) {
+        PaymentSettingsInput paymentSettings = input.getPaymentSettings();
+        verifyCreditCardId(paymentSettings.getCreditCardId());
+
+        Payer payer = convertToPayer(input.getPayer());
+        Set<LineItem> items = convertToLineItems(input.getItems());
+
+        Invoice invoice = invoicingService.issue(input.getOrderId(), input.getCustomerId(), payer, items);
+        invoice.changePaymentSettings(paymentSettings.getMethod(), paymentSettings.getCreditCardId());
+
+        invoiceRepository.saveAndFlush(invoice);
+
+        return invoice.getId();
+    }
+
+    @Transactional
+    public void processPayment(UUID invoiceId) {
+        Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(
+                () -> new InvoiceNotFoundException("Invoice not found"));
+
+        PaymentRequest paymentRequest = toPaymentRequest(invoice);
+
+        Payment payment;
+
+        try {
+            payment = paymentGatewayService.capture(paymentRequest);
+        } catch (Exception e) {
+            String errorMessage = "Payment capture failed";
+            log.error(errorMessage);
+            invoice.cancel(errorMessage);
+            invoiceRepository.save(invoice);
+            return;
+        }
+        invoicingService.assignPayment(invoice, payment);
+        invoiceRepository.saveAndFlush(invoice);
+    }
+
+    private PaymentRequest toPaymentRequest(Invoice invoice) {
+            return PaymentRequest.builder()
+                    .paymentMethod(invoice.getPaymentSettings().getPaymentMethod())
+                    .amount(invoice.getTotalAmount())
+                    .invoiceId(invoice.getId())
+                    .creditCardId(invoice.getPaymentSettings().getCreditCardId())
+                    .payer(invoice.getPayer())
+                    .build();
+    }
+
+    private Set<LineItem> convertToLineItems(Set<LineItemInput> itemsInput) {
+        Set<LineItem> lineItems = new LinkedHashSet<>();
+        int itemNumber = 1;
+        for (LineItemInput itemInput : itemsInput) {
+            lineItems.add(LineItem.builder()
+                    .number(itemNumber)
+                    .name(itemInput.getName())
+                    .amount(itemInput.getAmount())
+                    .build());
+            itemNumber++;
+        }
+        return lineItems;
+    }
+
+    private Payer convertToPayer(PayerData payerData) {
+        AddressData addressData = payerData.getAddress();
+
+        return Payer.builder()
+                .fullName(payerData.getFullName())
+                .email(payerData.getEmail())
+                .document(payerData.getDocument())
+                .phone(payerData.getPhone())
+                .address(Address.builder()
+                        .city(addressData.getCity())
+                        .state(addressData.getState())
+                        .neighborhood(addressData.getNeighborhood())
+                        .complement(addressData.getComplement())
+                        .zipCode(addressData.getZipCode())
+                        .street(addressData.getStreet())
+                        .number(addressData.getNumber())
+                        .build())
+                .build();
+    }
+
+    private void verifyCreditCardId(UUID creditCardId) {
+        if (creditCardId != null && !creditCardRepository.existsById(creditCardId)) {
+            throw new CreditCardNotFoundException("Credit card not found");
+        }
+    }
+}
