@@ -8,6 +8,7 @@ import com.henio.algashop.billing.domain.model.invoice.payment.Payment;
 import com.henio.algashop.billing.domain.model.invoice.payment.PaymentGatewayService;
 import com.henio.algashop.billing.domain.model.invoice.payment.PaymentRequest;
 import com.henio.algashop.billing.domain.model.invoice.payment.PaymentStatus;
+import com.henio.algashop.billing.infrastructure.listener.InvoiceEventListener;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ class InvoiceManagementApplicationServiceIT {
 
     @MockitoBean
     private PaymentGatewayService paymentGatewayService;
+
+    @MockitoSpyBean
+    private InvoiceEventListener invoiceEventListener;
 
     @Test
     void shouldPopulateAuditingFields() {
@@ -83,6 +87,8 @@ class InvoiceManagementApplicationServiceIT {
         assertThat(invoice.getCreatedByUserId()).isNotNull();
 
         Mockito.verify(invoicingService).issue(any(), any(), any(), any());
+
+        Mockito.verify(invoiceEventListener).listen(any(InvoiceIssuedEvent.class));
     }
 
     @Test
@@ -129,6 +135,34 @@ class InvoiceManagementApplicationServiceIT {
         Mockito.verify(paymentGatewayService).capture(any(PaymentRequest.class));
         Mockito.verify(invoicingService).assignPayment(Mockito.any(Invoice.class), Mockito.any(Payment.class));
 
+        Mockito.verify(invoiceEventListener).listen(any(InvoicePaidEvent.class));
+    }
+
+    @Test
+    void shouldGenerateInvoicePaymentAndCancelInvoice() {
+        Invoice invoice = InvoiceTestDataBuilder.anInvoice().build();
+        invoice.changePaymentSettings(PaymentMethod.GATEWAY_BALANCE, null);
+        invoiceRepository.save(invoice);
+
+        Payment payment = Payment.builder()
+                .gatewayCode(UUID.randomUUID().toString())
+                .invoiceId(invoice.getId())
+                .method(invoice.getPaymentSettings().getPaymentMethod())
+                .status(PaymentStatus.FAILED)
+                .build();
+
+        Mockito.when(paymentGatewayService.capture(Mockito.any(PaymentRequest.class))).thenReturn(payment);
+
+        applicationService.processPayment(invoice.getId());
+
+        Invoice paidInvoice = invoiceRepository.findById(invoice.getId()).orElseThrow();
+
+        assertThat(paidInvoice.isCanceled()).isTrue();
+
+        Mockito.verify(paymentGatewayService).capture(any(PaymentRequest.class));
+        Mockito.verify(invoicingService).assignPayment(Mockito.any(Invoice.class), Mockito.any(Payment.class));
+
+        Mockito.verify(invoiceEventListener).listen(any(InvoiceCanceledEvent.class));
     }
 
 }

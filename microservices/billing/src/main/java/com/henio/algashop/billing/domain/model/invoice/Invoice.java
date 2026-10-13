@@ -1,6 +1,6 @@
 package com.henio.algashop.billing.domain.model.invoice;
 
-import com.henio.algashop.billing.domain.model.AbstractAuditableEntity;
+import com.henio.algashop.billing.domain.model.AbstractAuditableAggregateRoot;
 import com.henio.algashop.billing.domain.model.IdGenerator;
 import com.henio.algashop.billing.shared.DomainException;
 import io.micrometer.common.util.StringUtils;
@@ -16,7 +16,7 @@ import java.util.*;
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
-public class Invoice extends AbstractAuditableEntity {
+public class Invoice extends AbstractAuditableAggregateRoot<Invoice> {
 
     @Id
     @EqualsAndHashCode.Include
@@ -113,7 +113,7 @@ public class Invoice extends AbstractAuditableEntity {
 
         BigDecimal totalAmount = items.stream().map(LineItem::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        return new Invoice(
+        Invoice invoice = new Invoice(
                 IdGenerator.generateTimeBasedUUID(),
                 orderId,
                 customerId,
@@ -126,7 +126,15 @@ public class Invoice extends AbstractAuditableEntity {
                 null,
                 payer,
                 items,
-                null);
+                null
+        );
+        invoice.registerEvent(new InvoiceIssuedEvent(
+                invoice.id,
+                invoice.customerId,
+                invoice.orderId,
+                invoice.issuedAt)
+        );
+        return invoice;
     }
 
     public boolean isPaid() {
@@ -144,9 +152,10 @@ public class Invoice extends AbstractAuditableEntity {
         }
         this.paidAt = OffsetDateTime.now();
         this.status = InvoiceStatus.PAID;
+        this.registerEvent(new InvoicePaidEvent(this.id, this.customerId, this.orderId, this.paidAt));
     }
 
-    private boolean isCanceled() {
+    public boolean isCanceled() {
         return InvoiceStatus.CANCELED.equals(this.status);
     }
 
@@ -157,6 +166,7 @@ public class Invoice extends AbstractAuditableEntity {
         this.cancelReason = cancelReason;
         this.canceledAt = OffsetDateTime.now();
         this.status = InvoiceStatus.CANCELED;
+        this.registerEvent(new InvoiceCanceledEvent(this.id, this.customerId, this.orderId, this.canceledAt));
     }
 
     public void assignPaymentGatewayCode(String code) {
