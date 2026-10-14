@@ -1,12 +1,20 @@
 package com.henio.algashop.ordering.presentation;
 
+import com.henio.algashop.ordering.application.customer.management.CustomerInput;
+import com.henio.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
+import com.henio.algashop.ordering.application.customer.query.CustomerOutput;
+import com.henio.algashop.ordering.application.customer.query.CustomerOutputTestDataBuilder;
+import com.henio.algashop.ordering.application.customer.query.CustomerQueryService;
+import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -14,12 +22,19 @@ import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 
 @WebMvcTest(controllers = CustomerController.class)
 class CustomerControllerTest {
 
     @Autowired
     private WebApplicationContext context;
+
+    @MockitoBean
+    private CustomerManagementApplicationService customerManagementApplicationService;
+
+    @MockitoBean
+    private CustomerQueryService queryService;
 
     @BeforeEach
     public void setupAll() {
@@ -33,6 +48,13 @@ class CustomerControllerTest {
 
     @Test
     void createCustomerContract() {
+        CustomerOutput customerOutput = CustomerOutputTestDataBuilder.existing().build();
+        Mockito.when(customerManagementApplicationService.create(any(CustomerInput.class)))
+                .thenReturn(new CustomerId());
+
+        Mockito.when(queryService.findById(any(String.class)))
+                .thenReturn(customerOutput);
+
         String jsonInput = """
                 {
                   "firstName": "John",
@@ -56,11 +78,11 @@ class CustomerControllerTest {
 
         RestAssuredMockMvc
                 .given()
-                    .accept(MediaType.APPLICATION_JSON)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(jsonInput)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(jsonInput)
                 .when()
-                    .post("/api/v1/customers")
+                .post("/api/v1/customers")
                 .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -85,7 +107,4 @@ class CustomerControllerTest {
                         "address.zipCode", is("12321")
                 );
     }
-
-
-
 }

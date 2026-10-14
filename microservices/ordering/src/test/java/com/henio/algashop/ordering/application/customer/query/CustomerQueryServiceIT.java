@@ -1,8 +1,5 @@
-package com.henio.algashop.ordering.infrastructure.persistence.customer;
+package com.henio.algashop.ordering.application.customer.query;
 
-import com.henio.algashop.ordering.application.customer.query.CustomerFilter;
-import com.henio.algashop.ordering.application.customer.query.CustomerQueryService;
-import com.henio.algashop.ordering.application.customer.query.CustomerSummaryOutput;
 import com.henio.algashop.ordering.domain.model.commons.Email;
 import com.henio.algashop.ordering.domain.model.commons.FullName;
 import com.henio.algashop.ordering.domain.model.customer.Customer;
