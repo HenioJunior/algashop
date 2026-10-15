@@ -5,6 +5,7 @@ import com.henio.algashop.ordering.application.customer.management.CustomerManag
 import com.henio.algashop.ordering.application.customer.query.CustomerOutput;
 import com.henio.algashop.ordering.application.customer.query.CustomerQueryService;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class CustomerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CustomerOutput create(@RequestBody CustomerInput input) {
+    public CustomerOutput create(@RequestBody @Valid CustomerInput input) {
         CustomerId customerId = customerManagementApplicationService.create(input);
         return queryService.findById(customerId.toString());
     }

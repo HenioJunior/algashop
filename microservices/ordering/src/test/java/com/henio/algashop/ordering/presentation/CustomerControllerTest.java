@@ -107,4 +107,47 @@ class CustomerControllerTest {
                         "address.zipCode", is("12321")
                 );
     }
+
+    @Test
+    void createCustomerErrorContract() {
+        String jsonInput = """
+                {
+                  "firstName": "",
+                  "lastName": "",
+                  "email": "johndoe@email.com",
+                  "document": "12345",
+                  "phone": "1191234564",
+                  "birthDate": "1991-07-05",
+                  "promotionNotificationsAllowed": false,
+                  "address": {
+                    "street": "Bourbon Street",
+                    "number": "2000",
+                    "complement": "apt 122",
+                    "neighborhood": "North Ville",
+                    "city": "Yostfort",
+                    "state": "South Carolina",
+                    "zipCode": "12321"
+                  }
+                }
+                """;
+        RestAssuredMockMvc
+                .given()
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(jsonInput)
+                .when()
+                .post("/api/v1/customers")
+                .then()
+                    .assertThat()
+                    .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(
+                        "status", is(HttpStatus.BAD_REQUEST.value()),
+                        "type", is("/errors/invalid-fields"),
+                        "title", notNullValue(),
+                        "detail", notNullValue(),
+                        "instance", notNullValue(),
+                        "fields", notNullValue()
+                );
+    }
 }
