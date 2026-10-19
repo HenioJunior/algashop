@@ -2,6 +2,7 @@ package com.henio.algashop.ordering.presentation;
 
 import com.henio.algashop.ordering.application.customer.management.CustomerInput;
 import com.henio.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
+import com.henio.algashop.ordering.application.customer.management.CustomerUpdateInput;
 import com.henio.algashop.ordering.application.customer.query.CustomerFilter;
 import com.henio.algashop.ordering.application.customer.query.CustomerOutput;
 import com.henio.algashop.ordering.application.customer.query.CustomerQueryService;
@@ -45,5 +46,17 @@ public class CustomerController {
     @GetMapping("/{customerId}")
     public CustomerOutput findById(@PathVariable String customerId) {
         return customerQueryService.findById(customerId);
+    }
+
+    @PutMapping("/{customerId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@PathVariable String customerId, @RequestBody @Valid CustomerUpdateInput input) {
+        customerManagementApplicationService.update(customerId, input);
+    }
+
+    @DeleteMapping("/{customerId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String customerId) {
+        customerManagementApplicationService.archive(customerId);
     }
 }

@@ -3,6 +3,7 @@ package com.henio.algashop.ordering.presentation;
 import com.henio.algashop.ordering.application.commons.AddressData;
 import com.henio.algashop.ordering.application.customer.management.CustomerInput;
 import com.henio.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
+import com.henio.algashop.ordering.application.customer.management.CustomerUpdateInput;
 import com.henio.algashop.ordering.application.customer.query.*;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerEmailIsInUseException;
@@ -411,5 +412,68 @@ class CustomerControllerTest {
                 .body("address.city", Matchers.is(address.getCity()))
                 .body("address.state", Matchers.is(address.getState()))
                 .body("address.zipCode", Matchers.is(address.getZipCode()));
+    }
+
+    @Test
+    void updateCustomerContract() {
+        String customerId = new CustomerId().value().toString();
+
+        String jsonInput = """
+                {
+                  "firstName": "John",
+                  "lastName": "Mc Doe",
+                  "phone": "4391234564",
+                  "email": "johndoe@gmail.com",
+                  "promotionNotificationsAllowed": false,
+                  "address": {
+                    "street": "Bourbon Street",
+                    "number": "2000",
+                    "complement": "apt 122",
+                    "neighborhood": "North Ville",
+                    "city": "Yostfort",
+                    "state": "South Carolina",
+                    "zipCode": "12321"
+                  }
+                }
+                """;
+
+        RestAssuredMockMvc
+                .given()
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .pathParam("customerId", customerId)
+                .body(jsonInput)
+                .when()
+                .put("/api/v1/customers/{customerId}")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value())
+                .body(Matchers.is(Matchers.emptyOrNullString()));
+
+        Mockito.verify(customerManagementApplicationService)
+                .update(
+                        Mockito.eq(customerId),
+                        Mockito.any(CustomerUpdateInput.class)
+                );
+    }
+
+    @Test
+    void deleteCustomerContract() {
+        String customerId = new CustomerId().value().toString();
+
+        RestAssuredMockMvc
+                .given()
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .pathParam("customerId", customerId)
+                .when()
+                .delete("/api/v1/customers/{customerId}")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value())
+                .body(Matchers.is(Matchers.emptyOrNullString()));
+
+        Mockito.verify(customerManagementApplicationService)
+                .archive(
+                        Mockito.eq(customerId)
+                );
     }
 }
