@@ -9,6 +9,7 @@ import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerEmailIsInUseException;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerNotFoundException;
 import com.henio.algashop.ordering.domain.model.shared.DomainException;
+import io.hypersistence.tsid.TSID;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -453,6 +454,102 @@ class CustomerControllerTest {
                 .update(
                         Mockito.eq(customerId),
                         Mockito.any(CustomerUpdateInput.class)
+                );
+    }
+
+    @Test
+    void updateCustomerError400Contract() {
+        String customerId = new CustomerId().value().toString();
+
+        String jsonInput = """
+                {
+                  "firstName": "",
+                  "lastName": "",
+                  "email": "",
+                  "phone": "1191234564",
+                  "promotionNotificationsAllowed": false,
+                  "address": {
+                    "street": "Bourbon Street",
+                    "number": "2000",
+                    "complement": "apt 122",
+                    "neighborhood": "North Ville",
+                    "city": "Yostfort",
+                    "state": "South Carolina",
+                    "zipCode": "12321"
+                  }
+                }
+                """;
+
+        RestAssuredMockMvc
+                .given()
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .pathParam("customerId", customerId)
+                .body(jsonInput)
+                .when()
+                .put("/api/v1/customers/{customerId}")
+                .then()
+                .assertThat()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(
+                        "status", is(HttpStatus.BAD_REQUEST.value()),
+                        "type", is("/errors/invalid-fields"),
+                        "title", notNullValue(),
+                        "detail", notNullValue(),
+                        "instance", notNullValue(),
+                        "fields", notNullValue()
+                );
+    }
+
+    @Test
+    void updateCustomerError404Contract() {
+        String customerId = new CustomerId().value().toString();
+
+        String jsonInput = """
+                {
+                  "firstName": "John",
+                  "lastName": "Mc Doe",
+                  "phone": "4391234564",
+                  "email": "johndoe@gmail.com",
+                  "promotionNotificationsAllowed": false,
+                  "address": {
+                    "street": "Bourbon Street",
+                    "number": "2000",
+                    "complement": "apt 122",
+                    "neighborhood": "North Ville",
+                    "city": "Yostfort",
+                    "state": "South Carolina",
+                    "zipCode": "12321"
+                  }
+                }
+                """;
+
+        Mockito.doThrow(new CustomerNotFoundException(new CustomerId(TSID.from(customerId))))
+                .when(customerManagementApplicationService)
+                .update(
+                        Mockito.eq(customerId),
+                        Mockito.any(CustomerUpdateInput.class)
+                );
+
+        RestAssuredMockMvc
+                .given()
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .pathParam("customerId", customerId)
+                .body(jsonInput)
+                .when()
+                .put("/api/v1/customers/{customerId}")
+                .then()
+                .assertThat()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body(
+                        "status", is(HttpStatus.NOT_FOUND.value()),
+                        "type", is("/errors/not-found"),
+                        "title", notNullValue(),
+                        "detail", notNullValue(),
+                        "instance", notNullValue()
                 );
     }
 

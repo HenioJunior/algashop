@@ -1,6 +1,9 @@
 package com.henio.algashop.ordering.application.customer.management;
 
 import com.henio.algashop.ordering.application.commons.AddressData;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,10 +14,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class CustomerUpdateInput {
+
+    @NotBlank
     private String firstName;
+
+    @NotBlank
     private String lastName;
+
+    @NotBlank
     private String phone;
+
+    @NotBlank
     private String email;
+
+    @NotNull
     private Boolean promotionNotificationsAllowed;
+
+    @NotNull
+    @Valid
     private AddressData address;
 }
