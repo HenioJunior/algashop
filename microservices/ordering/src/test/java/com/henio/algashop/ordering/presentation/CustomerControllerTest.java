@@ -1,5 +1,6 @@
 package com.henio.algashop.ordering.presentation;
 
+import com.henio.algashop.ordering.application.commons.AddressData;
 import com.henio.algashop.ordering.application.customer.management.CustomerInput;
 import com.henio.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
 import com.henio.algashop.ordering.application.customer.query.*;
@@ -209,5 +210,44 @@ class CustomerControllerTest {
                         "content[1].archived", Matchers.is(customer2.getArchived()),
                         "content[1].registeredAt", Matchers.is(formatter.format(customer2.getRegisteredAt()))
                 );
+    }
+    
+    @Test
+    void findByIdCustomer() {
+        CustomerOutput customer = CustomerOutputTestDataBuilder.existing().build();
+
+        AddressData address = customer.getAddress();
+
+        Mockito.when(customerQueryService.findById(customer.getId())).thenReturn(customer);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+
+        RestAssuredMockMvc
+                .given()
+                    .accept(MediaType.APPLICATION_JSON)
+                .when()
+                    .get("/api/v1/customers/{customerId}", customer.getId())
+                .then()
+                    .assertThat()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .statusCode(HttpStatus.OK.value())
+                    .body("id", Matchers.is(customer.getId()))
+                    .body("firstName", Matchers.is(customer.getFirstName()))
+                    .body("lastName", Matchers.is(customer.getLastName()))
+                    .body("email", Matchers.is(customer.getEmail()))
+                    .body("document", Matchers.is(customer.getDocument()))
+                    .body("phone", Matchers.is(customer.getPhone()))
+                    .body("birthDate", Matchers.is(customer.getBirthDate().toString()))
+                    .body("loyaltyPoints", Matchers.is(customer.getLoyaltyPoints()))
+                    .body("promotionNotificationsAllowed", Matchers.is(customer.getPromotionNotificationsAllowed()))
+                    .body("archived", Matchers.is(customer.getArchived()))
+                    .body("registeredAt", Matchers.is(formatter.format(customer.getRegisteredAt())))
+                    .body("address.street", Matchers.is(address.getStreet()))
+                    .body("address.number", Matchers.is(address.getNumber()))
+                    .body("address.complement", Matchers.is(address.getComplement()))
+                    .body("address.neighborhood", Matchers.is(address.getNeighborhood()))
+                    .body("address.city", Matchers.is(address.getCity()))
+                    .body("address.state", Matchers.is(address.getState()))
+                    .body("address.zipCode", Matchers.is(address.getZipCode()));
     }
 }
