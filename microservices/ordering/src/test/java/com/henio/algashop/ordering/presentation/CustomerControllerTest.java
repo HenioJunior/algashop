@@ -22,8 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @WebMvcTest(controllers = CustomerController.class)
@@ -51,8 +50,10 @@ class CustomerControllerTest {
     @Test
     void createCustomerContract() {
         CustomerOutput customerOutput = CustomerOutputTestDataBuilder.existing().build();
+        CustomerId customerId = new CustomerId();
+
         Mockito.when(customerManagementApplicationService.create(any(CustomerInput.class)))
-                .thenReturn(new CustomerId());
+                .thenReturn(customerId);
 
         Mockito.when(customerQueryService.findById(any(String.class)))
                 .thenReturn(customerOutput);
@@ -89,6 +90,7 @@ class CustomerControllerTest {
                 .assertThat()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .statusCode(HttpStatus.CREATED.value())
+                .header("Location", containsString("/api/v1/customers/" + customerId))
                 .body(
                         "id", notNullValue(),
                         "registeredAt", notNullValue(),

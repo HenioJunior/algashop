@@ -18,7 +18,8 @@ public class CustomerSummaryOutputTestDataBuilder {
                 .birthDate(LocalDate.of(1991, 7, 5))
                 .document("12345")
                 .promotionNotificationsAllowed(false)
-                .loyaltyPoints(0);
+                .loyaltyPoints(0)
+                .archived(false);
     }
 
     public static CustomerSummaryOutput.CustomerSummaryOutputBuilder existingAlt1() {
@@ -32,7 +33,8 @@ public class CustomerSummaryOutputTestDataBuilder {
                 .birthDate(LocalDate.of(1977, 1, 5))
                 .document("98745")
                 .promotionNotificationsAllowed(true)
-                .loyaltyPoints(10);
+                .loyaltyPoints(10)
+                .archived(false);
     }
 
 }
