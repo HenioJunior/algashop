@@ -554,6 +554,57 @@ class CustomerControllerTest {
     }
 
     @Test
+    void updateCustomerError500Contract() {
+        String customerId = new CustomerId().value().toString();
+
+        String jsonInput = """
+                {
+                  "firstName": "John",
+                  "lastName": "Mc Doe",
+                  "phone": "4391234564",
+                  "email": "johndoe@gmail.com",
+                  "promotionNotificationsAllowed": false,
+                  "address": {
+                    "street": "Bourbon Street",
+                    "number": "2000",
+                    "complement": "apt 122",
+                    "neighborhood": "North Ville",
+                    "city": "Yostfort",
+                    "state": "South Carolina",
+                    "zipCode": "12321"
+                  }
+                }
+                """;
+
+        Mockito.doThrow(new RuntimeException())
+                .when(customerManagementApplicationService)
+                .update(
+                        Mockito.eq(customerId),
+                        Mockito.any(CustomerUpdateInput.class)
+                );
+
+        RestAssuredMockMvc
+                .given()
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .pathParam("customerId", customerId)
+                .body(jsonInput)
+                .when()
+                .put("/api/v1/customers/{customerId}")
+                .then()
+                .assertThat()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .body(
+                        "status", is(HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                        "type", is("/errors/internal"),
+                        "title", notNullValue(),
+                        "detail", notNullValue(),
+                        "instance", notNullValue()
+                );
+    }
+
+    @Test
     void deleteCustomerContract() {
         String customerId = new CustomerId().value().toString();
 
@@ -571,6 +622,36 @@ class CustomerControllerTest {
         Mockito.verify(customerManagementApplicationService)
                 .archive(
                         Mockito.eq(customerId)
+                );
+    }
+
+    @Test
+    void deleteCustomerErrorContract404() {
+        String customerId = new CustomerId().value().toString();
+
+        Mockito.doThrow(new CustomerNotFoundException(new CustomerId(TSID.from(customerId))))
+                .when(customerManagementApplicationService)
+                .archive(
+                        Mockito.eq(customerId)
+                );
+
+        RestAssuredMockMvc
+                .given()
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .pathParam("customerId", customerId)
+                .when()
+                .delete("/api/v1/customers/{customerId}")
+                .then()
+                .assertThat()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body(
+                        "status", is(HttpStatus.NOT_FOUND.value()),
+                        "type", is("/errors/not-found"),
+                        "title", notNullValue(),
+                        "detail", notNullValue(),
+                        "instance", notNullValue()
                 );
     }
 }
