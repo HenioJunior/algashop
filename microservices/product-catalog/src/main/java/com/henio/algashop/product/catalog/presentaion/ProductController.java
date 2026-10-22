@@ -1,5 +1,6 @@
 package com.henio.algashop.product.catalog.presentaion;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,7 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductDetailOutput createProduct(@RequestBody ProductInput input) {
+    public ProductDetailOutput createProduct(@RequestBody @Valid ProductInput input) {
 
         return ProductDetailOutput.builder()
                 .id(UUID.randomUUID())
