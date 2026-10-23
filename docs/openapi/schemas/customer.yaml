@@ -185,6 +185,7 @@ CustomerUpdateInput:
   - firstName
   - lastName
   - phone
+  - email
   - promotionNotificationsAllowed
   - address
   properties:
@@ -203,6 +204,13 @@ CustomerUpdateInput:
       example: '1191234564'
       nullable: false
       x-validation: notBlank
+    email:
+      type: string
+      example: johndoe@email.com
+      nullable: false
+      x-validation:
+        - email
+        - notBlank
     promotionNotificationsAllowed:
       type: boolean
       example: false
