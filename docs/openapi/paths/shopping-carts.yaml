@@ -1,0 +1,143 @@
+collection:
+  post:
+    tags:
+    - Shopping Cart
+    description: Create shopping cart
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../schemas/shopping-cart.yaml#/ShoppingCartInput
+    responses:
+      201:
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/shopping-cart.yaml#/ShoppingCart
+      400:
+        $ref: ../components/responses.yaml#/BadRequest
+      500:
+        $ref: ../components/responses.yaml#/InternalError
+resource1:
+  get:
+    parameters:
+    - schema:
+        type: string
+      name: shoppingCartId
+      in: path
+      required: true
+      example: 01226N0693HDE
+    tags:
+    - Shopping Cart
+    description: Find shopping cart
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/shopping-cart.yaml#/ShoppingCart
+      404:
+        $ref: ../components/responses.yaml#/NotFound
+  delete:
+    parameters:
+    - schema:
+        type: string
+      name: shoppingCartId
+      in: path
+      required: true
+      example: 01226N0693HDE
+    tags:
+    - Shopping Cart
+    description: Delete shopping cart
+    responses:
+      204:
+        description: OK
+      404:
+        $ref: ../components/responses.yaml#/NotFound
+resource2:
+  post:
+    parameters:
+    - schema:
+        type: string
+      name: shoppingCartId
+      in: path
+      required: true
+      example: 01226N0693HDE
+    tags:
+    - Shopping Cart
+    description: Add or update cart item
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../schemas/shopping-cart.yaml#/ShoppingCartItemInput
+    responses:
+      204:
+        description: OK
+      404:
+        $ref: ../components/responses.yaml#/NotFound
+      400:
+        $ref: ../components/responses.yaml#/BadRequest
+      500:
+        $ref: ../components/responses.yaml#/InternalError
+  get:
+    parameters:
+    - schema:
+        type: string
+      name: shoppingCartId
+      in: path
+      required: true
+      example: 01226N0693HDE
+    tags:
+    - Shopping Cart
+    description: List shopping cart items
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/shopping-cart.yaml#/ShoppingCartItemList
+      404:
+        $ref: ../components/responses.yaml#/NotFound
+  delete:
+    parameters:
+    - schema:
+        type: string
+      name: shoppingCartId
+      in: path
+      required: true
+      example: 01226N0693HDE
+    tags:
+    - Shopping Cart
+    description: Empty shopping cart
+    responses:
+      204:
+        description: OK
+      404:
+        $ref: ../components/responses.yaml#/NotFound
+resource3:
+  delete:
+    tags:
+    - Shopping Cart
+    description: Remove cart item
+    parameters:
+    - schema:
+        type: string
+      name: shoppingCartId
+      in: path
+      required: true
+      example: 01226N0693HDE
+    - schema:
+        type: string
+      name: itemId
+      in: path
+      required: true
+      example: 01226N0693HDG
+    responses:
+      204:
+        description: OK

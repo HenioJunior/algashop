@@ -80,7 +80,7 @@ dependencyManagement {
 }
 
 contracts {
-	testFramework ='JUNIT5'
+	testFramework = 'JUNIT5'
 	testMode = 'MockMvc'
 	contractsDslDir = file('src/contractTest/resources/contracts')
 
@@ -88,53 +88,89 @@ contracts {
 			'com.henio.algashop.ordering.contract.base.OrderBase'
 }
 
-tasks.named('contractTest') {
+// Testes unitários e de controllers
+tasks.named('test', Test) {
 	useJUnitPlatform()
-}
 
-tasks.named('check') {
-	dependsOn(test, contractTest, integrationTest)
-}
-
-contracts {
-	testFramework ='JUNIT5'
-	testMode = 'MockMvc'
-	contractsDslDir = project.file("${layout.projectDirectory}/src/contractTest/resources/contracts")
-}
-
-tasks.named('test') {
-	useJUnitPlatform()
-}
-
-test {
 	filter {
-		excludeTestsMatching("*IT")
+		excludeTestsMatching('*IT')
 	}
+
 	jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
 }
 
-tasks.named('check') {
-	dependsOn(test, integrationTest)
-}
-
+// Testes de integração
 tasks.register('integrationTest', Test) {
 	description = 'Run integration tests.'
 	group = 'verification'
-	jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
 
 	testClassesDirs = sourceSets.test.output.classesDirs
 	classpath = sourceSets.test.runtimeClasspath
 
-	shouldRunAfter test
+	shouldRunAfter tasks.named('test')
 
 	useJUnitPlatform()
 
+	jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
+
 	testLogging {
-		events "passed"
+		events 'passed'
 	}
 
 	filter {
-		includeTestsMatching "*IT"
-		excludeTestsMatching "*Test"
+		includeTestsMatching '*IT'
 	}
+}
+
+// Testes de contrato
+tasks.named('contractTest', Test) {
+	useJUnitPlatform()
+}
+
+// Verificação completa
+tasks.named('check') {
+	dependsOn(
+			tasks.named('test'),
+			tasks.named('integrationTest'),
+			tasks.named('contractTest')
+	)
+}
+
+sourceSets {
+	openapi {
+		java.srcDir 'src/openapi/java'
+	}
+}
+
+dependencies {
+	openapiImplementation 'io.swagger.parser.v3:swagger-parser:2.1.36'
+}
+
+tasks.register('bundleOpenApi', JavaExec) {
+	group = 'documentation'
+	description = 'Generate bundled OpenAPI specification'
+
+	def openApiDirectory = file('../../docs/openapi')
+	def outputFile = layout.buildDirectory.file(
+			'generated/openapi/openapi-bundled.yaml'
+	)
+
+	dependsOn tasks.named('compileOpenapiJava')
+
+	inputs.files(
+			fileTree(openApiDirectory) {
+				include '**/*.yaml'
+				include '**/*.yml'
+			}
+	).withPathSensitivity(PathSensitivity.RELATIVE)
+
+	outputs.file(outputFile)
+
+	classpath = sourceSets.openapi.runtimeClasspath
+	mainClass = 'BundleOpenApi'
+
+	args(
+			file("${openApiDirectory}/openapi.yaml").absolutePath,
+			outputFile.get().asFile.absolutePath
+	)
 }

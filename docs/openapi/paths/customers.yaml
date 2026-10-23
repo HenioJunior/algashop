@@ -1,0 +1,137 @@
+collection:
+  post:
+    description: Register new customer
+    tags:
+    - Customers
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../schemas/customer.yaml#/CustomerInput
+    responses:
+      201:
+        description: Customer created
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/customer.yaml#/Customer
+        headers:
+          Location:
+            schema:
+              type: string
+              example: /api/v1/customers/01226N0640J7Q
+      400:
+        $ref: ../components/responses.yaml#/BadRequest
+      409:
+        $ref: ../components/responses.yaml#/Conflict
+      422:
+        $ref: ../components/responses.yaml#/UnprocessableEntity
+      500:
+        $ref: ../components/responses.yaml#/InternalError
+  get:
+    description: List customers
+    tags:
+    - Customers
+    parameters:
+    - schema:
+        type: string
+        example: '12345'
+      in: query
+      name: document
+      required: false
+    - schema:
+        type: string
+        example: johndoe@email.com
+      in: query
+      name: email
+      required: false
+    - $ref: ../components/parameters.yaml#/page
+    - $ref: ../components/parameters.yaml#/size
+    - $ref: ../components/parameters.yaml#/sort
+    - $ref: ../components/parameters.yaml#/direction
+    responses:
+      200:
+        description: Ok
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: ../schemas/common.yaml#/Page
+              - type: object
+              properties:
+                content:
+                  type: array
+                  items:
+                    $ref: ../schemas/customer.yaml#/CustomerSummary
+resource1:
+  get:
+    parameters:
+    - schema:
+        type: string
+      name: customerId
+      in: path
+      required: true
+      example: 01226N0640J7Q
+    description: Get one customer by id
+    tags:
+    - Customers
+    responses:
+      200:
+        description: Ok
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/customer.yaml#/Customer
+      404:
+        $ref: ../components/responses.yaml#/NotFound
+  put:
+    parameters:
+    - schema:
+        type: string
+      name: customerId
+      in: path
+      required: true
+      example: 01226N0640J7Q
+    description: Edit customer
+    tags:
+    - Customers
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../schemas/customer.yaml#/CustomerUpdateInput
+    responses:
+      200:
+        description: Ok
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/customer.yaml#/Customer
+      400:
+        $ref: ../components/responses.yaml#/BadRequest
+      404:
+        $ref: ../components/responses.yaml#/NotFound
+      409:
+        $ref: ../components/responses.yaml#/Conflict
+      422:
+        $ref: ../components/responses.yaml#/UnprocessableEntity
+      500:
+        $ref: ../components/responses.yaml#/InternalError
+  delete:
+    parameters:
+    - schema:
+        type: string
+      name: customerId
+      in: path
+      required: true
+      example: 01226N0640J7Q
+    description: Delete customer
+    tags:
+    - Customers
+    responses:
+      204:
+        description: No content
+      404:
+        $ref: ../components/responses.yaml#/NotFound

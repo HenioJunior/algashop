@@ -1,0 +1,45 @@
+ProblemDetail:
+  type: object
+  required:
+  - status
+  - type
+  properties:
+    status:
+      type: integer
+      example: 400
+    type:
+      type: string
+      example: /errors/invalid-data
+    title:
+      type: string
+      example: Invalid fields
+    instance:
+      type: string
+      example: /api/v1/customers
+    detail:
+      type: string
+      example: One or more fields are invalid
+    fields:
+      type: object
+      description: Fields that caused the error
+Page:
+  type: object
+  required:
+  - number
+  - size
+  - totalPages
+  - totalElements
+  - content
+  properties:
+    number:
+      type: integer
+      example: 2
+    size:
+      type: integer
+      example: 9
+    totalPages:
+      type: integer
+      example: 15
+    totalElements:
+      type: integer
+      example: 150

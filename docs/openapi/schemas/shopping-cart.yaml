@@ -1,0 +1,82 @@
+ShoppingCart:
+  required:
+  - id
+  - totalAmount
+  - totalItems
+  - customerId
+  - items
+  properties:
+    id:
+      type: string
+      example: 01226N0693HDE
+    totalAmount:
+      type: number
+      example: 41.98
+    totalItems:
+      type: integer
+      example: 1
+    customerId:
+      type: string
+      example: 01226N0693HDE
+    items:
+      type: array
+      items:
+        $ref: shopping-cart.yaml#/ShoppingCartItem
+ShoppingCartItem:
+  required:
+  - id
+  - productId
+  - name
+  - price
+  - available
+  - quantity
+  - totalAmount
+  properties:
+    id:
+      type: string
+      example: 01226N0640J7F
+    productId:
+      type: string
+      example: 01226N0693HDE
+    name:
+      type: string
+      example: Desktop Gamer Dive
+    price:
+      type: number
+      example: 100.0
+    available:
+      type: boolean
+      example: false
+    quantity:
+      type: integer
+      example: 2
+    totalAmount:
+      type: number
+      example: 140
+ShoppingCartItemList:
+  type: object
+  required:
+  - items
+  properties:
+    items:
+      type: array
+      items:
+        $ref: shopping-cart.yaml#/ShoppingCartItem
+ShoppingCartItemInput:
+  required:
+  - quantity
+  - productId
+  properties:
+    quantity:
+      type: integer
+      example: 2
+    productId:
+      type: string
+      example: 01226N0640J7G
+ShoppingCartInput:
+  required:
+  - customerId
+  properties:
+    customerId:
+      type: string
+      example: 01226N0640J7G

@@ -1,0 +1,122 @@
+collection:
+  post:
+    tags:
+    - Orders
+    description: Create an Order
+    requestBody:
+      required: true
+      content:
+        application/vnd.order-with-shopping-cart.v1+json:
+          schema:
+            $ref: ../schemas/order.yaml#/OrderWithShoppingCartInput
+        application/vnd.order-with-product.v1+json:
+          schema:
+            $ref: ../schemas/order.yaml#/OrderWithProductInput
+    responses:
+      201:
+        description: Order created
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/order.yaml#/Order
+        headers:
+          Location:
+            schema:
+              type: string
+            description: Resource address
+            example: /api/v1/orders/01226N0693HDE
+      400:
+        $ref: ../components/responses.yaml#/BadRequest
+      409:
+        $ref: ../components/responses.yaml#/Conflict
+      422:
+        $ref: ../components/responses.yaml#/UnprocessableEntity
+      500:
+        $ref: ../components/responses.yaml#/InternalError
+  get:
+    description: List orders
+    tags:
+    - Orders
+    parameters:
+    - schema:
+        $ref: ../schemas/order.yaml#/OrderStatus
+      in: query
+      name: status
+      required: false
+    - schema:
+        type: string
+        format: date
+        example: '2024-04-25'
+      in: query
+      name: placedAtFrom
+      required: false
+    - schema:
+        type: string
+        format: date
+        example: '2024-04-01'
+      in: query
+      name: placedAtTo
+      required: false
+    - schema:
+        type: number
+        example: 1211.98
+      in: query
+      name: totalAmountFrom
+      required: false
+    - schema:
+        type: number
+        example: 2341.98
+      in: query
+      name: totalAmountTo
+      required: false
+    - schema:
+        type: string
+        example: 01226N0640J7Q
+      in: query
+      name: orderId
+      required: false
+    - schema:
+        type: string
+        example: 01226N0640J7H
+      in: query
+      name: customerId
+      required: false
+    - $ref: ../components/parameters.yaml#/page
+    - $ref: ../components/parameters.yaml#/size
+    - $ref: ../components/parameters.yaml#/sort
+    - $ref: ../components/parameters.yaml#/direction
+    responses:
+      200:
+        description: Ok
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: ../schemas/common.yaml#/Page
+              - type: object
+              properties:
+                content:
+                  type: array
+                  items:
+                    $ref: ../schemas/order.yaml#/OrderSummary
+resource1:
+  get:
+    tags:
+    - Orders
+    description: Order detail
+    parameters:
+    - schema:
+        type: string
+      required: true
+      name: orderId
+      in: path
+      example: 01226N0693HDG
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/order.yaml#/Order
+      404:
+        $ref: ../components/responses.yaml#/NotFound

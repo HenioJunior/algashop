@@ -1,0 +1,276 @@
+OrderWithProductInput:
+  required:
+  - customerId
+  - paymentMethod
+  - productId
+  - quantity
+  - shipping
+  - billing
+  properties:
+    customerId:
+      type: string
+      example: 01226N0640J7Q
+      nullable: false
+    productId:
+      type: string
+      example: 01226N0693HDG
+      nullable: false
+    quantity:
+      type: integer
+      example: 12
+      nullable: false
+      x-validation: positive
+    paymentMethod:
+      type: string
+      example: GATEWAY_BALANCE
+      nullable: false
+    shipping:
+      $ref: order.yaml#/ShippingInput
+    billing:
+      $ref: order.yaml#/Billing
+OrderWithShoppingCartInput:
+  required:
+  - shoppingCartId
+  - paymentMethod
+  - shipping
+  - billing
+  properties:
+    shoppingCartId:
+      type: string
+      example: 01226N0693HDG
+      nullable: false
+    paymentMethod:
+      type: string
+      example: GATEWAY_BALANCE
+      nullable: false
+    shipping:
+      $ref: order.yaml#/ShippingInput
+    billing:
+      $ref: order.yaml#/Billing
+Order:
+  required:
+  - id
+  - customer
+  - paymentMethod
+  - totalItems
+  - totalAmount
+  - placedAt
+  - canceledAt
+  - paidAt
+  - readyAt
+  - status
+  - items
+  - shipping
+  - billing
+  properties:
+    id:
+      type: string
+      example: 01226N0640J7Q
+    customer:
+      $ref: customer.yaml#/CustomerMinimal
+    totalItems:
+      type: integer
+      example: 2
+    totalAmount:
+      type: number
+      example: 41.98
+    placedAt:
+      type: string
+      format: date-time
+      example: '2024-04-04T00:12:45Z'
+    canceledAt:
+      type: string
+      format: date-time
+      example: '2024-04-04T00:12:45Z'
+    paidAt:
+      type: string
+      format: date-time
+      example: '2024-04-04T00:12:45Z'
+    readyAt:
+      type: string
+      format: date-time
+      example: '2024-04-04T00:12:45Z'
+    status:
+      $ref: order.yaml#/OrderStatus
+    paymentMethod:
+      $ref: order.yaml#/PaymentMethod
+    shipping:
+      $ref: order.yaml#/Shipping
+    billing:
+      $ref: order.yaml#/Billing
+    items:
+      type: array
+      items:
+        $ref: order.yaml#/OrderItem
+OrderItem:
+  required:
+  - id
+  - productId
+  - productName
+  - quantity
+  - price
+  - totalAmount
+  properties:
+    id:
+      type: string
+      example: 02226N0640J7F
+    productId:
+      type: string
+      example: 01226N0693HDG
+    price:
+      type: number
+      example: 19.99
+      format: double
+      minimum: 1
+      maximum: 100000
+    productName:
+      type: string
+      example: Notebook Dive Gamer X11
+    quantity:
+      type: integer
+      example: 2
+      minimum: 1
+      maximum: 100
+    totalAmount:
+      type: number
+      example: 19.99
+      format: double
+      minimum: 1
+      maximum: 100000
+ShippingInput:
+  type: object
+  properties:
+    recipient:
+      $ref: order.yaml#/Recipient
+    address:
+      $ref: customer.yaml#/Address
+Recipient:
+  type: object
+  required:
+  - firstName
+  - lastName
+  - document
+  - phone
+  - address
+  properties:
+    firstName:
+      type: string
+      example: John
+      nullable: false
+    lastName:
+      type: string
+      example: Doe
+      nullable: false
+    document:
+      type: string
+      example: '12345'
+      nullable: false
+    phone:
+      type: string
+      example: '5511912341234'
+      nullable: false
+Billing:
+  type: object
+  required:
+  - firstName
+  - lastName
+  - document
+  - phone
+  - address
+  properties:
+    firstName:
+      type: string
+      example: John
+      nullable: false
+    lastName:
+      type: string
+      example: Doe
+      nullable: false
+    document:
+      type: string
+      example: '12345'
+      nullable: false
+    phone:
+      type: string
+      example: '5511912341234'
+      nullable: false
+    address:
+      $ref: customer.yaml#/Address
+Shipping:
+  type: object
+  required:
+  - cost
+  - expectedDate
+  - recipient
+  - address
+  properties:
+    cost:
+      type: number
+      example: 20.5
+    expectedDate:
+      type: string
+      format: date
+      example: '2026-05-01'
+    recipient:
+      $ref: order.yaml#/Recipient
+    address:
+      $ref: customer.yaml#/Address
+OrderStatus:
+  type: string
+  example: PLACED
+  enum:
+  - DRAFT
+  - PLACED
+  - PAID
+  - READY
+  - CANCELED
+PaymentMethod:
+  type: string
+  example: GATEWAY_BALANCE
+  enum:
+  - GATEWAY_BALANCE
+  - CREDIT_CARD
+OrderSummary:
+  required:
+  - id
+  - customer
+  - paymentMethod
+  - totalItems
+  - totalAmount
+  - placedAt
+  - canceledAt
+  - paidAt
+  - readyAt
+  - status
+  properties:
+    id:
+      type: string
+      example: 01226N0640J7Q
+    customer:
+      $ref: customer.yaml#/CustomerMinimal
+    totalItems:
+      type: integer
+      example: 2
+    totalAmount:
+      type: number
+      example: 41.98
+    placedAt:
+      type: string
+      format: date-time
+      example: '2024-04-04T00:12:45Z'
+    canceledAt:
+      type: string
+      format: date-time
+      example: '2024-04-04T00:12:45Z'
+    paidAt:
+      type: string
+      format: date-time
+      example: '2024-04-04T00:12:45Z'
+    readyAt:
+      type: string
+      format: date-time
+      example: '2024-04-04T00:12:45Z'
+    status:
+      $ref: order.yaml#/OrderStatus
+    paymentMethod:
+      $ref: order.yaml#/PaymentMethod

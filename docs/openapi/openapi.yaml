@@ -1,0 +1,96 @@
+openapi: 3.0.4
+info:
+  title: AlgaShop - Ordering
+  version: '1.0'
+servers:
+- description: Development
+  url: http://localhost:8080
+- description: Production
+  url: https://api.algashop.com
+paths:
+  /api/v1/customers:
+    $ref: ./paths/customers.yaml#/collection
+  /api/v1/customers/{customerId}:
+    $ref: ./paths/customers.yaml#/resource1
+  /api/v1/orders:
+    $ref: ./paths/orders.yaml#/collection
+  /api/v1/orders/{orderId}:
+    $ref: ./paths/orders.yaml#/resource1
+  /api/v1/shopping-carts:
+    $ref: ./paths/shopping-carts.yaml#/collection
+  /api/v1/shopping-carts/{shoppingCartId}:
+    $ref: ./paths/shopping-carts.yaml#/resource1
+  /api/v1/shopping-carts/{shoppingCartId}/items:
+    $ref: ./paths/shopping-carts.yaml#/resource2
+  /api/v1/shopping-carts/{shoppingCartId}/items/{itemId}:
+    $ref: ./paths/shopping-carts.yaml#/resource3
+components:
+  parameters:
+    page:
+      $ref: ./components/parameters.yaml#/page
+    size:
+      $ref: ./components/parameters.yaml#/size
+    sort:
+      $ref: ./components/parameters.yaml#/sort
+    direction:
+      $ref: ./components/parameters.yaml#/direction
+  responses:
+    NotFound:
+      $ref: ./components/responses.yaml#/NotFound
+    BadRequest:
+      $ref: ./components/responses.yaml#/BadRequest
+    Conflict:
+      $ref: ./components/responses.yaml#/Conflict
+    UnprocessableEntity:
+      $ref: ./components/responses.yaml#/UnprocessableEntity
+    InternalError:
+      $ref: ./components/responses.yaml#/InternalError
+  schemas:
+    Customer:
+      $ref: ./schemas/customer.yaml#/Customer
+    Address:
+      $ref: ./schemas/customer.yaml#/Address
+    CustomerSummary:
+      $ref: ./schemas/customer.yaml#/CustomerSummary
+    CustomerInput:
+      $ref: ./schemas/customer.yaml#/CustomerInput
+    CustomerUpdateInput:
+      $ref: ./schemas/customer.yaml#/CustomerUpdateInput
+    ProblemDetail:
+      $ref: ./schemas/common.yaml#/ProblemDetail
+    Page:
+      $ref: ./schemas/common.yaml#/Page
+    OrderWithProductInput:
+      $ref: ./schemas/order.yaml#/OrderWithProductInput
+    OrderWithShoppingCartInput:
+      $ref: ./schemas/order.yaml#/OrderWithShoppingCartInput
+    Order:
+      $ref: ./schemas/order.yaml#/Order
+    OrderItem:
+      $ref: ./schemas/order.yaml#/OrderItem
+    ShippingInput:
+      $ref: ./schemas/order.yaml#/ShippingInput
+    Recipient:
+      $ref: ./schemas/order.yaml#/Recipient
+    Billing:
+      $ref: ./schemas/order.yaml#/Billing
+    Shipping:
+      $ref: ./schemas/order.yaml#/Shipping
+    CustomerMinimal:
+      $ref: ./schemas/customer.yaml#/CustomerMinimal
+    OrderStatus:
+      $ref: ./schemas/order.yaml#/OrderStatus
+    PaymentMethod:
+      $ref: ./schemas/order.yaml#/PaymentMethod
+    OrderSummary:
+      $ref: ./schemas/order.yaml#/OrderSummary
+    ShoppingCart:
+      $ref: ./schemas/shopping-cart.yaml#/ShoppingCart
+    ShoppingCartItem:
+      $ref: ./schemas/shopping-cart.yaml#/ShoppingCartItem
+    ShoppingCartItemList:
+      $ref: ./schemas/shopping-cart.yaml#/ShoppingCartItemList
+    ShoppingCartItemInput:
+      $ref: ./schemas/shopping-cart.yaml#/ShoppingCartItemInput
+    ShoppingCartInput:
+      $ref: ./schemas/shopping-cart.yaml#/ShoppingCartInput

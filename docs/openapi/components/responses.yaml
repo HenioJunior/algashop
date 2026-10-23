@@ -1,0 +1,30 @@
+NotFound:
+  description: Resource not found
+  content:
+    application/problem+json:
+      schema:
+        $ref: ../schemas/common.yaml#/ProblemDetail
+BadRequest:
+  description: Invalid request
+  content:
+    application/problem+json:
+      schema:
+        $ref: ../schemas/common.yaml#/ProblemDetail
+Conflict:
+  description: Conflict resource
+  content:
+    application/problem+json:
+      schema:
+        $ref: ../schemas/common.yaml#/ProblemDetail
+UnprocessableEntity:
+  description: Unprocessable entity
+  content:
+    application/problem+json:
+      schema:
+        $ref: ../schemas/common.yaml#/ProblemDetail
+InternalError:
+  description: Internal Server Error
+  content:
+    application/problem+json:
+      schema:
+        $ref: ../schemas/common.yaml#/ProblemDetail

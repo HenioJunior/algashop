@@ -21,3 +21,8 @@ algashop:
       provider: "RAPIDEX"
     rapidex:
       url: "http://localhost:8780"
+
+springdoc:
+  swagger-ui:
+    url: /openapi-bundled.yaml
+    disable-swagger-default-url: true
