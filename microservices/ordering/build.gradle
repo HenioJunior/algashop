@@ -174,3 +174,13 @@ tasks.register('bundleOpenApi', JavaExec) {
 			outputFile.get().asFile.absolutePath
 	)
 }
+
+tasks.named('processResources', Copy) {
+	dependsOn tasks.named('bundleOpenApi')
+
+	from(layout.buildDirectory.file(
+			'generated/openapi/openapi-bundled.yaml'
+	)) {
+		into 'static'
+	}
+}

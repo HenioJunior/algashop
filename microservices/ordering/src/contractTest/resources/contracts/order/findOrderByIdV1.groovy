@@ -8,14 +8,14 @@ Contract.make {
         headers {
             accept 'application/json'
         }
-        url("/api/v1/orders/")
+        url("/api/v1/orders/01226N0640J7Q")
     }
     response {
         status 200
         body([
                 id: "01226N0640J7Q",
                 customer: [
-                        id: anyUuid(),
+                        id: anyNumber(),
                         firstName: "John",
                         lastName: "Doe",
                         document: "12345",
@@ -23,7 +23,7 @@ Contract.make {
                         phone: "1191234564"
                 ],
                 totalItems: 2,
-                totalAmount: 41.98,
+                totalAmount: 60.48,
                 placedAt: anyIso8601WithOffset(),
                 canceledAt: null,
                 paidAt: null,
@@ -66,13 +66,13 @@ Contract.make {
                 ],
                 items: [
                         [
-                                id: anyNonBlankString(),
-                                productId: anyUuid(),
+                                id: $(consumer(regex('[0-9A-HJKMNP-TV-Z]{13}'))),
+                                productId: $(consumer(regex('[0-9A-HJKMNP-TV-Z]{13}'))),
                                 orderId: "01226N0640J7Q",
                                 price: 19.99,
                                 productName: "Notebook Dive Gamer X11",
                                 quantity: 2,
-                                totalAmount: 19.99
+                                totalAmount: 39.98
                         ]
                 ]
         ])
