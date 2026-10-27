@@ -1,4 +1,4 @@
-package com.henio.algashop.product.catalog.presentaion;
+package com.henio.algashop.product.catalog.application.product.management;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package com.henio.algashop.product.catalog.presentaion;
+package com.henio.algashop.product.catalog.application.product.query;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
