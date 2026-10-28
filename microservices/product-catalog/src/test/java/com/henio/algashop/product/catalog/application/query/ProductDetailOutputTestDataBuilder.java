@@ -1,4 +1,7 @@
-package com.henio.algashop.product.catalog.application.product.query;
+package com.henio.algashop.product.catalog.application.query;
+
+import com.henio.algashop.product.catalog.application.product.query.CategoryMinimalOutput;
+import com.henio.algashop.product.catalog.application.product.query.ProductDetailOutput;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
