@@ -26,4 +26,21 @@ public class ProductDetailOutputTestDataBuilder {
                         .build()
                 );
     }
+
+    public static ProductDetailOutput.ProductDetailOutputBuilder aProductAlt1() {
+        return ProductDetailOutput.builder()
+                .id(UUID.randomUUID())
+                .addedAt(OffsetDateTime.now())
+                .name("Desktop I9000")
+                .brand("Deep Diver")
+                .description("A Gamer Desktop")
+                .regularPrice(new BigDecimal("3500.00"))
+                .salePrice(new BigDecimal("3000.00"))
+                .inStock(false)
+                .enabled(true)
+                .category(CategoryMinimalOutput.builder()
+                        .id(UUID.randomUUID())
+                        .name("Desktop")
+                        .build());
+    }
 }

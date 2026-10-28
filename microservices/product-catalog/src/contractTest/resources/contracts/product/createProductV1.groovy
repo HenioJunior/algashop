@@ -36,7 +36,7 @@ Contract.make {
                             stub(anyUuid())
                     ),
                     description: value(
-                            test("A Gamer Notebook!"),
+                            test("A Gamer Notebook"),
                             stub(optional(nonBlank()))
                     )
             ])
@@ -56,7 +56,7 @@ Contract.make {
                 inStock: false,
                 enabled: fromRequest().body('$.enabled'),
                 category: [
-                        id: fromRequest().body('$.categoryId'),
+                        id: anyUuid(),
                         name: "Notebook"
                 ],
                 description: fromRequest().body('$.description'),
