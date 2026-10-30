@@ -41,6 +41,7 @@ public class ProductBase {
     public static final UUID invalidProductId = UUID.fromString("21651a12-b126-4213-ac21-19f66ff4642e");
 
     public static final UUID createdProductId = UUID.randomUUID();
+
     @BeforeEach
     void setup() {
         RestAssuredMockMvc.mockMvc(
@@ -55,6 +56,26 @@ public class ProductBase {
         mockFilterProducts();
         mockCreateProduct();
         mockInvalidProductFindById();
+        mockUpdateProduct();
+        mockDeleteProduct();
+    }
+
+    private void mockDeleteProduct() {
+        Mockito.doNothing()
+                .when(productManagementApplicationService)
+                .disable(Mockito.eq(validProductId));
+    }
+
+    private void mockUpdateProduct() {
+        Mockito.doNothing()
+                .when(productManagementApplicationService)
+                .update(
+                        Mockito.eq(validProductId),
+                        Mockito.any(ProductInput.class)
+                );
+
+        Mockito.when(productQueryService.findById(createdProductId))
+                .thenReturn(ProductDetailOutputTestDataBuilder.aProduct().inStock(false).build());
     }
 
     private void mockInvalidProductFindById() {
