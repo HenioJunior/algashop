@@ -78,8 +78,9 @@ dependencyManagement {
 
 contracts {
 	testMode = 'MOCKMVC'
-	baseClassForTests =
-			'com.henio.algashop.product.catalog.contract.base.ProductBase'
+
+	packageWithBaseClasses =
+			'com.henio.algashop.product.catalog.contract.base'
 }
 
 tasks.named('contractTest') {
