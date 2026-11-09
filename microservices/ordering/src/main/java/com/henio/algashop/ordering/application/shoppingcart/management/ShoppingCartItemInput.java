@@ -2,7 +2,7 @@ package com.henio.algashop.ordering.application.shoppingcart.management;
 
 import lombok.*;
 
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

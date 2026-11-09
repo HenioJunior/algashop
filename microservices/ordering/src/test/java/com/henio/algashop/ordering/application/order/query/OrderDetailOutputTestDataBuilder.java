@@ -20,7 +20,7 @@ public class OrderDetailOutputTestDataBuilder {
         return OrderDetailOutput.builder()
                 .id(orderId)
                 .customer(CustomerMinimalOutput.builder()
-                        .id(new CustomerId().value().toLong())
+                        .id(new CustomerId().toString())
                         .firstName("John")
                         .lastName("Doe")
                         .document("12345")

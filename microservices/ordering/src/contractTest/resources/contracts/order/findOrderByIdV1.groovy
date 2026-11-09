@@ -15,7 +15,7 @@ Contract.make {
         body([
                 id: "01226N0640J7Q",
                 customer: [
-                        id: anyNumber(),
+                        id: regex('[0-9A-HJKMNP-TV-Z]{13}'),
                         firstName: "John",
                         lastName: "Doe",
                         document: "12345",

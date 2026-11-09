@@ -84,8 +84,8 @@ contracts {
 	testMode = 'MockMvc'
 	contractsDslDir = file('src/contractTest/resources/contracts')
 
-	baseClassForTests =
-			'com.henio.algashop.ordering.contract.base.OrderBase'
+	packageWithBaseClasses =
+			'com.henio.algashop.ordering.contract.base'
 }
 
 // Testes unitários e de controllers

@@ -1,11 +1,17 @@
 package com.henio.algashop.ordering.presentation;
 
+import com.henio.algashop.ordering.application.checkout.BuyNowApplicationService;
+import com.henio.algashop.ordering.application.checkout.BuyNowInput;
+import com.henio.algashop.ordering.application.checkout.CheckoutApplicationService;
+import com.henio.algashop.ordering.application.checkout.CheckoutInput;
 import com.henio.algashop.ordering.application.order.query.OrderDetailOutput;
 import com.henio.algashop.ordering.application.order.query.OrderFilter;
 import com.henio.algashop.ordering.application.order.query.OrderQueryService;
 import com.henio.algashop.ordering.application.order.query.OrderSummaryOutput;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
 
     private final OrderQueryService orderQueryService;
+    private final BuyNowApplicationService buyNowApplicationService;
+    private final CheckoutApplicationService checkoutApplicationService;
 
     @GetMapping("/{orderId}")
     public OrderDetailOutput findById(@PathVariable String orderId) {
@@ -23,5 +31,19 @@ public class OrderController {
     @GetMapping
     public Page<OrderSummaryOutput> filter(OrderFilter filter) {
         return orderQueryService.filter(filter);
+    }
+
+    @PostMapping(consumes = "application/vnd.order-with-product.v1+json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrderDetailOutput createWithProduct(@Valid @RequestBody BuyNowInput input) {
+        String orderId = buyNowApplicationService.buyNow(input);
+        return orderQueryService.findById(orderId);
+    }
+
+    @PostMapping(consumes = "application/vnd.order-with-shopping-cart.v1+json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrderDetailOutput createWithShoppingCart(@Valid @RequestBody CheckoutInput input) {
+        String orderId = checkoutApplicationService.checkout(input);
+        return orderQueryService.findById(orderId);
     }
 }
