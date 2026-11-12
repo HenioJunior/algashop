@@ -1,4 +1,4 @@
-package com.henio.algashop.ordering.presentation;
+package com.henio.algashop.ordering.presentation.order;
 
 import com.henio.algashop.ordering.application.checkout.BuyNowApplicationService;
 import com.henio.algashop.ordering.application.checkout.BuyNowInput;
