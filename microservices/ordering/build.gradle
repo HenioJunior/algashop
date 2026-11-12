@@ -33,6 +33,7 @@ configurations {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	implementation 'org.springframework.boot:spring-boot-starter-restclient'
 	implementation 'com.fasterxml.uuid:java-uuid-generator:5.2.0'
 	implementation 'io.hypersistence:hypersistence-tsid:2.1.4'
