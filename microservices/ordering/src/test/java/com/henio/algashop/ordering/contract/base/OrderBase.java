@@ -10,7 +10,7 @@ import com.henio.algashop.ordering.application.order.query.OrderQueryService;
 import com.henio.algashop.ordering.application.order.query.OrderSummaryOutputTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.order.OrderId;
 import com.henio.algashop.ordering.domain.model.order.exception.OrderNotFoundException;
-import com.henio.algashop.ordering.presentation.OrderController;
+import com.henio.algashop.ordering.presentation.order.OrderController;
 import io.hypersistence.tsid.TSID;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;

@@ -5,7 +5,7 @@ import com.henio.algashop.ordering.application.shoppingcart.query.ShoppingCartOu
 import com.henio.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
 import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartNotFoundException;
-import com.henio.algashop.ordering.presentation.ShoppingCartController;
+import com.henio.algashop.ordering.presentation.shoppingCart.ShoppingCartController;
 import io.hypersistence.tsid.TSID;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
