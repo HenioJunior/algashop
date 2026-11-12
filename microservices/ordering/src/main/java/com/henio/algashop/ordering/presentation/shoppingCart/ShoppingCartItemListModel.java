@@ -1,4 +1,4 @@
-package com.henio.algashop.ordering.presentation;
+package com.henio.algashop.ordering.presentation.shoppingCart;
 
 import com.henio.algashop.ordering.application.shoppingcart.query.ShoppingCartItemOutput;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.henio.algashop.ordering.presentation;
+package com.henio.algashop.ordering.presentation.customer;
 
 import com.henio.algashop.ordering.application.commons.AddressData;
 import com.henio.algashop.ordering.application.customer.management.CustomerInput;

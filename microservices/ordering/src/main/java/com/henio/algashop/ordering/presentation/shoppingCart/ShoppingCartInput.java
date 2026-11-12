@@ -1,4 +1,4 @@
-package com.henio.algashop.ordering.presentation;
+package com.henio.algashop.ordering.presentation.shoppingCart;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

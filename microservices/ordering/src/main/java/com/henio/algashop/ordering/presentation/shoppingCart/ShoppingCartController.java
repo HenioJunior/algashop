@@ -1,4 +1,4 @@
-package com.henio.algashop.ordering.presentation;
+package com.henio.algashop.ordering.presentation.shoppingCart;
 
 import com.henio.algashop.ordering.application.shoppingcart.management.ShoppingCartItemInput;
 import com.henio.algashop.ordering.application.shoppingcart.management.ShoppingCartManagementApplicationService;
