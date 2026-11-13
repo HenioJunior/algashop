@@ -51,7 +51,9 @@ public class BuyNowApplicationService {
 
         Quantity quantity = new Quantity(input.getQuantity());
 
-        Product product = findProduct(new ProductId(TSID.from(input.getProductId())));
+        ProductId productId = new ProductId(TSID.from(input.getProductId()));
+        Product product = productCatalogService.ofId(productId)
+                .orElseThrow(()-> new ProductNotFoundException(productId));
 
         ShippingCostService.CalculationResult shippingCost = calculateShippingCost(input.getShipping());
 
@@ -77,10 +79,5 @@ public class BuyNowApplicationService {
         ZipCode origin = originAddressService.originAddress().zipCode();
         ZipCode destination = new ZipCode(shipping.getAddress().getZipCode());
         return shippingCostService.calculate(new ShippingCostService.CalculationRequest(origin, destination));
-    }
-
-    private Product findProduct(ProductId productId) {
-        return productCatalogService.ofId(productId)
-                .orElseThrow(()-> new ProductNotFoundException(productId));
     }
 }

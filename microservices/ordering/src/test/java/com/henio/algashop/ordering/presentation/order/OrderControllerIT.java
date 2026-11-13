@@ -1,6 +1,7 @@
 package com.henio.algashop.ordering.presentation.order;
 
 import com.henio.algashop.ordering.domain.model.customer.Customer;
+import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.customer.Customers;
 import com.henio.algashop.ordering.domain.model.product.Product;
@@ -55,7 +56,7 @@ public class OrderControllerIT {
         String json = AlgaShopResourceUtils
                 .readContent("json/create-order-with-product.json")
                 .replace("${customerId}", customerId)
-                .replace("${productId}", productId);;
+                .replace("${productId}", productId);
         RestAssured
                 .given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -67,5 +68,33 @@ public class OrderControllerIT {
                 .assertThat()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    public void shouldNotCreateOrderUsingProductWhenCustomerWasNotFound() {
+
+        String customerId = new CustomerId().toString();
+
+        Product product = ProductTestDataBuilder
+                .aProduct()
+                .build();
+
+        String productId = product.id().toString();
+
+        String json = AlgaShopResourceUtils
+                .readContent("json/create-order-with-product.json")
+                .replace("${customerId}", customerId)
+                .replace("${productId}", productId);
+        RestAssured
+                .given()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType("application/vnd.order-with-product.v1+json")
+                .body(json)
+                .when()
+                .post("/api/v1/orders")
+                .then()
+                .assertThat()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
+                .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value());
     }
 }
