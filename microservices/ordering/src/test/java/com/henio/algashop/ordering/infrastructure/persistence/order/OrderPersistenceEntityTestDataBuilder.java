@@ -32,7 +32,7 @@ public class OrderPersistenceEntityTestDataBuilder {
     public static OrderItemPersistenceEntity existingOrderItem() {
         return OrderItemPersistenceEntity.builder()
                 .id(IdGenerator.generateTSID().toLong())
-                .productId(IdGenerator.generateTSID().toLong())
+                .productId(IdGenerator.generateTimeBasedUUID())
                 .productName("Notebook")
                 .price(new BigDecimal(500))
                 .quantity(2)
@@ -43,7 +43,7 @@ public class OrderPersistenceEntityTestDataBuilder {
     public static OrderItemPersistenceEntity existingOrderItemAlt() {
         return OrderItemPersistenceEntity.builder()
                 .id(IdGenerator.generateTSID().toLong())
-                .productId(IdGenerator.generateTSID().toLong())
+                .productId(IdGenerator.generateTimeBasedUUID())
                 .productName("iPhone")
                 .price(new BigDecimal(10000))
                 .quantity(1)

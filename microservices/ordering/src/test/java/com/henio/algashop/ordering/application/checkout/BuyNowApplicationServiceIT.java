@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
 @SpringBootTest
 @Transactional
@@ -51,7 +52,7 @@ class BuyNowApplicationServiceIT {
     @Test
     public void shouldBuyNow() {
         Product product = ProductTestDataBuilder.aProduct().build();
-        String productId = product.id().toString();
+        UUID productId = product.id().value();
         Mockito.when(productCatalogService.ofId(product.id())).thenReturn(Optional.of(product));
 
         Mockito.when(shippingCostService.calculate(Mockito.any(ShippingCostService.CalculationRequest.class)))

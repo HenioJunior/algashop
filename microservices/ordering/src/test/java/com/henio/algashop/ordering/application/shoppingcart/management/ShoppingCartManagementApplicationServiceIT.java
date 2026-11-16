@@ -27,6 +27,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,7 +69,7 @@ class ShoppingCartManagementApplicationServiceIT {
 
         ShoppingCartItemInput input = ShoppingCartItemInput.builder()
                 .shoppingCartId(shoppingCart.id().value().toString())
-                .productId(product.id().value().toString())
+                .productId(product.id().value())
                 .quantity(2)
                 .build();
 
@@ -100,7 +101,7 @@ class ShoppingCartManagementApplicationServiceIT {
 
         ShoppingCartItemInput input = ShoppingCartItemInput.builder()
                 .shoppingCartId(nonExistingCartId)
-                .productId(product.id().toString())
+                .productId(product.id().value())
                 .quantity(1)
                 .build();
 
@@ -115,7 +116,7 @@ class ShoppingCartManagementApplicationServiceIT {
         ShoppingCart shoppingCart = ShoppingCart.startShopping(customer.id());
         shoppingCarts.add(shoppingCart);
 
-        String rawProductId = IdGenerator.generateTSID().toString();
+        UUID rawProductId = IdGenerator.generateTimeBasedUUID();
 
         Mockito.when(productCatalogService.ofId(Mockito.any())).thenReturn(Optional.empty());
 
@@ -141,7 +142,7 @@ class ShoppingCartManagementApplicationServiceIT {
 
         ShoppingCartItemInput input = ShoppingCartItemInput.builder()
                 .shoppingCartId(shoppingCart.id().value().toString())
-                .productId(outOfStockProduct.id().value().toString())
+                .productId(outOfStockProduct.id().value())
                 .quantity(1)
                 .build();
 
@@ -162,7 +163,7 @@ class ShoppingCartManagementApplicationServiceIT {
 
         ShoppingCartItemInput input = ShoppingCartItemInput.builder()
                 .shoppingCartId(shoppingCart.id().value().toString())
-                .productId(product.id().value().toString())
+                .productId(product.id().value())
                 .quantity(2)
                 .build();
 
@@ -201,7 +202,7 @@ class ShoppingCartManagementApplicationServiceIT {
 
         ShoppingCartItemInput input = ShoppingCartItemInput.builder()
                 .shoppingCartId(shoppingCart.id().value().toString())
-                .productId(product.id().value().toString())
+                .productId(product.id().value())
                 .quantity(2)
                 .build();
 

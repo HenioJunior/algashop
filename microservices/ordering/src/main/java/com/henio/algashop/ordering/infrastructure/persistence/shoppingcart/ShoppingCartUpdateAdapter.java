@@ -16,14 +16,14 @@ public class ShoppingCartUpdateAdapter implements ShoppingCartProductAdjustmentS
     @Override
     @Transactional
     public void adjustPrice(ProductId productId, Money updatedPrice) {
-        shoppingCartPersistenceEntityRepository.updateItemPrice(productId.value().toLong(), updatedPrice.value());
-        shoppingCartPersistenceEntityRepository.recalculateTotalsForCartsWithProduct(productId.value().toLong());
+        shoppingCartPersistenceEntityRepository.updateItemPrice(productId.value(), updatedPrice.value());
+        shoppingCartPersistenceEntityRepository.recalculateTotalsForCartsWithProduct(productId.value());
 
     }
 
     @Override
     @Transactional
     public void changeAvailability(ProductId productId, boolean available) {
-        shoppingCartPersistenceEntityRepository.updateItemAvailability(productId.value().toLong(), available);
+        shoppingCartPersistenceEntityRepository.updateItemAvailability(productId.value(), available);
     }
 }

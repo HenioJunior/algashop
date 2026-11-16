@@ -28,7 +28,7 @@ public class ShoppingCartManagementApplicationService {
     public void addItem(ShoppingCartItemInput input) {
         Objects.requireNonNull(input, "Input cannot be null");
         ShoppingCartId shoppingCartId = new ShoppingCartId(TSID.from(input.getShoppingCartId()));
-        ProductId productId = new ProductId(TSID.from(input.getProductId()));
+        ProductId productId = new ProductId(input.getProductId());
 
         ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId)
                 .orElseThrow(() -> new ShoppingCartNotFoundException(shoppingCartId));

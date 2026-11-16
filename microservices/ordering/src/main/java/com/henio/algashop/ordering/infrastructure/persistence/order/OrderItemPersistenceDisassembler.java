@@ -20,7 +20,7 @@ public class OrderItemPersistenceDisassembler {
         return OrderItem.existing()
                 .id(new OrderItemId(TSID.from(persistenceEntity.getId())))
                 .orderId(new OrderId(TSID.from(persistenceEntity.getOrderId())))
-                .productId(new ProductId(TSID.from(persistenceEntity.getProductId())))
+                .productId(new ProductId(persistenceEntity.getProductId()))
                 .productName(new ProductName(persistenceEntity.getProductName()))
                 .price(new Money(persistenceEntity.getPrice()))
                 .quantity(new Quantity(persistenceEntity.getQuantity()))

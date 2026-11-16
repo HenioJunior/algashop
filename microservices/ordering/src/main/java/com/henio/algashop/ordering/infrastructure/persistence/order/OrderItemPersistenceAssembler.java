@@ -19,7 +19,7 @@ public class OrderItemPersistenceAssembler {
 
         return OrderItemPersistenceEntity.builder()
                 .id(orderItem.id().value().toLong())
-                .productId(orderItem.productId().value().toLong())
+                .productId(orderItem.productId().value())
                 .productName(orderItem.productName().toString())
                 .price(orderItem.price().value())
                 .quantity(orderItem.quantity().value())
@@ -32,7 +32,7 @@ public class OrderItemPersistenceAssembler {
         Objects.requireNonNull(orderItem, "Order item is required");
 
         entity.setId(orderItem.id().value().toLong());
-        entity.setProductId(orderItem.productId().value().toLong());
+        entity.setProductId(orderItem.productId().value());
         entity.setProductName(orderItem.productName().value());
         entity.setPrice(orderItem.price().value());
         entity.setQuantity(orderItem.quantity().value());
@@ -76,7 +76,7 @@ public class OrderItemPersistenceAssembler {
     private OrderItemPersistenceEntity toItemEntity(OrderItem item) {
         return OrderItemPersistenceEntity.builder()
                 .id(item.id().value().toLong())
-                .productId(item.id().value().toLong())
+                .productId(item.productId().value())
                 .productName(item.productName().toString())
                 .price(new BigDecimal(item.price().toString()))
                 .quantity(item.quantity().value())

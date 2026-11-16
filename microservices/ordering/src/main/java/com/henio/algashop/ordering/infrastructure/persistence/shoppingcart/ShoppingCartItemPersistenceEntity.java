@@ -29,7 +29,7 @@ public class ShoppingCartItemPersistenceEntity {
     @ManyToOne(optional = false)
     @JoinColumn(name = "shopping_cart_id", nullable = false)
     private ShoppingCartPersistenceEntity shoppingCart;
-    private Long productId;
+    private UUID productId;
     private String productName;
     private BigDecimal price;
     private Integer quantity;

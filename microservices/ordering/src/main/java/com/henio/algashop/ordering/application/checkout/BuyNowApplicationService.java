@@ -51,7 +51,7 @@ public class BuyNowApplicationService {
 
         Quantity quantity = new Quantity(input.getQuantity());
 
-        ProductId productId = new ProductId(TSID.from(input.getProductId()));
+        ProductId productId = new ProductId(input.getProductId());
         Product product = productCatalogService.ofId(productId)
                 .orElseThrow(()-> new ProductNotFoundException(productId));
 

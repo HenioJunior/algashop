@@ -96,7 +96,7 @@ public class ShoppingCartPersistenceAssembler {
     private ShoppingCartItemPersistenceEntity mergeItem(ShoppingCartItemPersistenceEntity persistenceEntity, ShoppingCartItem shoppingCartItem
     ) {
         persistenceEntity.setId(shoppingCartItem.id().value().toLong());
-        persistenceEntity.setProductId(shoppingCartItem.productId().value().toLong());
+        persistenceEntity.setProductId(shoppingCartItem.productId().value());
         persistenceEntity.setProductName(shoppingCartItem.name().value());
         persistenceEntity.setPrice(shoppingCartItem.price().value());
         persistenceEntity.setQuantity(shoppingCartItem.quantity().value());

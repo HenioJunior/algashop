@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
 @Table(name = "tb_order_item")
@@ -18,7 +19,7 @@ public class OrderItemPersistenceEntity {
     @Id
     @EqualsAndHashCode.Include
     private Long id;
-    private Long productId;
+    private UUID productId;
     private String productName;
     private BigDecimal price;
     private Integer quantity;

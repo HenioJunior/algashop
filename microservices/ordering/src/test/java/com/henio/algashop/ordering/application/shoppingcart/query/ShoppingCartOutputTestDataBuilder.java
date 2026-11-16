@@ -24,7 +24,7 @@ public class ShoppingCartOutputTestDataBuilder {
     public static ShoppingCartItemOutput.ShoppingCartItemOutputBuilder existingItem() {
         return ShoppingCartItemOutput.builder()
                 .id(new ShoppingCartItemId().value().toString())
-                .productId(new ProductId().value().toString())
+                .productId(new ProductId().value())
                 .price(new BigDecimal(500))
                 .quantity(2)
                 .totalAmount(new BigDecimal(1000))
@@ -35,7 +35,7 @@ public class ShoppingCartOutputTestDataBuilder {
     public static ShoppingCartItemOutput.ShoppingCartItemOutputBuilder existingItemAlt() {
         return ShoppingCartItemOutput.builder()
                 .id(new ShoppingCartId().value().toString())
-                .productId(new ProductId().value().toString())
+                .productId(new ProductId().value())
                 .price(new BigDecimal(250))
                 .quantity(1)
                 .totalAmount(new BigDecimal(250))

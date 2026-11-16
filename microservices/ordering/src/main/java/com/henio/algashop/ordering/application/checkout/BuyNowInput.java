@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class BuyNowInput {
     private ShippingInput shipping;
     private BillingData billing;
-    private String productId;
+    private UUID productId;
     private String customerId;
     private Integer quantity;
     private String paymentMethod;
