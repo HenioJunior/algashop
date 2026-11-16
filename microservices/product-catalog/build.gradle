@@ -89,17 +89,14 @@ contracts {
 			'com.henio.algashop.product.catalog.contract.base'
 }
 
-tasks.named('contractTest') {
+tasks.named('test', Test) {
 	useJUnitPlatform()
+	failOnNoDiscoveredTests = false
 }
 
-tasks.named('test') {
+tasks.named('contractTest', Test) {
 	useJUnitPlatform()
-}
-
-tasks.named('contractTest') {
 	outputs.dir snippetsDir
-	useJUnitPlatform()
 }
 
 asciidoctor {

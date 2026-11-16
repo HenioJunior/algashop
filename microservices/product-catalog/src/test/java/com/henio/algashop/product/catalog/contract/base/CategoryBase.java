@@ -43,7 +43,7 @@ public class CategoryBase {
     public static final UUID createdCategoryId = UUID.randomUUID();
 
     @BeforeEach
-    void setup() {
+    protected void setup() {
         RestAssuredMockMvc.mockMvc(
                 MockMvcBuilders.webAppContextSetup(context)
                         .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)

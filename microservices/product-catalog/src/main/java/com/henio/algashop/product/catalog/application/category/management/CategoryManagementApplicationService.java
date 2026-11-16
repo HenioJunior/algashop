@@ -11,11 +11,7 @@ public class CategoryManagementApplicationService {
         return null;
     }
 
-    public void update(UUID categoryId, CategoryInput categoryInput) {
+    public void update(UUID categoryId, CategoryInput categoryInput) {}
 
-    }
-
-    public void disable(UUID categoryId) {
-
-    }
+    public void disable(UUID categoryId) {}
 }
