@@ -4,11 +4,15 @@ import com.henio.algashop.ordering.domain.model.customer.Customer;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.henio.algashop.ordering.domain.model.customer.Customers;
+import com.henio.algashop.ordering.domain.model.order.OrderId;
 import com.henio.algashop.ordering.domain.model.product.Product;
 import com.henio.algashop.ordering.domain.model.product.ProductTestDataBuilder;
+import com.henio.algashop.ordering.infrastructure.persistence.order.OrderPersistenceEntityRepository;
 import com.henio.algashop.ordering.utils.AlgaShopResourceUtils;
 import io.restassured.RestAssured;
 import io.restassured.path.json.config.JsonPathConfig;
+import org.assertj.core.api.Assertions;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,9 @@ public class OrderControllerIT {
 
     @Autowired
     private Customers customers;
+
+    @Autowired
+    private OrderPersistenceEntityRepository orderPersistenceEntityRepositor;
 
     @BeforeEach
     void setup() {
@@ -57,7 +64,7 @@ public class OrderControllerIT {
                 .readContent("json/create-order-with-product.json")
                 .replace("${customerId}", customerId)
                 .replace("${productId}", productId);
-        RestAssured
+        String createdOrderId = RestAssured
                 .given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType("application/vnd.order-with-product.v1+json")
@@ -67,7 +74,14 @@ public class OrderControllerIT {
                 .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(HttpStatus.CREATED.value())
+                .body(
+                        "id", Matchers.not(Matchers.emptyString()),
+                        "customer.id", Matchers.not(Matchers.emptyString()))
+                .extract().jsonPath().getString("id");
+
+        boolean existsOrderId = orderPersistenceEntityRepositor.existsById(new OrderId(createdOrderId).value().toLong());
+        Assertions.assertThat(existsOrderId).isTrue();
     }
 
     @Test
