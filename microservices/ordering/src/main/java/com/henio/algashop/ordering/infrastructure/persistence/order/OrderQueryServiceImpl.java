@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -154,7 +155,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
         if(filter.getCustomerId() != null) {
             Path<Object> customerIdPath = root.get("customer").get("id");
-            Long expectedCustomerId = TSID.from(filter.getCustomerId()).toLong();
+            UUID expectedCustomerId = filter.getCustomerId();
             Predicate predicate = builder.equal(customerIdPath, expectedCustomerId);
             predicates.add(predicate);
         }

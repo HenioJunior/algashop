@@ -55,7 +55,7 @@ response {
     body([
             id: anyNonBlankString(),
             customer: [
-                id: regex('[0-9A-HJKMNP-TV-Z]{13}'),
+                id: anyUuid(),
                 firstName: "John",
                 lastName: "Doe",
                 document: "12345",
@@ -105,7 +105,7 @@ response {
                 [
                     id: anyNonBlankString(),
                     orderId: anyNonBlankString(),
-                    productId: regex('[0-9A-HJKMNP-TV-Z]{13}'),
+                    productId: anyUuid(),
                     productName: "Notebook Dive Gamer X11",
                     price: 19.99,
                     quantity: 2,

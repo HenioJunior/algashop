@@ -61,7 +61,7 @@ class ShoppingCartQueryServiceIT {
                 .isEqualTo(shoppingCart.id().value().toString());
 
         assertThat(shoppingCartFromDb.getCustomerId())
-                .isEqualTo(customer.id().value().toString());
+                .isEqualTo(customer.id().value());
 
         assertThat(shoppingCartFromDb.getTotalItems())
                 .isEqualTo(quantity.value());
@@ -76,7 +76,7 @@ class ShoppingCartQueryServiceIT {
                 shoppingCartFromDb.getItems().getFirst();
 
         assertThat(item.getProductId())
-                .isEqualTo(product.id().toString());
+                .isEqualTo(product.id().value());
 
         assertThat(item.getQuantity())
                 .isEqualTo(quantity.value());
@@ -122,7 +122,7 @@ class ShoppingCartQueryServiceIT {
         shoppingCarts.add(shoppingCart);
 
         ShoppingCartOutput shoppingCartFromDb =
-                service.findByCustomerId(customer.id().value().toString());
+                service.findByCustomerId(customer.id().value());
 
         assertThat(shoppingCartFromDb).isNotNull();
 
@@ -130,7 +130,7 @@ class ShoppingCartQueryServiceIT {
                 .isEqualTo(shoppingCart.id().value().toString());
 
         assertThat(shoppingCartFromDb.getCustomerId())
-                .isEqualTo(shoppingCart.customerId().value().toString());
+                .isEqualTo(shoppingCart.customerId().value());
 
         assertThat(shoppingCartFromDb.getTotalItems())
                 .isEqualTo(quantity.value());
@@ -145,7 +145,7 @@ class ShoppingCartQueryServiceIT {
                 shoppingCartFromDb.getItems().getFirst();
 
         assertThat(item.getProductId())
-                .isEqualTo(product.id().toString());
+                .isEqualTo(product.id().value());
 
         assertThat(item.getQuantity())
                 .isEqualTo(quantity.value());
@@ -164,7 +164,7 @@ class ShoppingCartQueryServiceIT {
 
     @Test
     void shouldThrowExceptionWhenShoppingCartNotFoundByCustomerId() {
-        assertThatThrownBy(() -> service.findByCustomerId(new CustomerId().value().toString()))
+        assertThatThrownBy(() -> service.findByCustomerId(new CustomerId().value()))
                 .isInstanceOf(ShoppingCartNotFoundException.class);
     }
 }

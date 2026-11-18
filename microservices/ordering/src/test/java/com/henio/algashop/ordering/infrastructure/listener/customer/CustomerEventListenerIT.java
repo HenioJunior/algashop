@@ -18,6 +18,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @SpringBootTest
 class CustomerEventListenerIT {
@@ -48,7 +49,7 @@ class CustomerEventListenerIT {
 
         Mockito.verify(loyaltyPointsApplicationService)
                 .addLoyaltyPoints(
-                        Mockito.any(String.class),
+                        Mockito.any(UUID.class),
                         Mockito.any(String.class)
                 );
     }

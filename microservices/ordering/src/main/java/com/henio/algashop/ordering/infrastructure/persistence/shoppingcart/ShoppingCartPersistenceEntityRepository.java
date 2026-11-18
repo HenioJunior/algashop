@@ -8,9 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface ShoppingCartPersistenceEntityRepository extends JpaRepository<ShoppingCartPersistenceEntity, Long> {
-    Optional<ShoppingCartPersistenceEntity> findByCustomer_Id(Long value);
+    Optional<ShoppingCartPersistenceEntity> findByCustomer_Id(UUID value);
 
     @Modifying
     @Transactional
@@ -23,7 +24,7 @@ public interface ShoppingCartPersistenceEntityRepository extends JpaRepository<S
       WHERE
         i.productId = :productId
       """)
-    void updateItemPrice(@Param("productId") Long productId,
+    void updateItemPrice(@Param("productId") UUID productId,
                          @Param("price") BigDecimal price);
 
     @Modifying
@@ -36,7 +37,7 @@ public interface ShoppingCartPersistenceEntityRepository extends JpaRepository<S
       WHERE
         i.productId = :productId
       """)
-    void updateItemAvailability(@Param("productId")Long productId,
+    void updateItemAvailability(@Param("productId")UUID productId,
                                 @Param("available") boolean available);
 
     @Modifying
@@ -56,5 +57,5 @@ public interface ShoppingCartPersistenceEntityRepository extends JpaRepository<S
             WHERE i2.shoppingCart.id = sc.id
             AND i2.productId = :productId)
       """)
-    void recalculateTotalsForCartsWithProduct(@Param("productId") Long productId);
+    void recalculateTotalsForCartsWithProduct(@Param("productId") UUID productId);
 }

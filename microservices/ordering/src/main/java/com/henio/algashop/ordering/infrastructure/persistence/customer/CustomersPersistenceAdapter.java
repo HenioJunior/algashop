@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Transactional(readOnly = true)
 @Component
@@ -24,7 +25,7 @@ public class CustomersPersistenceAdapter implements Customers {
 
     @Override
     public Optional<Customer> ofId(CustomerId customerId) {
-        Optional<CustomerPersistenceEntity> possibleCustomer = persistenceRepository.findById(customerId.value().toLong());
+        Optional<CustomerPersistenceEntity> possibleCustomer = persistenceRepository.findById(customerId.value());
         return possibleCustomer.map(disassembler::toDomain);
     }
 
@@ -36,9 +37,7 @@ public class CustomersPersistenceAdapter implements Customers {
                 "Customer must be not null"
         );
 
-        long customerId = aggregateRoot.id()
-                .value()
-                .toLong();
+       UUID customerId = aggregateRoot.id().value();
 
         persistenceRepository.findById(customerId)
                 .ifPresentOrElse(entity -> update(aggregateRoot, entity),
@@ -54,7 +53,7 @@ public class CustomersPersistenceAdapter implements Customers {
 
     @Override
     public boolean exists(CustomerId customerId) {
-        return persistenceRepository.existsById(customerId.value().toLong());
+        return persistenceRepository.existsById(customerId.value());
     }
 
     @Override

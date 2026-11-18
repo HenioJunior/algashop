@@ -57,29 +57,27 @@ public class ShoppingCartPersistenceAssembler {
                 persistenceItem -> !domainItemIds.contains(persistenceItem.getId())
         );
 
-        shoppingCart.items().forEach(domainItem -> {
-            entity.getItems().stream()
-                    .filter(persistenceItem ->
-                            persistenceItem.getId().equals(
-                                    domainItem.id().value().toLong()
-                            )
-                    )
-                    .findFirst()
-                    .ifPresentOrElse(
-                            persistenceItem ->
-                                    mergeItem(persistenceItem, domainItem),
-                            () -> entity.addItem(
-                                    mergeItem(
-                                            new ShoppingCartItemPersistenceEntity(),
-                                            domainItem
-                                    )
-                            )
-                    );
-        });
+        shoppingCart.items().forEach(domainItem -> entity.getItems().stream()
+                .filter(persistenceItem ->
+                        persistenceItem.getId().equals(
+                                domainItem.id().value().toLong()
+                        )
+                )
+                .findFirst()
+                .ifPresentOrElse(
+                        persistenceItem ->
+                                mergeItem(persistenceItem, domainItem),
+                        () -> entity.addItem(
+                                mergeItem(
+                                        new ShoppingCartItemPersistenceEntity(),
+                                        domainItem
+                                )
+                        )
+                ));
     }
 
     private CustomerPersistenceEntity getCustomerById(ShoppingCart shoppingCart) {
-        return customerPersistenceEntityRepository.getReferenceById(shoppingCart.customerId().value().toLong());
+        return customerPersistenceEntityRepository.getReferenceById(shoppingCart.customerId().value());
     }
 
     private Set<ShoppingCartItemPersistenceEntity> toItemsEntities(

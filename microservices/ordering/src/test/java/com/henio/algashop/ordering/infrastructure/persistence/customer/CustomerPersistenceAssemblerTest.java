@@ -16,7 +16,7 @@ class CustomerPersistenceAssemblerTest {
         CustomerPersistenceEntity customerPersistenceEntity = assembler.fromDomain(newCustomer);
 
         assertThat(customerPersistenceEntity).satisfies(
-                c -> assertThat(c.getId()).isEqualTo(newCustomer.id().value().toLong()),
+                c -> assertThat(c.getId()).isEqualTo(newCustomer.id().value()),
                 c -> assertThat(c.getFirstName()).isEqualTo(newCustomer.fullName().firstName()),
                 c -> assertThat(c.getLastName()).isEqualTo(newCustomer.fullName().lastName()),
                 c -> assertThat(c.getBirthDate()).isEqualTo(newCustomer.birthDate().toString()),

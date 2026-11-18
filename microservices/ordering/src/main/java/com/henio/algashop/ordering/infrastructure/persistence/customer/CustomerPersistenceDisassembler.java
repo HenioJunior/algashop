@@ -3,10 +3,9 @@ package com.henio.algashop.ordering.infrastructure.persistence.customer;
 import com.henio.algashop.ordering.domain.model.commons.*;
 import com.henio.algashop.ordering.domain.model.customer.BirthDate;
 import com.henio.algashop.ordering.domain.model.customer.Customer;
-import com.henio.algashop.ordering.domain.model.customer.LoyaltyPoints;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
+import com.henio.algashop.ordering.domain.model.customer.LoyaltyPoints;
 import com.henio.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddable;
-import io.hypersistence.tsid.TSID;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,7 +13,7 @@ public class CustomerPersistenceDisassembler {
 
 public Customer toDomain(CustomerPersistenceEntity entity) {
 	return Customer.existing()
-            .id(new CustomerId(TSID.from(entity.getId())))
+            .id(new CustomerId(entity.getId()))
             .fullName(new FullName(entity.getFirstName(), entity.getLastName()))
             .birthDate(entity.getBirthDate() == null
                     ? null

@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 import static com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 
 @SpringBootTest
@@ -61,7 +63,7 @@ public class CustomerLoyaltyPointsApplicationServiceIT {
 
     @Test
     void shouldThrowCustomerNotFoundExceptionWhenCustomerIdDoesNotExist() {
-        String nonExistingCustomerId = DEFAULT_CUSTOMER_ID.toString();
+        UUID nonExistingCustomerId = DEFAULT_CUSTOMER_ID.value();
 
         Customer dummyCustomer = CustomerTestDataBuilder.brandNewCustomer()
                 .email(new Email("dummy@example.com")).build();
@@ -83,7 +85,7 @@ public class CustomerLoyaltyPointsApplicationServiceIT {
         customers.add(customer);
         String nonExistingOrderId = TSID.fast().toString();
         Assertions.assertThatExceptionOfType(OrderNotFoundException.class)
-                .isThrownBy(() -> loyaltyPointsService.addLoyaltyPoints(customer.id().value().toString(), nonExistingOrderId));
+                .isThrownBy(() -> loyaltyPointsService.addLoyaltyPoints(customer.id().value(), nonExistingOrderId));
     }
 
     @Test
@@ -124,7 +126,7 @@ public class CustomerLoyaltyPointsApplicationServiceIT {
         orders.add(orderForCustomerB);
 
         Assertions.assertThatExceptionOfType(OrderNotBelongsToCustomerException.class)
-                .isThrownBy(() -> loyaltyPointsService.addLoyaltyPoints(customerA.id().value().toString(),
+                .isThrownBy(() -> loyaltyPointsService.addLoyaltyPoints(customerA.id().value(),
                         orderForCustomerB.id().toString()));
     }
 
@@ -140,7 +142,7 @@ public class CustomerLoyaltyPointsApplicationServiceIT {
         orders.add(order);
 
         Assertions.assertThatExceptionOfType(CantAddLoyaltyPointsOrderIsNotReady.class)
-                .isThrownBy(() -> loyaltyPointsService.addLoyaltyPoints(customer.id().value().toString(), order.id().toString()));
+                .isThrownBy(() -> loyaltyPointsService.addLoyaltyPoints(customer.id().value(), order.id().toString()));
     }
 
     @Test
@@ -162,7 +164,7 @@ public class CustomerLoyaltyPointsApplicationServiceIT {
 
         orders.add(order);
 
-        loyaltyPointsService.addLoyaltyPoints(customer.id().value().toString(), order.id().toString());
+        loyaltyPointsService.addLoyaltyPoints(customer.id().value(), order.id().toString());
 
         Customer updatedCustomer = customers.ofId(customer.id()).orElseThrow();
         Assertions.assertThat(updatedCustomer).isNotNull();

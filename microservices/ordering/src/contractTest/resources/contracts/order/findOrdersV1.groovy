@@ -26,7 +26,7 @@ Contract.make {
                 [
                     id: "01226N0640J7Q",
                     customer: [
-                        id: regex('[0-9A-HJKMNP-TV-Z]{13}'),
+                        id: anyUuid(),
                         firstName: "John",
                         lastName: "Doe",
                         document: "12345",

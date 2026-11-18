@@ -20,7 +20,7 @@ public class ShoppingCartPersistenceDisassembler {
     public ShoppingCart toDomainEntity(ShoppingCartPersistenceEntity source) {
         return ShoppingCart.existing()
                 .id(new ShoppingCartId(TSID.from(source.getId())))
-                .customerId(new CustomerId(TSID.from(source.getCustomerId())))
+                .customerId(new CustomerId(source.getCustomerId()))
                 .totalAmount(new Money(source.getTotalAmount()))
                 .createdAt(source.getCreatedAt())
                 .items(toItemsDomainEntities(source.getItems()))

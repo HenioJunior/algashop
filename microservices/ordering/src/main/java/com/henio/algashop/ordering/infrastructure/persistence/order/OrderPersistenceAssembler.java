@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class OrderPersistenceAssembler {
 
         OrderPersistenceEntity entity = OrderPersistenceEntity.builder()
                 .id(order.id().value().toLong())
-                .customer(toCustomerEntity(order.customerId().value().toLong()))
+                .customer(toCustomerEntity(order.customerId().value()))
                 .totalAmount(new BigDecimal(order.totalAmount().toString()))
                 .totalItems(order.totalItems().value())
                 .status(order.status().toString())
@@ -56,7 +57,7 @@ public class OrderPersistenceAssembler {
         Objects.requireNonNull(order, "Order is required");
 
         entity.setId(order.id().value().toLong());
-        entity.setCustomer(toCustomerEntity(order.customerId().value().toLong()));
+        entity.setCustomer(toCustomerEntity(order.customerId().value()));
         entity.setTotalAmount(order.totalAmount().value());
         entity.setTotalItems(order.totalItems().value());
         entity.setStatus(order.status().name());
@@ -80,7 +81,7 @@ public class OrderPersistenceAssembler {
         entity.addEvents(order.domainEvents());
     }
 
-    private CustomerPersistenceEntity toCustomerEntity(long customerId) {
+    private CustomerPersistenceEntity toCustomerEntity(UUID customerId) {
         return customerRepository.getReferenceById(customerId);
     }
 

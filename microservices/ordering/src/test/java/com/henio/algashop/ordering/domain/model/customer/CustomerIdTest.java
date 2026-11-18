@@ -1,6 +1,5 @@
 package com.henio.algashop.ordering.domain.model.customer;
 
-import io.hypersistence.tsid.TSID;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,7 +18,7 @@ class CustomerIdTest {
     @Test
     void shouldNotAcceptNullValue() {
         assertThatNullPointerException()
-                .isThrownBy(() -> new CustomerId((TSID) null));
+                .isThrownBy(() -> new CustomerId( null));
     }
 
     @Test

@@ -9,7 +9,7 @@ public class CustomerSummaryOutputTestDataBuilder {
 
     public static CustomerSummaryOutput.CustomerSummaryOutputBuilder existing() {
         return CustomerSummaryOutput.builder()
-                .id(new CustomerId().toString())
+                .id(new CustomerId().value())
                 .registeredAt(OffsetDateTime.now())
                 .phone("1191234564")
                 .email("johndoe@email.com")
@@ -24,7 +24,7 @@ public class CustomerSummaryOutputTestDataBuilder {
 
     public static CustomerSummaryOutput.CustomerSummaryOutputBuilder existingAlt1() {
         return CustomerSummaryOutput.builder()
-                .id(new CustomerId().toString())
+                .id(new CustomerId().value())
                 .registeredAt(OffsetDateTime.now())
                 .phone("119123456")
                 .email("scott1977@email.com")

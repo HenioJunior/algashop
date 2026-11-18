@@ -10,6 +10,8 @@ import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 @RequiredArgsConstructor
 public class ShoppingCartQueryServiceImpl implements ShoppingCartQueryService {
@@ -29,12 +31,9 @@ public class ShoppingCartQueryServiceImpl implements ShoppingCartQueryService {
     }
 
     @Override
-    public ShoppingCartOutput findByCustomerId(String customerId) {
-        TSID customerTsid = TSID.from(customerId);
-        Long id = customerTsid.toLong();
-
-        ShoppingCartPersistenceEntity entity = repository.findByCustomer_Id(id).orElseThrow(
-                () -> new ShoppingCartNotFoundException(new CustomerId(customerTsid))
+    public ShoppingCartOutput findByCustomerId(UUID customerId) {
+        ShoppingCartPersistenceEntity entity = repository.findByCustomer_Id(customerId).orElseThrow(
+                () -> new ShoppingCartNotFoundException(new CustomerId(customerId))
         );
         return mapper.convert(entity, ShoppingCartOutput.class);
     }

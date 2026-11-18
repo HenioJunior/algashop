@@ -9,12 +9,12 @@ import com.henio.algashop.ordering.domain.model.customer.Customers;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerAlreadyArchivedException;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerNotFoundException;
 import com.henio.algashop.ordering.domain.model.customer.service.CustomerRegistrationService;
-import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -43,12 +43,12 @@ public class CustomerManagementApplicationService {
     }
 
     @Transactional
-    public void update(String rawCustomerId, CustomerUpdateInput input) {
+    public void update(UUID rawCustomerId, CustomerUpdateInput input) {
         Objects.requireNonNull(input);
         Objects.requireNonNull(rawCustomerId);
 
-        Customer customer = customers.ofId(new CustomerId(TSID.from(rawCustomerId)))
-                .orElseThrow(() -> new CustomerNotFoundException(new CustomerId(TSID.from(rawCustomerId))));
+        Customer customer = customers.ofId(new CustomerId(rawCustomerId))
+                .orElseThrow(() -> new CustomerNotFoundException(new CustomerId(rawCustomerId)));
 
         customer.changeName(new FullName(input.getFirstName(), input.getLastName()));
         customer.changePhone(new Phone(input.getPhone()));
@@ -89,29 +89,29 @@ public class CustomerManagementApplicationService {
                 .build();
     }
 
-    public void archive(String rawCustomerId) {
+    public void archive(UUID rawCustomerId) {
         Objects.requireNonNull(rawCustomerId, "Customer ID is required");
 
-        Customer customer = customers.ofId(new CustomerId(TSID.from(rawCustomerId)))
-                .orElseThrow(() -> new CustomerNotFoundException(new CustomerId(TSID.from(rawCustomerId))));
+        Customer customer = customers.ofId(new CustomerId(rawCustomerId))
+                .orElseThrow(() -> new CustomerNotFoundException(new CustomerId(rawCustomerId)));
 
         if(customer.isArchived())
-            throw new CustomerAlreadyArchivedException(new CustomerId(TSID.from(rawCustomerId)));
+            throw new CustomerAlreadyArchivedException(new CustomerId(rawCustomerId));
 
         customer.archive();
 
         customers.add(customer);
     }
 
-    public void changeEmail(String rawCustomerId, String newEmail) {
+    public void changeEmail(UUID rawCustomerId, String newEmail) {
         Objects.requireNonNull(rawCustomerId, "Customer ID is required");
         Objects.requireNonNull(newEmail, "Email is required");
 
-        Customer customer = customers.ofId(new CustomerId(TSID.from(rawCustomerId)))
-                .orElseThrow(() -> new CustomerNotFoundException(new CustomerId(TSID.from(rawCustomerId))));
+        Customer customer = customers.ofId(new CustomerId(rawCustomerId))
+                .orElseThrow(() -> new CustomerNotFoundException(new CustomerId(rawCustomerId)));
 
         if(customer.isArchived()) {
-            throw new CustomerAlreadyArchivedException(new CustomerId(TSID.from(rawCustomerId)));
+            throw new CustomerAlreadyArchivedException(new CustomerId(rawCustomerId));
         }
 
         customerRegistration.changeEmail(customer, newEmail);

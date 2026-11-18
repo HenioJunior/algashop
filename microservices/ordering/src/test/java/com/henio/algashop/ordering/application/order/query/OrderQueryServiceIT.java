@@ -63,7 +63,7 @@ class OrderQueryServiceIT {
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.CANCELED).customerId(customer.id()).build());
 
         OrderFilter filter = new OrderFilter();
-        filter.setCustomerId(customer.id().toString());
+        filter.setCustomerId(customer.id().value());
 
         Page<OrderSummaryOutput> page = queryService.filter(filter);
 
@@ -91,7 +91,7 @@ class OrderQueryServiceIT {
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.CANCELED).customerId(customer2.id()).build());
 
         OrderFilter filter = new OrderFilter();
-        filter.setCustomerId(customer1.id().toString());
+        filter.setCustomerId(customer1.id().value());
 
         Page<OrderSummaryOutput> page = queryService.filter(filter);
 
@@ -121,7 +121,7 @@ class OrderQueryServiceIT {
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.CANCELED).customerId(customer2.id()).build());
 
         OrderFilter filter = new OrderFilter();
-        filter.setCustomerId(customer1.id().toString());
+        filter.setCustomerId(customer1.id().value());
         filter.setStatus(OrderStatus.PLACED.toString().toLowerCase());
         filter.setTotalAmountFrom(order1.totalAmount().value());
 

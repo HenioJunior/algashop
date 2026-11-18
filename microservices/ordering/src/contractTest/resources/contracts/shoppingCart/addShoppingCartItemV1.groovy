@@ -5,16 +5,14 @@ import org.springframework.cloud.contract.spec.Contract
 Contract.make {
     request {
         method POST()
-        urlPath("/api/v1/shopping-carts/01226N0640J7Q/items")
-
+        urlPath("/api/v1/shopping-carts/ad265aa3-c77d-46e9-9782-b70c487c1e17/items")
         headers {
             contentType("application/json")
         }
-
         body([
                 productId: value(
-                        test("0S66P0865N43J"),
-                        stub(regex('[0-9A-HJKMNP-TV-Z]{13}'))
+                        test("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+                        stub(anyUuid())
                 ),
                 quantity: value(
                         test(2),
@@ -22,7 +20,6 @@ Contract.make {
                 )
         ])
     }
-
     response {
         status 204
     }

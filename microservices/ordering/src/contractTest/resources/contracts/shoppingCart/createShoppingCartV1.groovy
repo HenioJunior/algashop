@@ -6,35 +6,32 @@ Contract.make {
     request {
         method POST()
         url "/api/v1/shopping-carts"
-
         headers {
             contentType("application/json")
         }
-
         body([
                 customerId: value(
-                        test("0S66P0865N43G"),
-                        stub(regex('[0-9A-HJKMNP-TV-Z]{13}'))
+                        test("f5ab7a1e-37da-41e1-892b-a1d38275c2f2"),
+                        stub(anyUuid())
                 )
         ])
     }
-
     response {
         status 201
-
         headers {
-            contentType("application/json")
+            contentType('application/json')
         }
-
         body([
-                id: regex('[0-9A-HJKMNP-TV-Z]{13}'),
-                customerId: "0S66P0865N43G",
+                id: $(consumer('01226N0640J7Q'),
+                        producer(regex('[0-9A-HJKMNP-TV-Z]{13}'))),
+                customerId: anyUuid(),
                 totalItems: 3,
                 totalAmount: 1250.00,
                 items: [
                         [
-                                id: regex('[0-9A-HJKMNP-TV-Z]{13}'),
-                                productId: regex('[0-9A-HJKMNP-TV-Z]{13}'),
+                                id: $(consumer('0S91DYB50M41R'),
+                                        producer(regex('[0-9A-HJKMNP-TV-Z]{13}'))),
+                                productId: anyUuid(),
                                 name: "Notebook",
                                 price: 500.00,
                                 quantity: 2,
@@ -42,8 +39,9 @@ Contract.make {
                                 available: anyBoolean()
                         ],
                         [
-                                id: regex('[0-9A-HJKMNP-TV-Z]{13}'),
-                                productId: regex('[0-9A-HJKMNP-TV-Z]{13}'),
+                                id: $(consumer('0S91DYB50M41S'),
+                                        producer(regex('[0-9A-HJKMNP-TV-Z]{13}'))),
+                                productId: anyUuid(),
                                 name: "Mouse pad",
                                 price: 250.00,
                                 quantity: 1,

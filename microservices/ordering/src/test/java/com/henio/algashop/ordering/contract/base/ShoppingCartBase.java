@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 @WebMvcTest(controllers = ShoppingCartController.class)
 public class ShoppingCartBase {
@@ -32,9 +33,9 @@ public class ShoppingCartBase {
 
     public static final String validShoppingCartId = "01226N0640J7Q";
 
-    public static final String validCustomerId = "0S66P0865N43G";
+    public static final UUID validCustomerId = UUID.randomUUID();
 
-    public static final String notFoundShoppingCartId = "0S66P0865N43J";
+    public static final String notFoundShoppingCartId = "01226N0640J7R";
 
     ShoppingCartId shoppingCartId = new ShoppingCartId(TSID.from(validShoppingCartId));
 
@@ -59,7 +60,7 @@ public class ShoppingCartBase {
         Mockito.when(queryService.findById(notFoundShoppingCartId))
                 .thenThrow(new ShoppingCartNotFoundException(new ShoppingCartId(TSID.from(notFoundShoppingCartId))));
 
-        Mockito.when(managementService.createNew(Mockito.any(String.class)))
+        Mockito.when(managementService.createNew(Mockito.any(UUID.class)))
                 .thenReturn(shoppingCartId);
 
     }

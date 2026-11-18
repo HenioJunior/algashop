@@ -116,7 +116,7 @@ public class ManualMapper implements Mapper {
     ) {
         ShoppingCartOutput output = new ShoppingCartOutput();
         output.setId(toTsidString(entity.getId()));
-        output.setCustomerId(toTsidString(entity.getCustomerId()));
+        output.setCustomerId(entity.getCustomerId());
         output.setTotalItems(entity.getTotalItems());
         output.setTotalAmount(entity.getTotalAmount());
         output.setItems(toShoppingCartItemOutputList(entity.getItems()));

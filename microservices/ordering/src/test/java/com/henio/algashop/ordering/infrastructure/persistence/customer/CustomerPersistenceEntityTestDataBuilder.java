@@ -13,7 +13,7 @@ public class CustomerPersistenceEntityTestDataBuilder {
 
     public static CustomerPersistenceEntity.CustomerPersistenceEntityBuilder aCustomer() {
         return CustomerPersistenceEntity.builder()
-                .id(DEFAULT_CUSTOMER_ID.value().toLong())
+                .id(DEFAULT_CUSTOMER_ID.value())
                 .registeredAt(OffsetDateTime.now())
                 .promotionNotificationsAllowed(true)
                 .archived(false)

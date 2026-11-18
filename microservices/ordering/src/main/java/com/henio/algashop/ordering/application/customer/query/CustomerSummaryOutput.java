@@ -1,20 +1,18 @@
 package com.henio.algashop.ordering.application.customer.query;
 
-import io.hypersistence.tsid.TSID;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class CustomerSummaryOutput {
-    private String id;
+    private UUID id;
     private String firstName;
     private String lastName;
     private String email;
@@ -28,7 +26,7 @@ public class CustomerSummaryOutput {
     private Boolean archived;
 
     public CustomerSummaryOutput(
-            Long id,
+            UUID id,
             String firstName,
             String lastName,
             String email,
@@ -41,7 +39,7 @@ public class CustomerSummaryOutput {
             Boolean promotionNotificationsAllowed,
             Boolean archived
     ) {
-        this.id = TSID.from(id).toString();
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

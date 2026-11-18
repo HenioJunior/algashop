@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface OrderPersistenceEntityRepository extends JpaRepository<OrderPersistenceEntity, Long> {
 
@@ -18,7 +19,7 @@ public interface OrderPersistenceEntityRepository extends JpaRepository<OrderPer
     AND YEAR(o.placedAt) = :year
     """)
     List<OrderPersistenceEntity> placedByCustomerInYear(
-            @Param("customerId") Long customerId,
+            @Param("customerId") UUID customerId,
             @Param("year") Integer year
     );
 
@@ -30,7 +31,7 @@ public interface OrderPersistenceEntityRepository extends JpaRepository<OrderPer
     AND o.paidAt IS NOT NULL
     AND o.canceledAt IS NULL
     """)
-    long salesQuantityByCustomerInYear(@Param("customerId") Long customerId,
+    long salesQuantityByCustomerInYear(@Param("customerId") UUID customerId,
                                        @Param("year") Integer year);
 
 
@@ -40,7 +41,7 @@ public interface OrderPersistenceEntityRepository extends JpaRepository<OrderPer
    WHERE o.customer.id = :customerId
    AND o.status = 'PAID'
 """)
-BigDecimal totalSoldForCustomer(@Param("customerId") Long customerId);
+BigDecimal totalSoldForCustomer(@Param("customerId") UUID customerId);
 
 @Override
 @EntityGraph(attributePaths = {"customer", "items"})

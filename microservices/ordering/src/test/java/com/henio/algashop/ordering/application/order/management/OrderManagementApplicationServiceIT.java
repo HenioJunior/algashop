@@ -170,7 +170,7 @@ class OrderManagementApplicationServiceIT {
                 .handleOrder(Mockito.any(OrderReadyEvent.class));
 
         Mockito.verify(customerLoyaltyPointsApplicationService)
-                .addLoyaltyPoints(order.customerId().toString(), order.id().toString());
+                .addLoyaltyPoints(order.customerId().value(), order.id().toString());
     }
 
     @Test

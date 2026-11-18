@@ -30,7 +30,7 @@ class CustomerQueryServiceIT {
         Customer customer = CustomerTestDataBuilder.existingCustomer().build();
         customers.add(customer);
 
-        CustomerOutput output = queryService.findById(customer.id().value().toString());
+        CustomerOutput output = queryService.findById(customer.id().value());
 
         assertThat(output)
                 .extracting(
@@ -38,7 +38,7 @@ class CustomerQueryServiceIT {
                         CustomerOutput::getFirstName,
                         CustomerOutput::getEmail
                 ).containsExactly(
-                        customer.id().value().toString(),
+                        customer.id().value(),
                         customer.fullName().firstName(),
                         customer.email().value()
                 );

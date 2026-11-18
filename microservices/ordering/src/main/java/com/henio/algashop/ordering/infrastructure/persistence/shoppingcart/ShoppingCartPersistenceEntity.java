@@ -92,7 +92,7 @@ public class ShoppingCartPersistenceEntity
         this.items.add(item);
     }
 
-    public Long getCustomerId() {
+    public UUID getCustomerId() {
         if (customer == null) {
             return null;
         }

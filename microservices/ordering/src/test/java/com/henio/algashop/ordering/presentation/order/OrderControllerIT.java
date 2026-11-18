@@ -6,11 +6,13 @@ import com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder
 import com.henio.algashop.ordering.domain.model.customer.Customers;
 import com.henio.algashop.ordering.domain.model.order.OrderId;
 import com.henio.algashop.ordering.domain.model.product.Product;
+import com.henio.algashop.ordering.domain.model.product.ProductId;
 import com.henio.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import com.henio.algashop.ordering.infrastructure.persistence.order.OrderPersistenceEntityRepository;
 import com.henio.algashop.ordering.utils.AlgaShopResourceUtils;
 import io.restassured.RestAssured;
 import io.restassured.path.json.config.JsonPathConfig;
+import io.restassured.response.Response;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +22,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import java.util.UUID;
 
 import static io.restassured.config.JsonConfig.jsonConfig;
 
@@ -52,17 +56,19 @@ public class OrderControllerIT {
 
         customers.add(customer);
 
-        String customerId = customer.id().toString();
+        UUID customerId = customer.id().value();
 
         Product product = ProductTestDataBuilder
                 .aProduct()
+                .id(new ProductId(UUID.fromString(
+                        "fffe6ec2-7103-48b3-8e4f-3b58e43fb75a")))
                 .build();
 
         String productId = product.id().toString();
 
         String json = AlgaShopResourceUtils
                 .readContent("json/create-order-with-product.json")
-                .replace("${customerId}", customerId)
+                .replace("${customerId}", customerId.toString())
                 .replace("${productId}", productId);
         String createdOrderId = RestAssured
                 .given()
@@ -82,6 +88,19 @@ public class OrderControllerIT {
 
         boolean existsOrderId = orderPersistenceEntityRepositor.existsById(new OrderId(createdOrderId).value().toLong());
         Assertions.assertThat(existsOrderId).isTrue();
+
+        Response response = RestAssured
+                .given()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType("application/vnd.order-with-product.v1+json")
+                .body(json)
+                .when()
+                .post("/api/v1/orders");
+
+        System.out.println("STATUS: " + response.statusCode());
+        System.out.println("CONTENT-TYPE: " + response.contentType());
+        System.out.println("BODY: " + response.asPrettyString());
+
     }
 
     @Test

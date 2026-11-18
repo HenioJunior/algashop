@@ -26,7 +26,7 @@ public class CustomerPersistenceEntity
 
     @Id
     @EqualsAndHashCode.Include
-    private Long id;
+    private UUID id;
     private String firstName;
     private String lastName;
     private LocalDate birthDate;
@@ -62,7 +62,7 @@ public class CustomerPersistenceEntity
     private Long version;
 
     @Builder
-    public CustomerPersistenceEntity(Long id, String firstName, String lastName, LocalDate birthDate, String email, String phone,
+    public CustomerPersistenceEntity(UUID id, String firstName, String lastName, LocalDate birthDate, String email, String phone,
                                      String document, boolean promotionNotificationsAllowed, boolean archived,
                                      OffsetDateTime registeredAt, OffsetDateTime archivedAt, Integer loyaltyPoints,
                                      AddressEmbeddable address, UUID createdByUserId, OffsetDateTime lastModifiedAt,

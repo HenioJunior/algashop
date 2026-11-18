@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -22,12 +23,12 @@ public class CustomerLoyaltyPointsApplicationService {
 
     private final CustomerLoyaltyPointsService customerLoyaltyPointsService;
 
-    public void addLoyaltyPoints(String rawCustomerId, String rawOrderId) {
+    public void addLoyaltyPoints(UUID rawCustomerId, String rawOrderId) {
         Objects.requireNonNull(rawCustomerId, "rawCustomerId must not be null");
         Objects.requireNonNull(rawOrderId, "rawOrderId must not be null");
 
-        Customer customer = customers.ofId(new CustomerId(TSID.from(rawCustomerId)))
-                .orElseThrow(() -> new CustomerNotFoundException(new CustomerId(TSID.from(rawCustomerId))));
+        Customer customer = customers.ofId(new CustomerId(rawCustomerId))
+                .orElseThrow(() -> new CustomerNotFoundException(new CustomerId(rawCustomerId)));
 
         Order order = orders.ofId(new OrderId(TSID.from(rawOrderId)))
                 .orElseThrow(() -> new OrderNotFoundException(new OrderId(TSID.from(rawOrderId))));

@@ -11,7 +11,7 @@ public class BuyNowInputTestDataBuilder {
     public static BuyNowInput.BuyNowInputBuilder aBuyNowInput() {
         return BuyNowInput.builder()
                 .productId(ProductTestDataBuilder.DEFAULT_PRODUCT_ID.value())
-                .customerId(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID.value().toString())
+                .customerId(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID.value())
                 .quantity(2)
                 .paymentMethod("CREDIT_CARD")
                 .shipping(ShippingInput.builder()

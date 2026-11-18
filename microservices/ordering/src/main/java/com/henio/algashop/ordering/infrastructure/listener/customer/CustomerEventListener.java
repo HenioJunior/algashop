@@ -43,6 +43,6 @@ public class CustomerEventListener {
     @EventListener
     public void listen(OrderReadyEvent event) {
         customerLoyaltyPointsApplicationService
-                .addLoyaltyPoints(event.customerId().toString(), event.orderId().toString());
+                .addLoyaltyPoints(event.customerId().value(), event.orderId().toString());
     }
 }

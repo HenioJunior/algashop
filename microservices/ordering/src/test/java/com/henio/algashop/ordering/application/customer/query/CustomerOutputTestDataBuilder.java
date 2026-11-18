@@ -9,7 +9,7 @@ import java.time.OffsetDateTime;
 public class CustomerOutputTestDataBuilder {
     public static CustomerOutput.CustomerOutputBuilder existing() {
         return CustomerOutput.builder()
-                .id(new CustomerId().toString())
+                .id(new CustomerId().value())
                 .registeredAt(OffsetDateTime.now())
                 .phone("1191234564")
                 .email("johndoe@email.com")

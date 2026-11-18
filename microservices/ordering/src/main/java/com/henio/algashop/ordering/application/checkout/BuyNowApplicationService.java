@@ -6,7 +6,10 @@ import com.henio.algashop.ordering.domain.model.customer.Customer;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.domain.model.customer.Customers;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerNotFoundException;
-import com.henio.algashop.ordering.domain.model.order.*;
+import com.henio.algashop.ordering.domain.model.order.Billing;
+import com.henio.algashop.ordering.domain.model.order.Order;
+import com.henio.algashop.ordering.domain.model.order.Orders;
+import com.henio.algashop.ordering.domain.model.order.PaymentMethod;
 import com.henio.algashop.ordering.domain.model.order.service.BuyNowService;
 import com.henio.algashop.ordering.domain.model.order.shipping.OriginAddressService;
 import com.henio.algashop.ordering.domain.model.order.shipping.Shipping;
@@ -15,7 +18,6 @@ import com.henio.algashop.ordering.domain.model.product.Product;
 import com.henio.algashop.ordering.domain.model.product.ProductCatalogService;
 import com.henio.algashop.ordering.domain.model.product.ProductId;
 import com.henio.algashop.ordering.domain.model.product.ProductNotFoundException;
-import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +47,7 @@ public class BuyNowApplicationService {
 
         PaymentMethod paymentMethod = PaymentMethod.valueOf(input.getPaymentMethod());
 
-        CustomerId customerId = new CustomerId(TSID.from(input.getCustomerId()));
+        CustomerId customerId = new CustomerId(input.getCustomerId());
         Customer customer = customers.ofId(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(customerId));
 

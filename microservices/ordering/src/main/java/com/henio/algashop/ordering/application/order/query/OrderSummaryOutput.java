@@ -1,5 +1,6 @@
 package com.henio.algashop.ordering.application.order.query;
 
+import io.hypersistence.tsid.TSID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,4 +24,28 @@ public class OrderSummaryOutput {
     private String status;
     private String paymentMethod;
     private CustomerMinimalOutput customer;
+
+    public OrderSummaryOutput(
+            Long id,
+            Integer totalItems,
+            BigDecimal totalAmount,
+            OffsetDateTime placedAt,
+            OffsetDateTime paidAt,
+            OffsetDateTime canceledAt,
+            OffsetDateTime readyAt,
+            String status,
+            String paymentMethod,
+            CustomerMinimalOutput customer) {
+
+        this.id = TSID.from(id).toString();
+        this.totalItems = totalItems;
+        this.totalAmount = totalAmount;
+        this.placedAt = placedAt;
+        this.paidAt = paidAt;
+        this.canceledAt = canceledAt;
+        this.readyAt = readyAt;
+        this.status = status;
+        this.paymentMethod = paymentMethod;
+        this.customer = customer;
+    }
 }

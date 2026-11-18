@@ -47,7 +47,7 @@ class CustomerManagementApplicationServiceIT {
         CustomerId customerId = customerManagementApplicationService.create(input);
         assertThat(customerId).isNotNull();
 
-        CustomerOutput customerOutput = customerQueryService.findById(customerId.toString());
+        CustomerOutput customerOutput = customerQueryService.findById(customerId.value());
 
         assertThat(customerOutput).extracting(
                 CustomerOutput::getId,
@@ -56,7 +56,7 @@ class CustomerManagementApplicationServiceIT {
                 CustomerOutput::getEmail,
                 CustomerOutput::getBirthDate
         ).contains(
-                customerId.toString(),
+                customerId.value(),
                 "John",
                 "Doe",
                 "johndoe@email.com",
@@ -80,9 +80,9 @@ class CustomerManagementApplicationServiceIT {
         CustomerId customerId = customerManagementApplicationService.create(customerInput);
         assertThat(customerId).isNotNull();
 
-        customerManagementApplicationService.update(customerId.toString(), customerUpdate);
+        customerManagementApplicationService.update(customerId.value(), customerUpdate);
 
-        CustomerOutput customerOutput = customerQueryService.findById(customerId.toString());
+        CustomerOutput customerOutput = customerQueryService.findById(customerId.value());
 
         assertThat(customerOutput)
                 .extracting(
@@ -92,7 +92,7 @@ class CustomerManagementApplicationServiceIT {
                         CustomerOutput::getEmail,
                         CustomerOutput::getBirthDate
                 ).containsExactly(
-                        customerId.toString(),
+                        customerId.value(),
                         "Matt",
                         "Damon",
                         "matt.damon@email.com",
@@ -108,10 +108,10 @@ class CustomerManagementApplicationServiceIT {
 
         CustomerId customerId = customerManagementApplicationService.create(customerInput);
 
-        customerManagementApplicationService.archive(customerId.toString());
+        customerManagementApplicationService.archive(customerId.value());
 
         CustomerOutput customerOutput =
-                customerQueryService.findById(customerId.toString());
+                customerQueryService.findById(customerId.value());
 
         assertThat(customerOutput).isNotNull();
         assertThat(customerOutput.getArchived()).isTrue();
@@ -133,7 +133,7 @@ class CustomerManagementApplicationServiceIT {
 
     @Test
     void shouldThrowExceptionWhenArchivingNonExistingCustomer() {
-        assertThatThrownBy(() -> customerManagementApplicationService.archive(DEFAULT_CUSTOMER_ID.toString()))
+        assertThatThrownBy(() -> customerManagementApplicationService.archive(DEFAULT_CUSTOMER_ID.value()))
                 .isInstanceOf(CustomerNotFoundException.class);
     }
 
@@ -143,14 +143,14 @@ class CustomerManagementApplicationServiceIT {
 
         CustomerId customerId = customerManagementApplicationService.create(customerInput);
 
-        customerManagementApplicationService.archive(customerId.toString());
+        customerManagementApplicationService.archive(customerId.value());
 
         CustomerOutput customerOutput =
-                customerQueryService.findById(customerId.toString());
+                customerQueryService.findById(customerId.value());
 
         assertThat(customerOutput.getArchived()).isTrue();
 
-        assertThatThrownBy(() -> customerManagementApplicationService.archive(customerId.toString()))
+        assertThatThrownBy(() -> customerManagementApplicationService.archive(customerId.value()))
                 .isInstanceOf(CustomerAlreadyArchivedException.class);
     }
 
@@ -160,17 +160,17 @@ class CustomerManagementApplicationServiceIT {
 
         CustomerId customerId = customerManagementApplicationService.create(customerInput);
 
-        customerManagementApplicationService.changeEmail(customerId.toString(), "new@email.com");
+        customerManagementApplicationService.changeEmail(customerId.value(), "new@email.com");
 
         CustomerOutput customerOutput =
-                customerQueryService.findById(customerId.toString());
+                customerQueryService.findById(customerId.value());
 
         assertThat(customerOutput.getEmail()).isEqualTo("new@email.com");
     }
 
     @Test
     void shouldThrowExceptionWhenChangingEmailOfNonExistingCustomer() {
-        assertThatThrownBy(() -> customerManagementApplicationService.changeEmail(DEFAULT_CUSTOMER_ID.toString(), "new@email.com"))
+        assertThatThrownBy(() -> customerManagementApplicationService.changeEmail(DEFAULT_CUSTOMER_ID.value(), "new@email.com"))
                 .isInstanceOf(CustomerNotFoundException.class);
     }
 
@@ -180,9 +180,9 @@ class CustomerManagementApplicationServiceIT {
 
         CustomerId customerId = customerManagementApplicationService.create(customerInput);
 
-        customerManagementApplicationService.archive(customerId.toString());
+        customerManagementApplicationService.archive(customerId.value());
 
-        assertThatThrownBy(() -> customerManagementApplicationService.changeEmail(customerId.toString(), "new@email.com"))
+        assertThatThrownBy(() -> customerManagementApplicationService.changeEmail(customerId.value(), "new@email.com"))
                 .isInstanceOf(CustomerAlreadyArchivedException.class);
     }
 
@@ -193,7 +193,7 @@ class CustomerManagementApplicationServiceIT {
         CustomerId customerId = customerManagementApplicationService.create(customerInput);
 
         assertThatThrownBy(() -> customerManagementApplicationService
-                .changeEmail(customerId.toString(), "email.com"))
+                .changeEmail(customerId.value(), "email.com"))
                 .isInstanceOf(DomainException.class);
     }
 
@@ -204,7 +204,7 @@ class CustomerManagementApplicationServiceIT {
         CustomerId customerId = customerManagementApplicationService.create(customerInput);
 
         assertThatThrownBy(() -> customerManagementApplicationService
-                .changeEmail(customerId.toString(), "johndoe@email.com"))
+                .changeEmail(customerId.value(), "johndoe@email.com"))
                 .isInstanceOf(CustomerEmailIsInUseException.class);
     }
 }

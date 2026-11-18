@@ -13,9 +13,9 @@ Contract.make {
     response {
         status 404
         body([
-                instance: fromRequest().path(),
-                type: "/errors/not-found",
-                title: "Not found"
+            instance: fromRequest().path(),
+            type: "/errors/not-found",
+            title: "Not found"
         ])
     }
 }

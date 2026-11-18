@@ -16,7 +16,7 @@ public class BuyNowInput {
     private ShippingInput shipping;
     private BillingData billing;
     private UUID productId;
-    private String customerId;
+    private UUID customerId;
     private Integer quantity;
     private String paymentMethod;
 }

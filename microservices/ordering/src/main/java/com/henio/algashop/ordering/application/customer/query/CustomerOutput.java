@@ -1,7 +1,6 @@
 package com.henio.algashop.ordering.application.customer.query;
 
 import com.henio.algashop.ordering.application.commons.AddressData;
-import io.hypersistence.tsid.TSID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +16,7 @@ import java.time.OffsetDateTime;
 @Builder
 public class CustomerOutput {
 
-    private String id;
+    private UUID id;
     private String firstName;
     private String lastName;
     private String email;
@@ -31,7 +31,7 @@ public class CustomerOutput {
     private AddressData address;
 
     public CustomerOutput(
-            Long id,
+            UUID id,
             String firstName,
             String lastName,
             String email,
@@ -45,7 +45,7 @@ public class CustomerOutput {
             boolean archived,
             AddressData address
     ) {
-        this.id = TSID.from(id).toString();
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/customers")
 @RequiredArgsConstructor
@@ -30,12 +32,12 @@ public class CustomerController {
         CustomerId customerId = customerManagementApplicationService.create(input);
 
         UriComponentsBuilder uriComponentsBuilder = MvcUriComponentsBuilder.fromMethodCall(
-                MvcUriComponentsBuilder.on(CustomerController.class).findById(customerId.toString())
+                MvcUriComponentsBuilder.on(CustomerController.class).findById(customerId.value())
         );
 
         httpServletResponse.addHeader("Location", uriComponentsBuilder.toUriString());
 
-        return customerQueryService.findById(customerId.toString());
+        return customerQueryService.findById(customerId.value());
     }
 
     @GetMapping
@@ -44,19 +46,19 @@ public class CustomerController {
     }
 
     @GetMapping("/{customerId}")
-    public CustomerOutput findById(@PathVariable String customerId) {
+    public CustomerOutput findById(@PathVariable UUID customerId) {
         return customerQueryService.findById(customerId);
     }
 
     @PutMapping("/{customerId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable String customerId, @RequestBody @Valid CustomerUpdateInput input) {
+    public void update(@PathVariable UUID customerId, @RequestBody @Valid CustomerUpdateInput input) {
         customerManagementApplicationService.update(customerId, input);
     }
 
     @DeleteMapping("/{customerId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String customerId) {
+    public void delete(@PathVariable UUID customerId) {
         customerManagementApplicationService.archive(customerId);
     }
 }

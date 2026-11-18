@@ -12,7 +12,7 @@ public class ShoppingCartOutputTestDataBuilder {
     public static ShoppingCartOutput.ShoppingCartOutputBuilder aShoppingCart() {
         return ShoppingCartOutput.builder()
                 .id(new ShoppingCartId().value().toString())
-                .customerId(new CustomerId().value().toString())
+                .customerId(new CustomerId().value())
                 .totalItems(3)
                 .totalAmount(new BigDecimal(1250))
                 .items(List.of(

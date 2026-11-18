@@ -1,11 +1,11 @@
 package com.henio.algashop.ordering.domain.model.customer;
 
 import com.henio.algashop.ordering.domain.model.shared.IdGenerator;
-import io.hypersistence.tsid.TSID;
 
 import java.util.Objects;
+import java.util.UUID;
 
-public record CustomerId(TSID value) {
+public record CustomerId(UUID value) {
 
     public CustomerId {
         Objects.requireNonNull(
@@ -15,12 +15,12 @@ public record CustomerId(TSID value) {
     }
 
     public CustomerId() {
-        this(IdGenerator.generateTSID());
+        this(IdGenerator.generateTimeBasedUUID());
     }
 
     public static CustomerId generate() {
         return new CustomerId(
-                IdGenerator.generateTSID()
+                IdGenerator.generateTimeBasedUUID()
         );
     }
 

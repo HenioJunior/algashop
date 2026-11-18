@@ -6,7 +6,6 @@ import com.henio.algashop.ordering.application.customer.query.CustomerQueryServi
 import com.henio.algashop.ordering.application.customer.query.CustomerSummaryOutput;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerNotFoundException;
-import io.hypersistence.tsid.TSID;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
@@ -21,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -57,14 +57,13 @@ public class CustomerQueryServiceImpl implements CustomerQueryService {
             WHERE c.id = :id""";
 
     @Override
-    public CustomerOutput findById(String customerId) {
-        long id = TSID.from(customerId).toLong();
+    public CustomerOutput findById(UUID customerId) {
         try {
             TypedQuery<CustomerOutput> query = entityManager.createQuery(findByIdAsOutputJPQL, CustomerOutput.class);
-            query.setParameter("id", id);
+            query.setParameter("id", customerId);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            throw new CustomerNotFoundException(new CustomerId(TSID.from(customerId)));
+            throw new CustomerNotFoundException(new CustomerId(customerId));
         }
     }
 

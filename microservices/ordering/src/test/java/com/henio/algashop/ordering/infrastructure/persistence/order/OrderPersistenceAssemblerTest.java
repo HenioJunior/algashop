@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Set;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,9 +37,9 @@ class OrderPersistenceAssemblerTest {
                 customerRepository
         );
 
-        Mockito.when(customerRepository.getReferenceById(Mockito.anyLong()))
+        Mockito.when(customerRepository.getReferenceById(Mockito.any(UUID.class)))
                 .thenAnswer(invocation -> {
-                    Long customerId = invocation.getArgument(0);
+                   UUID customerId = invocation.getArgument(0);
 
                     return CustomerPersistenceEntityTestDataBuilder
                             .aCustomer()
@@ -56,7 +57,7 @@ class OrderPersistenceAssemblerTest {
 
         assertThat(orderPersistenceEntity).satisfies(
                 p-> assertThat(p.getId()).isEqualTo(order.id().value().toLong()),
-                p-> assertThat(p.getCustomer()).isEqualTo(customerRepository.getReferenceById(order.customerId().value().toLong())),
+                p-> assertThat(p.getCustomer()).isEqualTo(customerRepository.getReferenceById(order.customerId().value())),
                 p -> assertThat(p.getTotalAmount()).isEqualTo(order.totalAmount().value()),
                 p -> assertThat(p.getTotalItems()).isEqualTo(order.totalItems().value()),
                 p -> assertThat(p.getStatus()).isEqualTo(order.status().name()),

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -15,7 +16,7 @@ public class OrderFilter extends SortablePageFilter<OrderFilter.SortyType> {
 
     private String status;
     private String orderId;
-    private String customerId;
+    private UUID customerId;
     private OffsetDateTime placedAtFrom;
     private OffsetDateTime placedAtTo;
     private BigDecimal totalAmountFrom;

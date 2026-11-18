@@ -243,7 +243,7 @@ class ShoppingCartManagementApplicationServiceIT {
         Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
         customers.add(customer);
 
-        ShoppingCartId shoppingCartId = service.createNew(customer.id().value().toString());
+        ShoppingCartId shoppingCartId = service.createNew(customer.id().value());
 
         Optional<ShoppingCart> createdCart = shoppingCarts.ofId(shoppingCartId);
         assertThat(createdCart).isPresent();
@@ -262,7 +262,7 @@ class ShoppingCartManagementApplicationServiceIT {
     @Test
     void shouldThrowCustomerNotFoundExceptionWhenCreatingNewShoppingCartForNonExistingCustomer() {
         assertThatExceptionOfType(CustomerNotFoundException.class)
-                .isThrownBy(() -> service.createNew(DEFAULT_CUSTOMER_ID.toString()));
+                .isThrownBy(() -> service.createNew(DEFAULT_CUSTOMER_ID.value()));
     }
 
     @Test
@@ -273,7 +273,7 @@ class ShoppingCartManagementApplicationServiceIT {
         shoppingCarts.add(existingCart);
 
         assertThatExceptionOfType(CustomerAlreadyHaveShoppingCartException.class)
-                .isThrownBy(() -> service.createNew(customer.id().toString()));
+                .isThrownBy(() -> service.createNew(customer.id().value()));
     }
 
 }

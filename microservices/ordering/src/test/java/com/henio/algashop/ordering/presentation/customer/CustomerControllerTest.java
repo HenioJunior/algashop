@@ -9,7 +9,6 @@ import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerEmailIsInUseException;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerNotFoundException;
 import com.henio.algashop.ordering.domain.model.shared.DomainException;
-import io.hypersistence.tsid.TSID;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -61,7 +61,7 @@ class CustomerControllerTest {
         Mockito.when(customerManagementApplicationService.create(any(CustomerInput.class)))
                 .thenReturn(customerId);
 
-        Mockito.when(customerQueryService.findById(any(String.class)))
+        Mockito.when(customerQueryService.findById(any(UUID.class)))
                 .thenReturn(customerOutput);
 
         String jsonInput = """
@@ -165,7 +165,7 @@ class CustomerControllerTest {
     void findByIdError404Customer() {
         var invalidCustomerId = new CustomerId();
 
-        Mockito.when(customerQueryService.findById(invalidCustomerId.toString()))
+        Mockito.when(customerQueryService.findById(invalidCustomerId.value()))
                 .thenThrow(CustomerNotFoundException.class);
 
         RestAssuredMockMvc
@@ -350,7 +350,7 @@ class CustomerControllerTest {
                         "totalPages", Matchers.equalTo(1),
                         "totalElements", Matchers.equalTo(2),
 
-                        "content[0].id", Matchers.equalTo(customer1.getId()),
+                        "content[0].id", Matchers.equalTo(customer1.getId().toString()),
                         "content[0].firstName", Matchers.is(customer1.getFirstName()),
                         "content[0].lastName", Matchers.is(customer1.getLastName()),
                         "content[0].email", Matchers.is(customer1.getEmail()),
@@ -362,7 +362,7 @@ class CustomerControllerTest {
                         "content[0].archived", Matchers.is(customer1.getArchived()),
                         "content[0].registeredAt", Matchers.is(formatter.format(customer1.getRegisteredAt())),
 
-                        "content[1].id", Matchers.equalTo(customer2.getId()),
+                        "content[1].id", Matchers.equalTo(customer2.getId().toString()),
                         "content[1].firstName", Matchers.is(customer2.getFirstName()),
                         "content[1].lastName", Matchers.is(customer2.getLastName()),
                         "content[1].email", Matchers.is(customer2.getEmail()),
@@ -395,7 +395,7 @@ class CustomerControllerTest {
                 .assertThat()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .statusCode(HttpStatus.OK.value())
-                .body("id", Matchers.is(customer.getId()))
+                .body("id", Matchers.is(customer.getId().toString()))
                 .body("firstName", Matchers.is(customer.getFirstName()))
                 .body("lastName", Matchers.is(customer.getLastName()))
                 .body("email", Matchers.is(customer.getEmail()))
@@ -417,7 +417,7 @@ class CustomerControllerTest {
 
     @Test
     void updateCustomerContract() {
-        String customerId = new CustomerId().value().toString();
+        UUID customerId = new CustomerId().value();
 
         String jsonInput = """
                 {
@@ -504,7 +504,7 @@ class CustomerControllerTest {
 
     @Test
     void updateCustomerError404Contract() {
-        String customerId = new CustomerId().value().toString();
+        UUID customerId = new CustomerId().value();
 
         String jsonInput = """
                 {
@@ -525,7 +525,7 @@ class CustomerControllerTest {
                 }
                 """;
 
-        Mockito.doThrow(new CustomerNotFoundException(new CustomerId(TSID.from(customerId))))
+        Mockito.doThrow(new CustomerNotFoundException(new CustomerId(customerId)))
                 .when(customerManagementApplicationService)
                 .update(
                         Mockito.eq(customerId),
@@ -555,7 +555,7 @@ class CustomerControllerTest {
 
     @Test
     void updateCustomerError500Contract() {
-        String customerId = new CustomerId().value().toString();
+        UUID customerId = new CustomerId().value();
 
         String jsonInput = """
                 {
@@ -606,7 +606,7 @@ class CustomerControllerTest {
 
     @Test
     void deleteCustomerContract() {
-        String customerId = new CustomerId().value().toString();
+        UUID customerId = new CustomerId().value();
 
         RestAssuredMockMvc
                 .given()
@@ -627,9 +627,9 @@ class CustomerControllerTest {
 
     @Test
     void deleteCustomerErrorContract404() {
-        String customerId = new CustomerId().value().toString();
+        UUID customerId = new CustomerId().value();
 
-        Mockito.doThrow(new CustomerNotFoundException(new CustomerId(TSID.from(customerId))))
+        Mockito.doThrow(new CustomerNotFoundException(new CustomerId(customerId)))
                 .when(customerManagementApplicationService)
                 .archive(
                         Mockito.eq(customerId)

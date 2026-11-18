@@ -10,14 +10,8 @@ Contract.make {
             contentType("application/vnd.order-with-product.v1+json")
         }
         body([
-                productId: value(
-                        test("0S66P0865N43J"),
-                        stub(regex('[0-9A-HJKMNP-TV-Z]{13}'))
-                ),
-                customerId: value(
-                        test("0S66P0865N43G"),
-                        stub(regex('[0-9A-HJKMNP-TV-Z]{13}'))
-                ),
+                productId: value(test(anyUuid()), stub(anyUuid())),
+                customerId: value(test(anyUuid()), stub(anyUuid())),
                 quantity: value(test(1), stub(anyPositiveInt())),
                 paymentMethod: "GATEWAY_BALANCE",
                 shipping: [
@@ -63,7 +57,7 @@ Contract.make {
         body([
             id: anyNonBlankString(),
             customer: [
-                    id: regex('[0-9A-HJKMNP-TV-Z]{13}'),
+                    id: anyUuid(),
                     firstName: "John",
                     lastName: "Doe",
                     document: "12345",
@@ -113,7 +107,7 @@ Contract.make {
                     [
                             id: anyNonBlankString(),
                             orderId: anyNonBlankString(),
-                            productId: regex('[0-9A-HJKMNP-TV-Z]{13}'),
+                            productId: anyUuid(),
                             productName: "Notebook Dive Gamer X11",
                             price: 19.99,
                             quantity: 2,

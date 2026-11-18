@@ -12,7 +12,7 @@ public class OrderSummaryOutputTestDataBuilder {
         return OrderSummaryOutput.builder()
                 .id(new OrderId().toString())
                 .customer(CustomerMinimalOutput.builder()
-                        .id(new CustomerId().toString())
+                        .id(new CustomerId().value())
                         .firstName("John")
                         .lastName("Doe")
                         .document("12345")

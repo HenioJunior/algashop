@@ -70,19 +70,19 @@ public class OrdersPersistenceAdapter implements Orders {
     @Override
     public List<Order> placedByCustomerInYear(CustomerId customerId, Year year) {
         List<OrderPersistenceEntity> entities = persistenceRepository.placedByCustomerInYear(
-                customerId.value().toLong(), year.getValue());
+                customerId.value(), year.getValue());
 
         return entities.stream().map(disassembler::toDomain).toList();
     }
 
     @Override
     public long salesQuantityByCustomerInYear(CustomerId customerId, Year year) {
-        return persistenceRepository.salesQuantityByCustomerInYear(customerId.value().toLong(), year.getValue());
+        return persistenceRepository.salesQuantityByCustomerInYear(customerId.value(), year.getValue());
     }
 
     @Override
     public Money totalSoldForCustomer(CustomerId customerId) {
-        return new Money(persistenceRepository.totalSoldForCustomer(customerId.value().toLong()));
+        return new Money(persistenceRepository.totalSoldForCustomer(customerId.value()));
     }
 
     private void update(Order aggregateRoot, OrderPersistenceEntity entity) {

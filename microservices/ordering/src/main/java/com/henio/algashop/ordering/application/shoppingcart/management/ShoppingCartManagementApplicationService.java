@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -44,9 +45,9 @@ public class ShoppingCartManagementApplicationService {
     }
 
     @Transactional
-    public ShoppingCartId createNew(String rawCustomerId) {
+    public ShoppingCartId createNew(UUID rawCustomerId) {
         Objects.requireNonNull(rawCustomerId, "Customer ID cannot be null");
-        CustomerId customerId = new CustomerId(TSID.from(rawCustomerId));
+        CustomerId customerId = new CustomerId(rawCustomerId);
 
         ShoppingCart shoppingCart = shoppingService.startShopping(customerId);
 

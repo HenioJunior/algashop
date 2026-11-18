@@ -21,15 +21,8 @@ public class OrderPersistenceDisassembler {
     public Order toDomain(OrderPersistenceEntity persistenceEntity) {
         return Order.existing()
                 .id(new OrderId(TSID.from(persistenceEntity.getId())))
-                .customerId(
-                        new CustomerId(
-                                TSID.from(
-                                        Objects.requireNonNull(
-                                                persistenceEntity.getCustomerId(),
-                                                "Customer id is required"
-                                        )
-                                )
-                        )
+                .customerId(new CustomerId(Objects.requireNonNull(
+                        persistenceEntity.getCustomerId(),"Customer id is required"))
                 )
                 .totalAmount(new Money(persistenceEntity.getTotalAmount()))
                 .totalItems(new Quantity(persistenceEntity.getTotalItems()))

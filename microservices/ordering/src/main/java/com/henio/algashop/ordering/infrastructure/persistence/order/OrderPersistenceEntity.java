@@ -128,7 +128,7 @@ public class OrderPersistenceEntity
         this.items.add(item);
     }
 
-    public Long getCustomerId() {
+    public UUID getCustomerId() {
         return this.customer.getId();
     }
 

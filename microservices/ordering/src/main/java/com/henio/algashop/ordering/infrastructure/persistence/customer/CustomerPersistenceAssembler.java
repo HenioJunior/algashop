@@ -14,7 +14,7 @@ public class CustomerPersistenceAssembler {
         Objects.requireNonNull(customer, "Customer is required");
 
         CustomerPersistenceEntity entity = CustomerPersistenceEntity.builder()
-                .id(customer.id().value().toLong())
+                .id(customer.id().value())
                 .firstName(customer.fullName().firstName())
                 .lastName(customer.fullName().lastName())
                 .birthDate(customer.birthDate() == null ? null : customer.birthDate().value())
@@ -37,7 +37,7 @@ public class CustomerPersistenceAssembler {
         Objects.requireNonNull(entity, "Customer persistence entity is required");
         Objects.requireNonNull(customer, "Customer is required");
 
-        entity.setId(customer.id().value().toLong());
+        entity.setId(customer.id().value());
         entity.setFirstName(customer.fullName().firstName());
         entity.setLastName(customer.fullName().lastName());
         entity.setBirthDate(customer.birthDate() == null ? null : customer.birthDate().value());

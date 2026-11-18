@@ -14,6 +14,8 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.context.annotation.Import;
 
+import java.util.UUID;
+
 @DataJpaTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -27,7 +29,7 @@ public class ShoppingCartPersistenceEntityRepositoryIT {
 
     @BeforeEach
     public void setup() {
-        Long customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID.value().toLong();
+        UUID customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID.value();
         if (!customerPersistenceEntityRepository.existsById(customerId)) {
             customerPersistenceEntity = customerPersistenceEntityRepository.saveAndFlush(
                     CustomerPersistenceEntityTestDataBuilder.aCustomer().build()
