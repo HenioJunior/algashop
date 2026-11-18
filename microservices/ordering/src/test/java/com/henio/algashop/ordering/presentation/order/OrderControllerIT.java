@@ -1,6 +1,9 @@
 package com.henio.algashop.ordering.presentation.order;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.henio.algashop.ordering.application.checkout.BuyNowInput;
+import com.henio.algashop.ordering.application.checkout.BuyNowInputTestDataBuilder;
+import com.henio.algashop.ordering.application.order.query.OrderDetailOutput;
 import com.henio.algashop.ordering.domain.model.customer.Customer;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
@@ -40,7 +43,7 @@ public class OrderControllerIT {
     private Customers customers;
 
     @Autowired
-    private OrderPersistenceEntityRepository orderPersistenceEntityRepositor;
+    private OrderPersistenceEntityRepository orderRepository;
 
     private WireMockServer wireMockProductCatalog;
     private WireMockServer wireMockRapidex;
@@ -111,7 +114,7 @@ public class OrderControllerIT {
                         "customer.id", Matchers.not(Matchers.emptyString()))
                 .extract().jsonPath().getString("id");
 
-        boolean existsOrderId = orderPersistenceEntityRepositor.existsById(new OrderId(createdOrderId).value().toLong());
+        boolean existsOrderId = orderRepository.existsById(new OrderId(createdOrderId).value().toLong());
         Assertions.assertThat(existsOrderId).isTrue();
 
         Response response = RestAssured
@@ -126,6 +129,53 @@ public class OrderControllerIT {
         System.out.println("CONTENT-TYPE: " + response.contentType());
         System.out.println("BODY: " + response.asPrettyString());
 
+    }
+
+    @Test
+    public void shouldCreateOrderUsingProduct_DTO() {
+        Customer customer = CustomerTestDataBuilder
+                .brandNewCustomer()
+                .build();
+
+        customers.add(customer);
+
+        UUID customerId = customer.id().value();
+
+        Product product = ProductTestDataBuilder
+                .aProduct()
+                .id(new ProductId(UUID.fromString(
+                        "fffe6ec2-7103-48b3-8e4f-3b58e43fb75a")))
+                .build();
+
+        UUID productId = product.id().value();
+
+        BuyNowInput input = BuyNowInputTestDataBuilder.aBuyNowInput()
+                .productId(productId)
+                .customerId(customerId)
+                .build();
+
+        OrderDetailOutput output = RestAssured
+                .given()
+                .log().body()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType("application/vnd.order-with-product.v1+json")
+                .body(input)
+                .when()
+                .post("/api/v1/orders")
+                .then()
+                .log().body()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
+                .as(OrderDetailOutput.class);
+
+        Assertions.assertThat(output.getCustomer())
+                .isNotNull();
+
+        Assertions.assertThat(output.getCustomer().getId())
+                .isEqualTo(customerId);
+
+        boolean orderExists = orderRepository.existsById(new OrderId(output.getId()).value().toLong());
+        Assertions.assertThat(orderExists).isTrue();
     }
 
     @Test
@@ -181,6 +231,8 @@ public class OrderControllerIT {
                 .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value());
 
     }
+
+
 
     @Test
     public void shouldNotCreateOrderUsingProductWhenCustomerWasNotFound() {

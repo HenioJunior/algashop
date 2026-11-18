@@ -1,12 +1,14 @@
 package com.henio.algashop.ordering.infrastructure.utility.mapper;
 
 import com.henio.algashop.ordering.application.customer.query.CustomerOutput;
+import com.henio.algashop.ordering.application.order.query.CustomerMinimalOutput;
 import com.henio.algashop.ordering.application.order.query.OrderDetailOutput;
 import com.henio.algashop.ordering.application.order.query.OrderItemDetailOutput;
 import com.henio.algashop.ordering.application.shoppingcart.query.ShoppingCartItemOutput;
 import com.henio.algashop.ordering.application.shoppingcart.query.ShoppingCartOutput;
 import com.henio.algashop.ordering.application.utility.Mapper;
 import com.henio.algashop.ordering.domain.model.customer.Customer;
+import com.henio.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.order.OrderItemPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.order.OrderPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartItemPersistenceEntity;
@@ -47,6 +49,10 @@ public class ManualMapper implements Mapper {
                     when destinationType == ShoppingCartItemOutput.class ->
                     toShoppingCartItemOutput(item);
 
+            case CustomerPersistenceEntity customer
+                    when destinationType == CustomerMinimalOutput.class ->
+                    toCustomerMinimalOutput(customer);
+
             default -> throw new IllegalArgumentException(
                     "Unsupported mapping: %s -> %s"
                             .formatted(
@@ -85,15 +91,33 @@ public class ManualMapper implements Mapper {
         return output;
     }
 
+    private CustomerMinimalOutput toCustomerMinimalOutput(
+            CustomerPersistenceEntity customer) {
+
+        CustomerMinimalOutput output = new CustomerMinimalOutput();
+
+        output.setId(customer.getId());
+        output.setFirstName(customer.getFirstName());
+        output.setLastName(customer.getLastName());
+        output.setEmail(customer.getEmail());
+        output.setDocument(customer.getDocument());
+        output.setPhone(customer.getPhone());
+
+        return output;
+    }
+
     private OrderDetailOutput toOrderDetailOutput(
-            OrderPersistenceEntity order
-    ) {
+            OrderPersistenceEntity order) {
+
         OrderDetailOutput output = new OrderDetailOutput();
 
         output.setId(toTsidString(order.getId()));
         output.setTotalAmount(order.getTotalAmount());
-
-        // demais propriedades...
+        output.setTotalItems(order.getTotalItems());
+        output.setPlacedAt(order.getPlacedAt());
+        output.setStatus(order.getStatus());
+        output.setPaymentMethod(order.getPaymentMethod());
+        output.setCustomer(toCustomerMinimalOutput(order.getCustomer()));
 
         return output;
     }
