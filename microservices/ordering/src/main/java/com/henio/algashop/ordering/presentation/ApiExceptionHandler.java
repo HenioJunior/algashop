@@ -63,11 +63,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({DomainException.class, UnprocessableContentException.class})
-    public ProblemDetail handleUnprocessableEntityException(Exception ex) {
+    public ProblemDetail handleUnprocessableContentException(Exception ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNPROCESSABLE_CONTENT);
         problemDetail.setTitle("Unprocessable content");
         problemDetail.setDetail(ex.getMessage());
         problemDetail.setType(URI.create("/errors/unprocessable-content"));
+
 
         return problemDetail;
     }
@@ -90,6 +91,26 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         problemDetail.setDetail("An unexpected internal error ocurred.");
         problemDetail.setType(URI.create("/errors/internal"));
 
+        return problemDetail;
+    }
+
+    @ExceptionHandler(GatewayTimeoutException.class)
+    public ProblemDetail handleGatewayTimeoutException(GatewayTimeoutException e) {
+        log.error(e.getMessage(), e);
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.GATEWAY_TIMEOUT);
+        problemDetail.setTitle("Gateway Timeout");
+        problemDetail.setDetail(e.getMessage());
+        problemDetail.setType(URI.create("/errors/gateway-timeout"));
+        return problemDetail;
+    }
+
+    @ExceptionHandler(BadGatewayException.class)
+    public ProblemDetail handleBadGatewayException(BadGatewayException e) {
+        log.error(e.getMessage(), e);
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_GATEWAY);
+        problemDetail.setTitle("Bad Gateway");
+        problemDetail.setDetail(e.getMessage());
+        problemDetail.setType(URI.create("/errors/bad-gateway"));
         return problemDetail;
     }
 }
