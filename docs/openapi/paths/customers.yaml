@@ -20,7 +20,7 @@ collection:
           Location:
             schema:
               type: string
-              example: /api/v1/customers/01226N0640J7Q
+              example: '/api/v1/customers/550e8400-e29b-41d4-a716-446655440000'
       400:
         $ref: ../components/responses.yaml#/BadRequest
       409:
@@ -65,17 +65,13 @@ collection:
                   items:
                     $ref: ../schemas/customer.yaml#/CustomerSummary
 resource1:
+  parameters:
+    - $ref: ../components/parameters.yaml#/customerId
+
   get:
-    parameters:
-    - schema:
-        type: string
-      name: customerId
-      in: path
-      required: true
-      example: 01226N0640J7Q
     description: Get one customer by id
     tags:
-    - Customers
+      - Customers
     responses:
       200:
         description: Ok
@@ -85,17 +81,11 @@ resource1:
               $ref: ../schemas/customer.yaml#/Customer
       404:
         $ref: ../components/responses.yaml#/NotFound
+
   put:
-    parameters:
-    - schema:
-        type: string
-      name: customerId
-      in: path
-      required: true
-      example: 01226N0640J7Q
     description: Edit customer
     tags:
-    - Customers
+      - Customers
     requestBody:
       required: true
       content:
@@ -115,17 +105,11 @@ resource1:
         $ref: ../components/responses.yaml#/UnprocessableEntity
       500:
         $ref: ../components/responses.yaml#/InternalError
+
   delete:
-    parameters:
-    - schema:
-        type: string
-      name: customerId
-      in: path
-      required: true
-      example: 01226N0640J7Q
     description: Delete customer
     tags:
-    - Customers
+      - Customers
     responses:
       204:
         description: No content

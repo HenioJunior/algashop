@@ -35,3 +35,61 @@ direction:
       - DESC
     default: ASC
     example: DESC
+
+customerId:
+  name: customerId
+  in: path
+  required: true
+  description: Unique customer identifier
+  schema:
+    type: string
+    format: uuid
+  example: '550e8400-e29b-41d4-a716-446655440000'
+
+orderId:
+  name: orderId
+  in: path
+  required: true
+  description: Unique order identifier
+  schema:
+    type: string
+  example: '01226N0693HDG'
+
+orderIdQuery:
+  name: orderId
+  in: query
+  required: false
+  description: Filter orders by identifier
+  schema:
+    type: string
+  example: '01226N0640J7Q'
+
+customerIdQuery:
+  name: customerId
+  in: query
+  required: false
+  description: Filter orders by customer UUID
+  schema:
+    type: string
+    format: uuid
+  example: '550e8400-e29b-41d4-a716-446655440000'
+
+
+shoppingCartId:
+  name: shoppingCartId
+  in: path
+  required: true
+  description: Unique shopping cart identifier
+  schema:
+    type: string
+  example: '01226N0693HDE'
+
+itemId:
+  name: itemId
+  in: path
+  required: true
+  description: Unique shopping cart item identifier
+  schema:
+    type: string
+  example: '01226N0693HDG'
+

@@ -17,7 +17,8 @@ ShoppingCart:
       example: 1
     customerId:
       type: string
-      example: 01226N0693HDE
+      format: uuid
+      example: '550e8400-e29b-41d4-a716-446655440000'
     items:
       type: array
       items:
@@ -37,7 +38,8 @@ ShoppingCartItem:
       example: 01226N0640J7F
     productId:
       type: string
-      example: 01226N0693HDE
+      format: uuid
+      example: '123e4567-e89b-42d3-a456-426614174000'
     name:
       type: string
       example: Desktop Gamer Dive
@@ -72,11 +74,13 @@ ShoppingCartItemInput:
       example: 2
     productId:
       type: string
-      example: 01226N0640J7G
+      format: uuid
+      example: '123e4567-e89b-42d3-a456-426614174000'
 ShoppingCartInput:
   required:
   - customerId
   properties:
     customerId:
       type: string
-      example: 01226N0640J7G
+      format: uuid
+      example: '550e8400-e29b-41d4-a716-446655440000'

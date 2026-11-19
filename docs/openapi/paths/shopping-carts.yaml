@@ -1,7 +1,7 @@
 collection:
   post:
     tags:
-    - Shopping Cart
+      - Shopping Cart
     description: Create shopping cart
     requestBody:
       required: true
@@ -20,17 +20,14 @@ collection:
         $ref: ../components/responses.yaml#/BadRequest
       500:
         $ref: ../components/responses.yaml#/InternalError
+
 resource1:
+  parameters:
+  - $ref: ../components/parameters.yaml#/shoppingCartId
+
   get:
-    parameters:
-    - schema:
-        type: string
-      name: shoppingCartId
-      in: path
-      required: true
-      example: 01226N0693HDE
     tags:
-    - Shopping Cart
+      - Shopping Cart
     description: Find shopping cart
     responses:
       200:
@@ -41,33 +38,24 @@ resource1:
               $ref: ../schemas/shopping-cart.yaml#/ShoppingCart
       404:
         $ref: ../components/responses.yaml#/NotFound
+
   delete:
-    parameters:
-    - schema:
-        type: string
-      name: shoppingCartId
-      in: path
-      required: true
-      example: 01226N0693HDE
     tags:
-    - Shopping Cart
+      - Shopping Cart
     description: Delete shopping cart
     responses:
       204:
         description: OK
       404:
         $ref: ../components/responses.yaml#/NotFound
+
 resource2:
+  parameters:
+    - $ref: ../components/parameters.yaml#/shoppingCartId
+
   post:
-    parameters:
-    - schema:
-        type: string
-      name: shoppingCartId
-      in: path
-      required: true
-      example: 01226N0693HDE
     tags:
-    - Shopping Cart
+      - Shopping Cart
     description: Add or update cart item
     requestBody:
       required: true
@@ -84,16 +72,10 @@ resource2:
         $ref: ../components/responses.yaml#/BadRequest
       500:
         $ref: ../components/responses.yaml#/InternalError
+
   get:
-    parameters:
-    - schema:
-        type: string
-      name: shoppingCartId
-      in: path
-      required: true
-      example: 01226N0693HDE
     tags:
-    - Shopping Cart
+      - Shopping Cart
     description: List shopping cart items
     responses:
       200:
@@ -104,40 +86,26 @@ resource2:
               $ref: ../schemas/shopping-cart.yaml#/ShoppingCartItemList
       404:
         $ref: ../components/responses.yaml#/NotFound
+
   delete:
-    parameters:
-    - schema:
-        type: string
-      name: shoppingCartId
-      in: path
-      required: true
-      example: 01226N0693HDE
     tags:
-    - Shopping Cart
+      - Shopping Cart
     description: Empty shopping cart
     responses:
       204:
         description: OK
       404:
         $ref: ../components/responses.yaml#/NotFound
+
 resource3:
+  parameters:
+    - $ref: ../components/parameters.yaml#/shoppingCartId
+    - $ref: ../components/parameters.yaml#/itemId
+
   delete:
     tags:
-    - Shopping Cart
+      - Shopping Cart
     description: Remove cart item
-    parameters:
-    - schema:
-        type: string
-      name: shoppingCartId
-      in: path
-      required: true
-      example: 01226N0693HDE
-    - schema:
-        type: string
-      name: itemId
-      in: path
-      required: true
-      example: 01226N0693HDG
     responses:
       204:
         description: OK

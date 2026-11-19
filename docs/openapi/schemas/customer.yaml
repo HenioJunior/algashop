@@ -17,7 +17,8 @@ Customer:
   properties:
     id:
       type: string
-      example: 01226N0640J7H
+      format: uuid
+      example: '550e8400-e29b-41d4-a716-446655440000'
     firstName:
       type: string
       example: John
@@ -113,7 +114,8 @@ CustomerSummary:
   properties:
     id:
       type: string
-      example: 01226N0640J7H
+      format: uuid
+      example: '550e8400-e29b-41d4-a716-446655440000'
     firstName:
       type: string
       example: John
@@ -229,7 +231,8 @@ CustomerMinimal:
   properties:
     id:
       type: string
-      example: 01226N0640J7H
+      format: uuid
+      example: '550e8400-e29b-41d4-a716-446655440000'
     firstName:
       type: string
       example: John

@@ -1,7 +1,8 @@
+
 collection:
   post:
     tags:
-    - Orders
+      - Orders
     description: Create an Order
     requestBody:
       required: true
@@ -21,10 +22,10 @@ collection:
               $ref: ../schemas/order.yaml#/Order
         headers:
           Location:
+            description: Resource address
             schema:
               type: string
-            description: Resource address
-            example: /api/v1/orders/01226N0693HDE
+            example: '/api/v1/orders/01226N0693HDE'
       400:
         $ref: ../components/responses.yaml#/BadRequest
       409:
@@ -33,58 +34,57 @@ collection:
         $ref: ../components/responses.yaml#/UnprocessableEntity
       500:
         $ref: ../components/responses.yaml#/InternalError
+
   get:
     description: List orders
     tags:
-    - Orders
+      - Orders
     parameters:
-    - schema:
-        $ref: ../schemas/order.yaml#/OrderStatus
-      in: query
-      name: status
-      required: false
-    - schema:
-        type: string
-        format: date
-        example: '2024-04-25'
-      in: query
-      name: placedAtFrom
-      required: false
-    - schema:
-        type: string
-        format: date
-        example: '2024-04-01'
-      in: query
-      name: placedAtTo
-      required: false
-    - schema:
-        type: number
-        example: 1211.98
-      in: query
-      name: totalAmountFrom
-      required: false
-    - schema:
-        type: number
-        example: 2341.98
-      in: query
-      name: totalAmountTo
-      required: false
-    - schema:
-        type: string
-        example: 01226N0640J7Q
-      in: query
-      name: orderId
-      required: false
-    - schema:
-        type: string
-        example: 01226N0640J7H
-      in: query
-      name: customerId
-      required: false
-    - $ref: ../components/parameters.yaml#/page
-    - $ref: ../components/parameters.yaml#/size
-    - $ref: ../components/parameters.yaml#/sort
-    - $ref: ../components/parameters.yaml#/direction
+      - name: status
+        in: query
+        required: false
+        schema:
+          $ref: ../schemas/order.yaml#/OrderStatus
+
+      - name: placedAtFrom
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+          example: '2024-04-01'
+
+      - name: placedAtTo
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+          example: '2024-04-25'
+
+      - name: totalAmountFrom
+        in: query
+        required: false
+        schema:
+          type: number
+          example: 1211.98
+
+      - name: totalAmountTo
+        in: query
+        required: false
+        schema:
+          type: number
+          example: 2341.98
+
+      - $ref: ../components/parameters.yaml#/orderIdQuery
+
+      - $ref: ../components/parameters.yaml#/customerIdQuery
+
+      - $ref: ../components/parameters.yaml#/page
+      - $ref: ../components/parameters.yaml#/size
+      - $ref: ../components/parameters.yaml#/sort
+      - $ref: ../components/parameters.yaml#/direction
+
     responses:
       200:
         description: Ok
@@ -92,25 +92,22 @@ collection:
           application/json:
             schema:
               allOf:
-              - $ref: ../schemas/common.yaml#/Page
-              - type: object
-              properties:
-                content:
-                  type: array
-                  items:
-                    $ref: ../schemas/order.yaml#/OrderSummary
+                - $ref: ../schemas/common.yaml#/Page
+                - type: object
+                  properties:
+                    content:
+                      type: array
+                      items:
+                        $ref: ../schemas/order.yaml#/OrderSummary
+
 resource1:
+  parameters:
+    - $ref: ../components/parameters.yaml#/orderId
+
   get:
     tags:
-    - Orders
+      - Orders
     description: Order detail
-    parameters:
-    - schema:
-        type: string
-      required: true
-      name: orderId
-      in: path
-      example: 01226N0693HDG
     responses:
       200:
         description: OK
