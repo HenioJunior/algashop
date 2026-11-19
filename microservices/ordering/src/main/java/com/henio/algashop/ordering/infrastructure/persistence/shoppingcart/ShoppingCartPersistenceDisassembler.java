@@ -1,15 +1,14 @@
 package com.henio.algashop.ordering.infrastructure.persistence.shoppingcart;
 
-import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
-import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartItem;
 import com.henio.algashop.ordering.domain.model.commons.Money;
-import com.henio.algashop.ordering.domain.model.product.ProductName;
 import com.henio.algashop.ordering.domain.model.commons.Quantity;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.domain.model.product.ProductId;
+import com.henio.algashop.ordering.domain.model.product.ProductName;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartItem;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartItemId;
-import io.hypersistence.tsid.TSID;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 public class ShoppingCartPersistenceDisassembler {
     public ShoppingCart toDomainEntity(ShoppingCartPersistenceEntity source) {
         return ShoppingCart.existing()
-                .id(new ShoppingCartId(TSID.from(source.getId())))
+                .id(new ShoppingCartId(source.getId()))
                 .customerId(new CustomerId(source.getCustomerId()))
                 .totalAmount(new Money(source.getTotalAmount()))
                 .createdAt(source.getCreatedAt())
@@ -35,8 +34,8 @@ public class ShoppingCartPersistenceDisassembler {
 
     private ShoppingCartItem toItemEntity(ShoppingCartItemPersistenceEntity source) {
         return ShoppingCartItem.existing()
-                .id(new ShoppingCartItemId(TSID.from(source.getId())))
-                .shoppingCartId(new ShoppingCartId(TSID.from(source.getShoppingCartId())))
+                .id(new ShoppingCartItemId(source.getId()))
+                .shoppingCartId(new ShoppingCartId(source.getShoppingCartId()))
                 .productId(new ProductId(source.getProductId()))
                 .productName(new ProductName(source.getProductName()))
                 .price(new Money(source.getPrice()))

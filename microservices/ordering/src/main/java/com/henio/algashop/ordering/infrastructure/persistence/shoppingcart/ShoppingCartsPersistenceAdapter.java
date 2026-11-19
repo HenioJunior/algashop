@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -24,19 +25,19 @@ public class ShoppingCartsPersistenceAdapter implements ShoppingCarts {
 
     @Override
     public Optional<ShoppingCart> ofId(ShoppingCartId shoppingCartId) {
-        return persistenceRepository.findById(shoppingCartId.value().toLong())
+        return persistenceRepository.findById(shoppingCartId.value())
                 .map(disassembler::toDomainEntity);
     }
 
     @Override
     public boolean exists(ShoppingCartId shoppingCartId) {
-        return persistenceRepository.existsById(shoppingCartId.value().toLong());
+        return persistenceRepository.existsById(shoppingCartId.value());
     }
 
     @Override
     @Transactional
     public void add(ShoppingCart aggregateRoot) {
-        Long shoppingCartId = aggregateRoot.id().value().toLong();
+        UUID shoppingCartId = aggregateRoot.id().value();
 
         persistenceRepository.findById(shoppingCartId)
                 .ifPresentOrElse(
@@ -57,14 +58,14 @@ public class ShoppingCartsPersistenceAdapter implements ShoppingCarts {
     public void remove(ShoppingCart shoppingCart) {
         Objects.requireNonNull(shoppingCart, "Shopping cart is required");
         persistenceRepository.deleteById(
-                shoppingCart.id().value().toLong()
+                shoppingCart.id().value()
         );
     }
 
     @Override
     @Transactional
     public void remove(ShoppingCartId shoppingCartId) {
-        this.persistenceRepository.deleteById(shoppingCartId.value().toLong());
+        this.persistenceRepository.deleteById(shoppingCartId.value());
     }
 
     @Override

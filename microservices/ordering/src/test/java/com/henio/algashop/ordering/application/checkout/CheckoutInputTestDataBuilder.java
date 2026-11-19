@@ -10,7 +10,7 @@ public class CheckoutInputTestDataBuilder {
 
     public static CheckoutInput.CheckoutInputBuilder aCheckoutInput() {
         return CheckoutInput.builder()
-                .shoppingCartId(DEFAULT_SHOPPING_CART_ID.toString())
+                .shoppingCartId(DEFAULT_SHOPPING_CART_ID.value())
                 .paymentMethod("CREDIT_CARD")
                 .shipping(ShippingInput.builder()
                         .recipient(RecipientData.builder()

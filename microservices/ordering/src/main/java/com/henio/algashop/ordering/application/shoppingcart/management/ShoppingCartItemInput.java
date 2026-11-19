@@ -9,7 +9,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class ShoppingCartItemInput {
-    public String shoppingCartId;
+    public UUID shoppingCartId;
     private UUID productId;
     private int quantity;
 }

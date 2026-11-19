@@ -14,7 +14,7 @@ public class ShoppingCartPersistenceEntityTestDataBuilder {
 
     public static ShoppingCartPersistenceEntity.ShoppingCartPersistenceEntityBuilder existingShoppingCart() {
         return ShoppingCartPersistenceEntity.builder()
-                .id(1L)
+                .id(UUID.randomUUID())
                 .customer(CustomerPersistenceEntityTestDataBuilder.aCustomer().build())
                 .totalItems(3)
                 .totalAmount(new BigDecimal(1250))
@@ -27,7 +27,7 @@ public class ShoppingCartPersistenceEntityTestDataBuilder {
 
     public static ShoppingCartItemPersistenceEntity.ShoppingCartItemPersistenceEntityBuilder existingItem() {
         return ShoppingCartItemPersistenceEntity.builder()
-                .id(1L)
+                .id(UUID.randomUUID())
                 .price(new BigDecimal(500))
                 .quantity(2)
                 .totalAmount(new BigDecimal(1000))
@@ -37,7 +37,7 @@ public class ShoppingCartPersistenceEntityTestDataBuilder {
 
     public static ShoppingCartItemPersistenceEntity.ShoppingCartItemPersistenceEntityBuilder existingItemAlt() {
         return ShoppingCartItemPersistenceEntity.builder()
-                .id(2L)
+                .id(UUID.randomUUID())
                 .price(new BigDecimal(250))
                 .quantity(1)
                 .totalAmount(new BigDecimal(250))

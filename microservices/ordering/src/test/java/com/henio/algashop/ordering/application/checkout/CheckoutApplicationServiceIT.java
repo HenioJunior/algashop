@@ -106,7 +106,7 @@ class CheckoutApplicationServiceIT {
         shoppingCarts.add(shoppingCart);
 
         CheckoutInput input = CheckoutInputTestDataBuilder.aCheckoutInput()
-                .shoppingCartId(shoppingCart.id().value().toString())
+                .shoppingCartId(shoppingCart.id().value())
                 .build();
 
 
@@ -146,7 +146,7 @@ class CheckoutApplicationServiceIT {
     @Test
     void shouldThrowShoppingCartNotFoundExceptionWhenCheckoutWithNonExistingShoppingCart() {
         CheckoutInput input = CheckoutInputTestDataBuilder.aCheckoutInput()
-                .shoppingCartId(DEFAULT_SHOPPING_CART_ID.value().toString())
+                .shoppingCartId(DEFAULT_SHOPPING_CART_ID.value())
                 .build();
 
         Assertions.assertThatExceptionOfType(ShoppingCartNotFoundException.class)
@@ -162,7 +162,7 @@ class CheckoutApplicationServiceIT {
         shoppingCarts.add(shoppingCart);
 
         CheckoutInput input = CheckoutInputTestDataBuilder.aCheckoutInput()
-                .shoppingCartId(shoppingCart.id().value().toString())
+                .shoppingCartId(shoppingCart.id().value())
                 .build();
 
         Assertions.assertThatExceptionOfType(ShoppingCartCantProceedToCheckoutException.class)
@@ -183,7 +183,7 @@ class CheckoutApplicationServiceIT {
         shoppingCarts.add(shoppingCart);
 
         CheckoutInput input = CheckoutInputTestDataBuilder.aCheckoutInput()
-                .shoppingCartId(shoppingCart.id().value().toString())
+                .shoppingCartId(shoppingCart.id().value())
                 .build();
 
         Assertions.assertThatExceptionOfType(ShoppingCartCantProceedToCheckoutException.class)

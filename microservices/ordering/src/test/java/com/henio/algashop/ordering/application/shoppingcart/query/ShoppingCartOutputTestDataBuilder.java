@@ -11,7 +11,7 @@ import java.util.List;
 public class ShoppingCartOutputTestDataBuilder {
     public static ShoppingCartOutput.ShoppingCartOutputBuilder aShoppingCart() {
         return ShoppingCartOutput.builder()
-                .id(new ShoppingCartId().value().toString())
+                .id(new ShoppingCartId().value())
                 .customerId(new CustomerId().value())
                 .totalItems(3)
                 .totalAmount(new BigDecimal(1250))
@@ -23,7 +23,7 @@ public class ShoppingCartOutputTestDataBuilder {
 
     public static ShoppingCartItemOutput.ShoppingCartItemOutputBuilder existingItem() {
         return ShoppingCartItemOutput.builder()
-                .id(new ShoppingCartItemId().value().toString())
+                .id(new ShoppingCartItemId().value())
                 .productId(new ProductId().value())
                 .price(new BigDecimal(500))
                 .quantity(2)
@@ -34,7 +34,7 @@ public class ShoppingCartOutputTestDataBuilder {
 
     public static ShoppingCartItemOutput.ShoppingCartItemOutputBuilder existingItemAlt() {
         return ShoppingCartItemOutput.builder()
-                .id(new ShoppingCartId().value().toString())
+                .id(new ShoppingCartId().value())
                 .productId(new ProductId().value())
                 .price(new BigDecimal(250))
                 .quantity(1)

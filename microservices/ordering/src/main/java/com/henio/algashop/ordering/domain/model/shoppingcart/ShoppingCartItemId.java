@@ -1,21 +1,21 @@
 package com.henio.algashop.ordering.domain.model.shoppingcart;
 
 import com.henio.algashop.ordering.domain.model.shared.IdGenerator;
-import io.hypersistence.tsid.TSID;
 
 import java.util.Objects;
+import java.util.UUID;
 
-public record ShoppingCartItemId(TSID value) {
+public record ShoppingCartItemId(UUID value) {
 
     public ShoppingCartItemId {
         Objects.requireNonNull(value,"Shopping cart item id cannot be null.");
     }
 
     public ShoppingCartItemId() {
-        this(IdGenerator.generateTSID());
+        this(IdGenerator.generateTimeBasedUUID());
     }
 
     public static ShoppingCartItemId generate() {
-        return new ShoppingCartItemId(IdGenerator.generateTSID());
+        return new ShoppingCartItemId(IdGenerator.generateTimeBasedUUID());
     }
 }

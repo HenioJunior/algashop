@@ -6,7 +6,6 @@ import com.henio.algashop.ordering.application.shoppingcart.query.ShoppingCartQu
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
 import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartNotFoundException;
 import com.henio.algashop.ordering.presentation.shoppingCart.ShoppingCartController;
-import io.hypersistence.tsid.TSID;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
@@ -31,13 +30,13 @@ public class ShoppingCartBase {
     @MockitoBean
     private ShoppingCartQueryService queryService;
 
-    public static final String validShoppingCartId = "01226N0640J7Q";
+    public static final UUID validShoppingCartId = UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
 
     public static final UUID validCustomerId = UUID.randomUUID();
 
-    public static final String notFoundShoppingCartId = "01226N0640J7R";
+    public static final UUID notFoundShoppingCartId = UUID.fromString("550e8400-e29b-41d4-a716-446655440099");
 
-    ShoppingCartId shoppingCartId = new ShoppingCartId(TSID.from(validShoppingCartId));
+    ShoppingCartId shoppingCartId = new ShoppingCartId(validShoppingCartId);
 
     @BeforeEach
     void setUp() {
@@ -58,7 +57,7 @@ public class ShoppingCartBase {
                                 .build());
 
         Mockito.when(queryService.findById(notFoundShoppingCartId))
-                .thenThrow(new ShoppingCartNotFoundException(new ShoppingCartId(TSID.from(notFoundShoppingCartId))));
+                .thenThrow(new ShoppingCartNotFoundException(new ShoppingCartId(notFoundShoppingCartId)));
 
         Mockito.when(managementService.createNew(Mockito.any(UUID.class)))
                 .thenReturn(shoppingCartId);

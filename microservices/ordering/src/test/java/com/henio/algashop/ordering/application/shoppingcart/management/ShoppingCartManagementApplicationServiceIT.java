@@ -68,7 +68,7 @@ class ShoppingCartManagementApplicationServiceIT {
         Mockito.when(productCatalogService.ofId(product.id())).thenReturn(Optional.of(product));
 
         ShoppingCartItemInput input = ShoppingCartItemInput.builder()
-                .shoppingCartId(shoppingCart.id().value().toString())
+                .shoppingCartId(shoppingCart.id().value())
                 .productId(product.id().value())
                 .quantity(2)
                 .build();
@@ -95,7 +95,7 @@ class ShoppingCartManagementApplicationServiceIT {
 
     @Test
     void shouldThrowShoppingCartNotFoundExceptionWhenAddingItemToNonExistingShoppingCart() {
-        String nonExistingCartId = IdGenerator.generateTSID().toString();
+        UUID nonExistingCartId = IdGenerator.generateTimeBasedUUID();
         Product product = ProductTestDataBuilder.aProduct().inStock(true).build();
         Mockito.when(productCatalogService.ofId(product.id())).thenReturn(Optional.of(product));
 
@@ -121,7 +121,7 @@ class ShoppingCartManagementApplicationServiceIT {
         Mockito.when(productCatalogService.ofId(Mockito.any())).thenReturn(Optional.empty());
 
         ShoppingCartItemInput input = ShoppingCartItemInput.builder()
-                .shoppingCartId(shoppingCart.id().value().toString())
+                .shoppingCartId(shoppingCart.id().value())
                 .productId(rawProductId)
                 .quantity(1)
                 .build();
@@ -141,7 +141,7 @@ class ShoppingCartManagementApplicationServiceIT {
         Mockito.when(productCatalogService.ofId(outOfStockProduct.id())).thenReturn(Optional.of(outOfStockProduct));
 
         ShoppingCartItemInput input = ShoppingCartItemInput.builder()
-                .shoppingCartId(shoppingCart.id().value().toString())
+                .shoppingCartId(shoppingCart.id().value())
                 .productId(outOfStockProduct.id().value())
                 .quantity(1)
                 .build();
@@ -162,14 +162,14 @@ class ShoppingCartManagementApplicationServiceIT {
         Mockito.when(productCatalogService.ofId(product.id())).thenReturn(Optional.of(product));
 
         ShoppingCartItemInput input = ShoppingCartItemInput.builder()
-                .shoppingCartId(shoppingCart.id().value().toString())
+                .shoppingCartId(shoppingCart.id().value())
                 .productId(product.id().value())
                 .quantity(2)
                 .build();
 
         service.addItem(input);
 
-        service.empty(shoppingCart.id().value().toString());
+        service.empty(shoppingCart.id().value());
 
         ShoppingCart updatedCart = shoppingCarts.ofId(shoppingCart.id())
                 .orElseThrow();
@@ -201,7 +201,7 @@ class ShoppingCartManagementApplicationServiceIT {
         Mockito.when(productCatalogService.ofId(product.id())).thenReturn(Optional.of(product));
 
         ShoppingCartItemInput input = ShoppingCartItemInput.builder()
-                .shoppingCartId(shoppingCart.id().value().toString())
+                .shoppingCartId(shoppingCart.id().value())
                 .productId(product.id().value())
                 .quantity(2)
                 .build();
@@ -216,8 +216,8 @@ class ShoppingCartManagementApplicationServiceIT {
                 .next();
 
         service.removeItem(
-                shoppingCart.id().value().toString(),
-                item.id().value().toString()
+                shoppingCart.id().value(),
+                item.id().value()
         );
 
         ShoppingCart updatedCart = shoppingCarts.ofId(shoppingCart.id())

@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface ShoppingCartPersistenceEntityRepository extends JpaRepository<ShoppingCartPersistenceEntity, Long> {
+public interface ShoppingCartPersistenceEntityRepository extends JpaRepository<ShoppingCartPersistenceEntity, UUID> {
     Optional<ShoppingCartPersistenceEntity> findByCustomer_Id(UUID value);
 
     @Modifying

@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/shopping-carts")
 @RequiredArgsConstructor
@@ -22,35 +24,35 @@ public class ShoppingCartController {
     @ResponseStatus(HttpStatus.CREATED)
     public ShoppingCartOutput create(@RequestBody @Valid ShoppingCartInput input) {
         ShoppingCartId shoppingCartId = managementService.createNew(input.getCustomerId());
-        return queryService.findById(shoppingCartId.value().toString());
+        return queryService.findById(shoppingCartId.value());
     }
 
     @GetMapping("/{shoppingCartId}")
-    public ShoppingCartOutput getById(@PathVariable String shoppingCartId) {
+    public ShoppingCartOutput getById(@PathVariable UUID shoppingCartId) {
         return queryService.findById(shoppingCartId);
     }
 
     @GetMapping("/{shoppingCartId}/items")
-    public ShoppingCartItemListModel getItems(@PathVariable String shoppingCartId) {
+    public ShoppingCartItemListModel getItems(@PathVariable UUID shoppingCartId) {
         var items = queryService.findById(shoppingCartId).getItems();
         return new ShoppingCartItemListModel(items);
     }
 
     @DeleteMapping("/{shoppingCartId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String shoppingCartId) {
+    public void delete(@PathVariable UUID shoppingCartId) {
         managementService.delete(shoppingCartId);
     }
 
     @DeleteMapping("/{shoppingCartId}/items")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void empty(@PathVariable String shoppingCartId) {
+    public void empty(@PathVariable UUID shoppingCartId) {
         managementService.empty(shoppingCartId);
     }
 
     @PostMapping("/{shoppingCartId}/items")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void addItem(@PathVariable String shoppingCartId,
+    public void addItem(@PathVariable UUID shoppingCartId,
                         @RequestBody @Valid ShoppingCartItemInput input) {
         input.setShoppingCartId(shoppingCartId);
         managementService.addItem(input);
@@ -58,8 +60,8 @@ public class ShoppingCartController {
 
     @DeleteMapping("/{shoppingCartId}/items/{itemId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeItem(@PathVariable String shoppingCartId,
-                           @PathVariable String itemId) {
+    public void removeItem(@PathVariable UUID shoppingCartId,
+                           @PathVariable UUID itemId) {
         managementService.removeItem(shoppingCartId, itemId);
     }
 }

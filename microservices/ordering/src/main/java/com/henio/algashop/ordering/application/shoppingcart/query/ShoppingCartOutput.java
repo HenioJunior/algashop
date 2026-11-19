@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class ShoppingCartOutput {
-    private String id;
+    private UUID id;
     private UUID customerId;
     private Integer totalItems;
     private BigDecimal totalAmount;

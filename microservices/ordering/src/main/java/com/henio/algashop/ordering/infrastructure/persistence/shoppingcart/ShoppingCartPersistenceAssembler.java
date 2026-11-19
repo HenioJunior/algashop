@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -18,7 +19,7 @@ public class ShoppingCartPersistenceAssembler {
 
     public ShoppingCartPersistenceEntity fromDomain(ShoppingCart shoppingCart) {
         ShoppingCartPersistenceEntity entity = ShoppingCartPersistenceEntity.builder()
-                .id(shoppingCart.id().value().toLong())
+                .id(shoppingCart.id().value())
                 .customer(getCustomerById(shoppingCart))
                 .totalAmount(shoppingCart.totalAmount().value())
                 .totalItems(shoppingCart.totalItems().value())
@@ -34,7 +35,7 @@ public class ShoppingCartPersistenceAssembler {
 
     public void merge(ShoppingCartPersistenceEntity entity,
                       ShoppingCart shoppingCart) {
-        entity.setId(shoppingCart.id().value().toLong());
+        entity.setId(shoppingCart.id().value());
         entity.setCustomer(getCustomerById(shoppingCart));
         entity.setTotalAmount(shoppingCart.totalAmount().value());
         entity.setTotalItems(shoppingCart.totalItems().value());
@@ -49,8 +50,8 @@ public class ShoppingCartPersistenceAssembler {
             ShoppingCartPersistenceEntity entity,
             ShoppingCart shoppingCart
     ) {
-        Set<Long> domainItemIds = shoppingCart.items().stream()
-                .map(item -> item.id().value().toLong())
+        Set<UUID> domainItemIds = shoppingCart.items().stream()
+                .map(item -> item.id().value())
                 .collect(Collectors.toSet());
 
         entity.getItems().removeIf(
@@ -60,7 +61,7 @@ public class ShoppingCartPersistenceAssembler {
         shoppingCart.items().forEach(domainItem -> entity.getItems().stream()
                 .filter(persistenceItem ->
                         persistenceItem.getId().equals(
-                                domainItem.id().value().toLong()
+                                domainItem.id().value()
                         )
                 )
                 .findFirst()
@@ -93,7 +94,7 @@ public class ShoppingCartPersistenceAssembler {
 
     private ShoppingCartItemPersistenceEntity mergeItem(ShoppingCartItemPersistenceEntity persistenceEntity, ShoppingCartItem shoppingCartItem
     ) {
-        persistenceEntity.setId(shoppingCartItem.id().value().toLong());
+        persistenceEntity.setId(shoppingCartItem.id().value());
         persistenceEntity.setProductId(shoppingCartItem.productId().value());
         persistenceEntity.setProductName(shoppingCartItem.name().value());
         persistenceEntity.setPrice(shoppingCartItem.price().value());

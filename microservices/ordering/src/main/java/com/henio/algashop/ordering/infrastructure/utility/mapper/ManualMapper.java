@@ -139,7 +139,7 @@ public class ManualMapper implements Mapper {
             ShoppingCartPersistenceEntity entity
     ) {
         ShoppingCartOutput output = new ShoppingCartOutput();
-        output.setId(toTsidString(entity.getId()));
+        output.setId(entity.getId());
         output.setCustomerId(entity.getCustomerId());
         output.setTotalItems(entity.getTotalItems());
         output.setTotalAmount(entity.getTotalAmount());
@@ -155,7 +155,7 @@ public class ManualMapper implements Mapper {
 
     private ShoppingCartItemOutput toShoppingCartItemOutput(ShoppingCartItemPersistenceEntity item) {
         ShoppingCartItemOutput output = new ShoppingCartItemOutput();
-        output.setId(toTsidString(item.getId()));
+        output.setId(item.getId());
         output.setProductId(item.getProductId());
         output.setName(item.getProductName());
         output.setPrice(item.getPrice());

@@ -1,3 +1,4 @@
+
 package contracts.shoppingCart
 
 import org.springframework.cloud.contract.spec.Contract
@@ -22,15 +23,15 @@ Contract.make {
             contentType('application/json')
         }
         body([
-                id: $(consumer('01226N0640J7Q'),
-                        producer(regex('[0-9A-HJKMNP-TV-Z]{13}'))),
+                id: $(consumer('550e8400-e29b-41d4-a716-446655440000'),
+                        producer(regex(uuid()))),
                 customerId: anyUuid(),
                 totalItems: 3,
                 totalAmount: 1250.00,
                 items: [
                         [
-                                id: $(consumer('0S91DYB50M41R'),
-                                        producer(regex('[0-9A-HJKMNP-TV-Z]{13}'))),
+                                id: $(consumer('550e8400-e29b-41d4-a716-446655440001'),
+                                        producer(regex(uuid()))),
                                 productId: anyUuid(),
                                 name: "Notebook",
                                 price: 500.00,
@@ -39,8 +40,8 @@ Contract.make {
                                 available: anyBoolean()
                         ],
                         [
-                                id: $(consumer('0S91DYB50M41S'),
-                                        producer(regex('[0-9A-HJKMNP-TV-Z]{13}'))),
+                                id: $(consumer('550e8400-e29b-41d4-a716-446655440002'),
+                                        producer(regex(uuid()))),
                                 productId: anyUuid(),
                                 name: "Mouse pad",
                                 price: 250.00,

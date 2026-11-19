@@ -26,7 +26,7 @@ public class ShoppingCartPersistenceEntity
 
     @Id
     @EqualsAndHashCode.Include
-    private Long id;
+    private UUID id;
 
     @JoinColumn(name = "customer_id", nullable = false)
     @ManyToOne(optional = false)
@@ -54,7 +54,7 @@ public class ShoppingCartPersistenceEntity
 
     @Builder(toBuilder = true)
     public ShoppingCartPersistenceEntity(
-            Long id,
+            UUID id,
             CustomerPersistenceEntity customer,
             BigDecimal totalAmount,
             Integer totalItems,

@@ -53,12 +53,12 @@ class ShoppingCartQueryServiceIT {
         shoppingCarts.add(shoppingCart);
 
         ShoppingCartOutput shoppingCartFromDb =
-                service.findById(shoppingCart.id().value().toString());
+                service.findById(shoppingCart.id().value());
 
         assertThat(shoppingCartFromDb).isNotNull();
 
         assertThat(shoppingCartFromDb.getId())
-                .isEqualTo(shoppingCart.id().value().toString());
+                .isEqualTo(shoppingCart.id().value());
 
         assertThat(shoppingCartFromDb.getCustomerId())
                 .isEqualTo(customer.id().value());
@@ -95,7 +95,7 @@ class ShoppingCartQueryServiceIT {
 
     @Test
     void shouldThrowExceptionWhenShoppingCartNotFoundById() {
-        assertThatThrownBy(() -> service.findById(new ShoppingCartId().value().toString()))
+        assertThatThrownBy(() -> service.findById(new ShoppingCartId().value()))
                 .isInstanceOf(ShoppingCartNotFoundException.class);
     }
 
@@ -127,7 +127,7 @@ class ShoppingCartQueryServiceIT {
         assertThat(shoppingCartFromDb).isNotNull();
 
         assertThat(shoppingCartFromDb.getId())
-                .isEqualTo(shoppingCart.id().value().toString());
+                .isEqualTo(shoppingCart.id().value());
 
         assertThat(shoppingCartFromDb.getCustomerId())
                 .isEqualTo(shoppingCart.customerId().value());

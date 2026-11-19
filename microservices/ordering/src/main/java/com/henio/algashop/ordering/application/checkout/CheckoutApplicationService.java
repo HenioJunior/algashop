@@ -4,17 +4,16 @@ import com.henio.algashop.ordering.domain.model.commons.ZipCode;
 import com.henio.algashop.ordering.domain.model.customer.Customer;
 import com.henio.algashop.ordering.domain.model.customer.Customers;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerNotFoundException;
-import com.henio.algashop.ordering.domain.model.order.service.CheckoutService;
 import com.henio.algashop.ordering.domain.model.order.Order;
 import com.henio.algashop.ordering.domain.model.order.Orders;
 import com.henio.algashop.ordering.domain.model.order.PaymentMethod;
+import com.henio.algashop.ordering.domain.model.order.service.CheckoutService;
 import com.henio.algashop.ordering.domain.model.order.shipping.OriginAddressService;
 import com.henio.algashop.ordering.domain.model.order.shipping.ShippingCostService;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
-import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartNotFoundException;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCarts;
-import io.hypersistence.tsid.TSID;
+import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,7 +39,7 @@ public class CheckoutApplicationService {
     public String checkout(CheckoutInput input) {
         Objects.requireNonNull(input, "CheckoutInput must not be null");
 
-        ShoppingCartId shoppingCartId = new ShoppingCartId(TSID.from(input.getShoppingCartId()));
+        ShoppingCartId shoppingCartId = new ShoppingCartId(input.getShoppingCartId());
 
         PaymentMethod paymentMethod = PaymentMethod.valueOf(input.getPaymentMethod());
 

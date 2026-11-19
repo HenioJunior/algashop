@@ -6,10 +6,12 @@ import com.henio.algashop.ordering.domain.model.product.Product;
 import com.henio.algashop.ordering.domain.model.product.ProductCatalogService;
 import com.henio.algashop.ordering.domain.model.product.ProductId;
 import com.henio.algashop.ordering.domain.model.product.ProductNotFoundException;
-import com.henio.algashop.ordering.domain.model.shoppingcart.*;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartItemId;
+import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCarts;
 import com.henio.algashop.ordering.domain.model.shoppingcart.exception.ShoppingCartNotFoundException;
 import com.henio.algashop.ordering.domain.model.shoppingcart.service.ShoppingService;
-import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +30,7 @@ public class ShoppingCartManagementApplicationService {
     @Transactional
     public void addItem(ShoppingCartItemInput input) {
         Objects.requireNonNull(input, "Input cannot be null");
-        ShoppingCartId shoppingCartId = new ShoppingCartId(TSID.from(input.getShoppingCartId()));
+        ShoppingCartId shoppingCartId = new ShoppingCartId(input.getShoppingCartId());
         ProductId productId = new ProductId(input.getProductId());
 
         ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId)
@@ -57,20 +59,20 @@ public class ShoppingCartManagementApplicationService {
     }
 
     @Transactional
-    public void removeItem(String rawShoppingCartId, String rawShoppingCartItemId) {
+    public void removeItem(UUID rawShoppingCartId, UUID rawShoppingCartItemId) {
         Objects.requireNonNull(rawShoppingCartId);
         Objects.requireNonNull(rawShoppingCartItemId);
-        ShoppingCartId shoppingCartId = new ShoppingCartId(TSID.from(rawShoppingCartId));
+        ShoppingCartId shoppingCartId = new ShoppingCartId(rawShoppingCartId);
         ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId)
                 .orElseThrow(()-> new ShoppingCartNotFoundException(shoppingCartId));
-        shoppingCart.removeItem(new ShoppingCartItemId(TSID.from(rawShoppingCartItemId)));
+        shoppingCart.removeItem(new ShoppingCartItemId(rawShoppingCartItemId));
         shoppingCarts.add(shoppingCart);
     }
 
     @Transactional
-    public void empty(String rawShoppingCartId) {
+    public void empty(UUID rawShoppingCartId) {
         Objects.requireNonNull(rawShoppingCartId);
-        ShoppingCartId shoppingCartId = new ShoppingCartId(TSID.from(rawShoppingCartId));
+        ShoppingCartId shoppingCartId = new ShoppingCartId(rawShoppingCartId);
         ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId)
                 .orElseThrow(()-> new ShoppingCartNotFoundException(shoppingCartId));
         shoppingCart.empty();
@@ -78,9 +80,9 @@ public class ShoppingCartManagementApplicationService {
     }
 
     @Transactional
-    public void delete(String rawShoppingCartId) {
+    public void delete(UUID rawShoppingCartId) {
         Objects.requireNonNull(rawShoppingCartId);
-        ShoppingCartId shoppingCartId = new ShoppingCartId(TSID.from(rawShoppingCartId));
+        ShoppingCartId shoppingCartId = new ShoppingCartId(rawShoppingCartId);
         ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId)
                 .orElseThrow(()-> new ShoppingCartNotFoundException(shoppingCartId));
         shoppingCarts.remove(shoppingCart);

@@ -1,3 +1,4 @@
+
 package contracts.shoppingCart
 
 import org.springframework.cloud.contract.spec.Contract
@@ -5,7 +6,7 @@ import org.springframework.cloud.contract.spec.Contract
 Contract.make {
     request {
         method GET()
-        urlPath("/api/v1/shopping-carts/01226N0640J7Q")
+        urlPath("/api/v1/shopping-carts/550e8400-e29b-41d4-a716-446655440000")
     }
     response {
         status 200
@@ -19,8 +20,7 @@ Contract.make {
                 totalAmount: 1250.00,
                 items: [
                         [
-                                id: $(consumer('0S91DYB50M41R'),
-                                        producer(regex('[0-9A-HJKMNP-TV-Z]{13}'))),
+                                id: anyUuid(),
                                 productId: anyUuid(),
                                 name: "Notebook",
                                 price: 500.00,
@@ -29,8 +29,7 @@ Contract.make {
                                 available: anyBoolean()
                         ],
                         [
-                                id: $(consumer('0S91DYB50M41S'),
-                                        producer(regex('[0-9A-HJKMNP-TV-Z]{13}'))),
+                                id: anyUuid(),
                                 productId: anyUuid(),
                                 name: "Mouse pad",
                                 price: 250.00,

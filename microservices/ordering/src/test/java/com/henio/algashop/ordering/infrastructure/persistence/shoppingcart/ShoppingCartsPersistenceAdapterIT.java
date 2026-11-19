@@ -77,7 +77,7 @@ class ShoppingCartsPersistenceAdapterIT {
         persistenceAdapter.remove(shoppingCart.id());
 
         assertThat(persistenceAdapter.exists(shoppingCart.id())).isFalse();
-        assertThat(entityRepository.findById(shoppingCart.id().value().toLong())).isEmpty();
+        assertThat(entityRepository.findById(shoppingCart.id().value())).isEmpty();
     }
 
     @Test

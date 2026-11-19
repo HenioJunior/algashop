@@ -6,12 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class CheckoutInput {
-    private String shoppingCartId;
+    private UUID shoppingCartId;
     private String paymentMethod;
     private ShippingInput shipping;
     private BillingData billing;
