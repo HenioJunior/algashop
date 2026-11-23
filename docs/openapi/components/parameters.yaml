@@ -74,7 +74,6 @@ customerIdQuery:
     format: uuid
   example: '550e8400-e29b-41d4-a716-446655440000'
 
-
 shoppingCartId:
   name: shoppingCartId
   in: path
@@ -82,7 +81,8 @@ shoppingCartId:
   description: Unique shopping cart identifier
   schema:
     type: string
-  example: '01226N0693HDE'
+    format: uuid
+  example: 'a3d7b8e2-4f91-4c6a-8d25-1e9f0b7c6324'
 
 itemId:
   name: itemId
@@ -91,5 +91,7 @@ itemId:
   description: Unique shopping cart item identifier
   schema:
     type: string
-  example: '01226N0693HDG'
+    format: uuid
+  example: 'b6f4a2c9-8d13-4e75-9a20-3c7d1f5e8042'
+
 

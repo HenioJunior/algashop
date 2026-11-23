@@ -1,14 +1,16 @@
 ShoppingCart:
+  type: object
   required:
-  - id
-  - totalAmount
-  - totalItems
-  - customerId
-  - items
+    - id
+    - totalAmount
+    - totalItems
+    - customerId
+    - items
   properties:
     id:
       type: string
-      example: 01226N0693HDE
+      format: uuid
+      example: 'a3d7b8e2-4f91-4c6a-8d25-1e9f0b7c6324'
     totalAmount:
       type: number
       example: 41.98
@@ -23,19 +25,22 @@ ShoppingCart:
       type: array
       items:
         $ref: shopping-cart.yaml#/ShoppingCartItem
+
 ShoppingCartItem:
+  type: object
   required:
-  - id
-  - productId
-  - name
-  - price
-  - available
-  - quantity
-  - totalAmount
+    - id
+    - productId
+    - name
+    - price
+    - available
+    - quantity
+    - totalAmount
   properties:
     id:
       type: string
-      example: 01226N0640J7F
+      format: uuid
+      example: 'b6f4a2c9-8d13-4e75-9a20-3c7d1f5e8042'
     productId:
       type: string
       format: uuid
@@ -55,19 +60,22 @@ ShoppingCartItem:
     totalAmount:
       type: number
       example: 140
+
 ShoppingCartItemList:
   type: object
   required:
-  - items
+    - items
   properties:
     items:
       type: array
       items:
         $ref: shopping-cart.yaml#/ShoppingCartItem
+
 ShoppingCartItemInput:
+  type: object
   required:
-  - quantity
-  - productId
+    - quantity
+    - productId
   properties:
     quantity:
       type: integer
@@ -76,9 +84,11 @@ ShoppingCartItemInput:
       type: string
       format: uuid
       example: '123e4567-e89b-42d3-a456-426614174000'
+
 ShoppingCartInput:
+  type: object
   required:
-  - customerId
+    - customerId
   properties:
     customerId:
       type: string

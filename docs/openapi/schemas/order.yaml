@@ -39,7 +39,8 @@ OrderWithShoppingCartInput:
   properties:
     shoppingCartId:
       type: string
-      example: 01226N0693HDG
+      format: uuid
+      example: 'a3d7b8e2-4f91-4c6a-8d25-1e9f0b7c6324'
       nullable: false
     paymentMethod:
       type: string
