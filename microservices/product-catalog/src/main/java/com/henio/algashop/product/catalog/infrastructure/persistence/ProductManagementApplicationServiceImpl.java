@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Transactional
@@ -29,11 +30,13 @@ public class ProductManagementApplicationServiceImpl implements ProductManagemen
                         "Category not found: " + productInput.getCategoryId()));
 
         Product product = Product.builder()
+                .addedAt(OffsetDateTime.now())
                 .name(productInput.getName())
                 .brand(productInput.getBrand())
                 .regularPrice(productInput.getRegularPrice())
                 .salePrice(productInput.getSalePrice())
-                .enabled(productInput.getEnabled())
+                .inStock(false)
+                .enabled(true)
                 .category(category)
                 .description(productInput.getDescription())
                 .build();
@@ -57,7 +60,7 @@ public class ProductManagementApplicationServiceImpl implements ProductManagemen
         product.setBrand(productInput.getBrand());
         product.setRegularPrice(productInput.getRegularPrice());
         product.setSalePrice(productInput.getSalePrice());
-        product.setEnabled(productInput.getEnabled());
+        product.setInStock(true);
         product.setCategory(category);
         product.setDescription(productInput.getDescription());
         productRepository.save(product);
@@ -68,7 +71,6 @@ public class ProductManagementApplicationServiceImpl implements ProductManagemen
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Product not found: " + productId));
-
         product.setEnabled(false);
         productRepository.save(product);
     }

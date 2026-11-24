@@ -24,8 +24,6 @@ public class ProductInput {
     @NotNull
     private BigDecimal salePrice;
     @NotNull
-    private Boolean enabled;
-    @NotNull
     private UUID categoryId;
 
     private String description;

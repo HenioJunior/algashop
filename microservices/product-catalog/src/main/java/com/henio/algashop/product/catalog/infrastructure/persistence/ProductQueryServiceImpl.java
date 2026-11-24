@@ -26,7 +26,6 @@ public class ProductQueryServiceImpl implements ProductQueryService {
     public ProductDetailOutput findById(UUID productId) {
         Product product = productRepository.findById(productId).orElseThrow(
                 () -> new ResourceNotFoundException("Product not found: " + productId));
-
         return ProductDetailOutput.builder()
                 .id(product.getId())
                 .addedAt(product.getAddedAt())

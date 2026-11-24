@@ -36,7 +36,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public Page<ProductDetailOutput> findAll(
+    public Page<ProductDetailOutput> findAllPage(
             @PageableDefault(
                     size = 20,
                     sort = "name",

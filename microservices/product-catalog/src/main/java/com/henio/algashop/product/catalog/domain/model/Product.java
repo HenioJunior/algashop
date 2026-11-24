@@ -1,9 +1,7 @@
 package com.henio.algashop.product.catalog.domain.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -18,8 +16,9 @@ import java.util.UUID;
 public class Product {
 
     @Id
-    private UUID id = UUID.randomUUID();
-    private OffsetDateTime addedAt = OffsetDateTime.now();
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+    private OffsetDateTime addedAt;
     private String name;
     private String brand;
     private BigDecimal regularPrice;
@@ -29,4 +28,12 @@ public class Product {
     private String description;
     @ManyToOne
     private Category category;
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public boolean inStock() {
+        return inStock;
+    }
 }

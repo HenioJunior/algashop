@@ -28,6 +28,7 @@ public class CategoryQueryServiceImpl implements CategoryQueryService {
         return CategoryDetailOutput.builder()
                 .id(category.getId())
                 .name(category.getName())
+                .enabled(category.isEnabled())
                 .build();
     }
 
@@ -39,6 +40,7 @@ public class CategoryQueryServiceImpl implements CategoryQueryService {
                 .map(category -> CategoryDetailOutput.builder()
                         .id(category.getId())
                         .name(category.getName())
+                        .enabled(category.isEnabled())
                         .build())
                 .toList();
     }

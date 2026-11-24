@@ -22,7 +22,7 @@ public class CategoryManagementApplicationServiceImpl implements CategoryManagem
     public UUID create(CategoryInput categoryInput) {
         Category category = Category.builder()
                 .name(categoryInput.getName())
-                .enabled(categoryInput.isEnabled())
+                .enabled(true)
                 .build();
 
         categoryRepository.save(category);
@@ -40,8 +40,8 @@ public class CategoryManagementApplicationServiceImpl implements CategoryManagem
 
     @Override
     public void disable(UUID categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found: " + categoryId));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(
+                () -> new ResourceNotFoundException("Category not found: " + categoryId));
         category.setEnabled(false);
         categoryRepository.save(category);
     }

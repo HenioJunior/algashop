@@ -1,7 +1,6 @@
 package com.henio.algashop.product.catalog.application.category.management;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @NoArgsConstructor
@@ -11,10 +10,4 @@ import lombok.*;
 public class CategoryInput {
     @NotBlank
     private String name;
-    @NotNull
-    private Boolean enabled;
-
-    public boolean isEnabled() {
-        return enabled;
-    }
 }

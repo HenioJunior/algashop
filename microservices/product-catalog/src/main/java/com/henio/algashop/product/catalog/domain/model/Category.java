@@ -1,6 +1,8 @@
 package com.henio.algashop.product.catalog.domain.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
@@ -14,7 +16,12 @@ import java.util.UUID;
 public class Category {
 
     @Id
-    private UUID id = UUID.randomUUID();
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String name;
     private Boolean enabled;
+
+    public Boolean isEnabled() {
+        return enabled;
+    }
 }
