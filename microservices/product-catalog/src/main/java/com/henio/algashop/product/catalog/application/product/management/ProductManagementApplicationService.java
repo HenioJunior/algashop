@@ -1,22 +1,9 @@
 package com.henio.algashop.product.catalog.application.product.management;
 
-import org.springframework.stereotype.Service;
-
 import java.util.UUID;
 
-@Service
-public class ProductManagementApplicationService {
-
-    public UUID create(ProductInput productInput) {
-
-        return null;
-    }
-
-    public void update(UUID productId, ProductInput productInput) {
-
-    }
-
-    public void disable(UUID productId) {
-
-    }
+public interface ProductManagementApplicationService {
+    UUID create(ProductInput productInput);
+    void update(UUID productId, ProductInput productInput);
+    void disable(UUID productId);
 }

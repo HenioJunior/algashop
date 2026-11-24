@@ -2,13 +2,10 @@ package com.henio.algashop.product.catalog.application.category.management;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Data
 @Builder
 public class CategoryInput {
@@ -16,4 +13,8 @@ public class CategoryInput {
     private String name;
     @NotNull
     private Boolean enabled;
+
+    public boolean isEnabled() {
+        return enabled;
+    }
 }

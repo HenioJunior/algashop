@@ -3,7 +3,6 @@ package com.henio.algashop.product.catalog.contract.base;
 import com.henio.algashop.product.catalog.application.ResourceNotFoundException;
 import com.henio.algashop.product.catalog.application.product.management.ProductInput;
 import com.henio.algashop.product.catalog.application.product.management.ProductManagementApplicationService;
-import com.henio.algashop.product.catalog.application.product.query.PageModel;
 import com.henio.algashop.product.catalog.application.product.query.ProductDetailOutput;
 import com.henio.algashop.product.catalog.application.query.ProductDetailOutputTestDataBuilder;
 import com.henio.algashop.product.catalog.application.product.query.ProductQueryService;
@@ -14,6 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
@@ -28,12 +29,11 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 
 @WebMvcTest(controllers = ProductController.class)
 @ExtendWith(RestDocumentationExtension.class)
-public class ProductBase {
+public abstract class ProductBase {
 
     @Autowired
     private WebApplicationContext context;
@@ -93,7 +93,7 @@ public class ProductBase {
 
     private void mockInvalidProductFindById() {
         Mockito.when(productQueryService.findById(invalidProductId))
-                .thenThrow(new ResourceNotFoundException());
+                .thenThrow(new ResourceNotFoundException("Product not found: " + invalidProductId));
     }
 
     private void mockCreateProduct() {
@@ -105,20 +105,16 @@ public class ProductBase {
     }
 
     private void mockFilterProducts() {
-        Mockito.when(productQueryService.filter(anyInt(), anyInt()))
-                .then((answer) -> {
-                    Integer size = answer.getArgument(0);
-                    return PageModel.<ProductDetailOutput>builder()
-                            .number(0)
-                            .size(size)
-                            .totalPages(1)
-                            .totalElements(2)
-                            .content(
-                                    List.of (
-                                            ProductDetailOutputTestDataBuilder.aProduct().build(),
-                                            ProductDetailOutputTestDataBuilder.aProductAlt1().build()
-                                    )
-                            ).build();
+        Mockito.when(productQueryService.findAllPage(any(Pageable.class)))
+                .thenAnswer(invocation -> {
+                    Pageable pageable = invocation.getArgument(0);
+
+                    List<ProductDetailOutput> products = List.of(
+                            ProductDetailOutputTestDataBuilder.aProduct().build(),
+                            ProductDetailOutputTestDataBuilder.aProductAlt1().build()
+                    );
+
+                    return new PageImpl<>(products, pageable, products.size());
                 });
     }
 

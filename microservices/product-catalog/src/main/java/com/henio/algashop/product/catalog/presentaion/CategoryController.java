@@ -4,12 +4,12 @@ import com.henio.algashop.product.catalog.application.category.management.Catego
 import com.henio.algashop.product.catalog.application.category.management.CategoryManagementApplicationService;
 import com.henio.algashop.product.catalog.application.category.query.CategoryDetailOutput;
 import com.henio.algashop.product.catalog.application.category.query.CategoryQueryService;
-import com.henio.algashop.product.catalog.application.product.query.PageModel;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -34,11 +34,8 @@ public class CategoryController {
     }
 
     @GetMapping
-    public PageModel<CategoryDetailOutput> filter(
-            @RequestParam(name = "size", required = false) Integer size,
-            @RequestParam(name = "number", required = false) Integer number
-    ) {
-        return categoryQueryService.filter(size, number);
+    public List<CategoryDetailOutput> findAll() {
+        return categoryQueryService.findAll();
     }
 
     @PutMapping("/{categoryId}")

@@ -3,9 +3,7 @@ package com.henio.algashop.product.catalog.contract.base;
 import com.henio.algashop.product.catalog.application.ResourceNotFoundException;
 import com.henio.algashop.product.catalog.application.category.management.CategoryInput;
 import com.henio.algashop.product.catalog.application.category.management.CategoryManagementApplicationService;
-import com.henio.algashop.product.catalog.application.category.query.CategoryDetailOutput;
 import com.henio.algashop.product.catalog.application.category.query.CategoryQueryService;
-import com.henio.algashop.product.catalog.application.product.query.PageModel;
 import com.henio.algashop.product.catalog.application.query.CategoryDetailOutputTestDataBuilder;
 import com.henio.algashop.product.catalog.presentaion.CategoryController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -22,10 +20,9 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 
 @WebMvcTest(controllers = CategoryController.class)
-public class CategoryBase {
+public abstract class CategoryBase {
 
     @Autowired
     private WebApplicationContext context;
@@ -80,7 +77,7 @@ public class CategoryBase {
 
     private void mockInvalidCategoryFindById() {
         Mockito.when(categoryQueryService.findById(invalidCategoryId))
-                .thenThrow(new ResourceNotFoundException());
+                .thenThrow(new ResourceNotFoundException("Category not found: " + invalidCategoryId));
     }
 
     private void mockCreateCategory() {
@@ -92,21 +89,11 @@ public class CategoryBase {
     }
 
     private void mockFilterCategories() {
-        Mockito.when(categoryQueryService.filter(anyInt(), anyInt()))
-                .then((answer) -> {
-                    Integer size = answer.getArgument(0);
-                    return PageModel.<CategoryDetailOutput>builder()
-                            .number(0)
-                            .size(size)
-                            .totalPages(1)
-                            .totalElements(2)
-                            .content(
-                                    List.of (
-                                            CategoryDetailOutputTestDataBuilder.aCategory().build(),
-                                            CategoryDetailOutputTestDataBuilder.aCategoryAlt().build()
-                                    )
-                            ).build();
-                });
+        Mockito.when(categoryQueryService.findAll())
+                .thenReturn(List.of(
+                        CategoryDetailOutputTestDataBuilder.aCategory().build(),
+                        CategoryDetailOutputTestDataBuilder.aCategoryAlt().build()
+                ));
     }
 
     private void mockValidCategoryById() {

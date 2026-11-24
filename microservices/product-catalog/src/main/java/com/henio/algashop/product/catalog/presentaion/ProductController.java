@@ -2,11 +2,14 @@ package com.henio.algashop.product.catalog.presentaion;
 
 import com.henio.algashop.product.catalog.application.product.management.ProductInput;
 import com.henio.algashop.product.catalog.application.product.management.ProductManagementApplicationService;
-import com.henio.algashop.product.catalog.application.product.query.PageModel;
 import com.henio.algashop.product.catalog.application.product.query.ProductDetailOutput;
 import com.henio.algashop.product.catalog.application.product.query.ProductQueryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,11 +36,13 @@ public class ProductController {
     }
 
     @GetMapping
-    public PageModel<ProductDetailOutput> filter(
-            @RequestParam(name = "size", required = false) Integer size,
-            @RequestParam(name = "number", required = false) Integer number
-    ) {
-        return productQueryService.filter(size, number);
+    public Page<ProductDetailOutput> findAll(
+            @PageableDefault(
+                    size = 20,
+                    sort = "name",
+                    direction = Sort.Direction.ASC
+            ) Pageable pageable) {
+        return productQueryService.findAllPage(pageable);
     }
 
     @PutMapping("/{productId}")
