@@ -5,6 +5,7 @@ import com.henio.algashop.ordering.application.customer.management.CustomerInput
 import com.henio.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
 import com.henio.algashop.ordering.application.customer.management.CustomerUpdateInput;
 import com.henio.algashop.ordering.application.customer.query.*;
+import com.henio.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerEmailIsInUseException;
 import com.henio.algashop.ordering.domain.model.customer.exception.CustomerNotFoundException;
@@ -42,6 +43,9 @@ class CustomerControllerTest {
 
     @MockitoBean
     private CustomerQueryService customerQueryService;
+
+    @MockitoBean
+    private ShoppingCartQueryService shoppingCartQueryService;
 
     @BeforeEach
     public void setupAll() {
