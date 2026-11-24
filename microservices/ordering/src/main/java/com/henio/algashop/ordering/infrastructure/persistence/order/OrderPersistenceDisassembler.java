@@ -1,11 +1,12 @@
 package com.henio.algashop.ordering.infrastructure.persistence.order;
 
-import com.henio.algashop.ordering.domain.model.commons.*;
-import com.henio.algashop.ordering.domain.model.order.*;
+import com.henio.algashop.ordering.domain.model.commons.Money;
+import com.henio.algashop.ordering.domain.model.commons.Quantity;
 import com.henio.algashop.ordering.domain.model.customer.CustomerId;
-import com.henio.algashop.ordering.domain.model.order.shipping.Recipient;
-import com.henio.algashop.ordering.domain.model.order.shipping.Shipping;
-import com.henio.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddable;
+import com.henio.algashop.ordering.domain.model.order.Order;
+import com.henio.algashop.ordering.domain.model.order.OrderId;
+import com.henio.algashop.ordering.domain.model.order.OrderStatus;
+import com.henio.algashop.ordering.domain.model.order.PaymentMethod;
 import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -38,43 +39,6 @@ public class OrderPersistenceDisassembler {
                 ))
                 .items(itemDisassembler.toDomain(persistenceEntity.getItems()))
                 .version(persistenceEntity.getVersion())
-                .build();
-    }
-
-    private Shipping toShippingValueObject(ShippingEmbeddable shippingEmbeddable) {
-        RecipientEmbeddable recipientEmbeddable = shippingEmbeddable.getRecipient();
-        return Shipping.builder()
-                .cost(new Money(shippingEmbeddable.getCost()))
-                .expectedDate(shippingEmbeddable.getExpectedDate())
-                .recipient(
-                        Recipient.builder()
-                                .fullName(new FullName(recipientEmbeddable.getFirstName(), recipientEmbeddable.getLastName()))
-                                .document(new Document(recipientEmbeddable.getDocument()))
-                                .phone(new Phone(recipientEmbeddable.getPhone()))
-                                .build()
-                )
-                .address(toAddressValueObject(shippingEmbeddable.getAddress()))
-                .build();
-    }
-
-    private Billing toBillingValueObject(BillingEmbeddable billingEmbeddable) {
-        return Billing.builder()
-                .fullName(new FullName(billingEmbeddable.getFirstName(), billingEmbeddable.getLastName()))
-                .document(new Document(billingEmbeddable.getDocument()))
-                .phone(new Phone(billingEmbeddable.getPhone()))
-                .address(toAddressValueObject(billingEmbeddable.getAddress()))
-                .build();
-    }
-
-    private Address toAddressValueObject(AddressEmbeddable address) {
-        return Address.builder()
-                .street(address.getStreet())
-                .number(address.getNumber())
-                .complement(address.getComplement())
-                .neighborhood(address.getNeighborhood())
-                .city(address.getCity())
-                .state(address.getState())
-                .zipCode(new ZipCode(address.getZipCode()))
                 .build();
     }
 }

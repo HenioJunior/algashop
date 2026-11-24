@@ -1,16 +1,15 @@
 package com.henio.algashop.ordering.infrastructure.utility.mapper;
 
+import com.henio.algashop.ordering.application.commons.AddressData;
 import com.henio.algashop.ordering.application.customer.query.CustomerOutput;
-import com.henio.algashop.ordering.application.order.query.CustomerMinimalOutput;
-import com.henio.algashop.ordering.application.order.query.OrderDetailOutput;
-import com.henio.algashop.ordering.application.order.query.OrderItemDetailOutput;
+import com.henio.algashop.ordering.application.order.query.*;
 import com.henio.algashop.ordering.application.shoppingcart.query.ShoppingCartItemOutput;
 import com.henio.algashop.ordering.application.shoppingcart.query.ShoppingCartOutput;
 import com.henio.algashop.ordering.application.utility.Mapper;
 import com.henio.algashop.ordering.domain.model.customer.Customer;
+import com.henio.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddable;
 import com.henio.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity;
-import com.henio.algashop.ordering.infrastructure.persistence.order.OrderItemPersistenceEntity;
-import com.henio.algashop.ordering.infrastructure.persistence.order.OrderPersistenceEntity;
+import com.henio.algashop.ordering.infrastructure.persistence.order.*;
 import com.henio.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartItemPersistenceEntity;
 import com.henio.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceEntity;
 import io.hypersistence.tsid.TSID;
@@ -114,10 +113,96 @@ public class ManualMapper implements Mapper {
         output.setId(toTsidString(order.getId()));
         output.setTotalAmount(order.getTotalAmount());
         output.setTotalItems(order.getTotalItems());
+
         output.setPlacedAt(order.getPlacedAt());
+        output.setPaidAt(order.getPaidAt());
+        output.setCanceledAt(order.getCanceledAt());
+        output.setReadyAt(order.getReadyAt());
+
         output.setStatus(order.getStatus());
         output.setPaymentMethod(order.getPaymentMethod());
-        output.setCustomer(toCustomerMinimalOutput(order.getCustomer()));
+
+        output.setCustomer(
+                order.getCustomer() == null
+                        ? null
+                        : toCustomerMinimalOutput(order.getCustomer())
+        );
+
+        output.setBilling(toBillingOutput(order.getBilling()));
+        output.setShipping(toShippingOutput(order.getShipping()));
+
+        output.setItems(
+                order.getItems() == null
+                        ? List.of()
+                        : order.getItems().stream()
+                        .map(this::toOrderItemDetailOutput)
+                        .toList()
+        );
+
+        return output;
+    }
+
+    private static ShippingData toShippingOutput(ShippingEmbeddable shipping) {
+        if (shipping == null) {
+            return null;
+        }
+
+        ShippingData output = new ShippingData();
+
+        output.setCost(shipping.getCost());
+        output.setExpectedDate(shipping.getExpectedDate());
+        output.setAddress(toAddressOutput(shipping.getAddress()));
+        output.setRecipient(toRecipientOutput(shipping.getRecipient()));
+
+        return output;
+    }
+
+    private static BillingData toBillingOutput(BillingEmbeddable billing) {
+        if (billing == null) {
+            return null;
+        }
+
+        BillingData output = new BillingData();
+
+        output.setFirstName(billing.getFirstName());
+        output.setLastName(billing.getLastName());
+        output.setDocument(billing.getDocument());
+        output.setEmail(billing.getEmail());
+        output.setPhone(billing.getPhone());
+        output.setAddress(toAddressOutput(billing.getAddress()));
+
+        return output;
+    }
+
+    private static AddressData toAddressOutput(AddressEmbeddable address) {
+        if (address == null) {
+            return null;
+        }
+
+        AddressData output = new AddressData();
+
+        output.setStreet(address.getStreet());
+        output.setNumber(address.getNumber());
+        output.setComplement(address.getComplement());
+        output.setNeighborhood(address.getNeighborhood());
+        output.setCity(address.getCity());
+        output.setState(address.getState());
+        output.setZipCode(address.getZipCode());
+
+        return output;
+    }
+
+    private static RecipientData toRecipientOutput(RecipientEmbeddable recipient) {
+        if (recipient == null) {
+            return null;
+        }
+
+        RecipientData output = new RecipientData();
+
+        output.setFirstName(recipient.getFirstName());
+        output.setLastName(recipient.getLastName());
+        output.setDocument(recipient.getDocument());
+        output.setPhone(recipient.getPhone());
 
         return output;
     }
@@ -129,8 +214,11 @@ public class ManualMapper implements Mapper {
 
         output.setId(toTsidString(item.getId()));
         output.setOrderId(toTsidString(item.getOrderId()));
-
-        // demais propriedades...
+        output.setProductId(item.getProductId().toString());
+        output.setProductName(item.getProductName());
+        output.setPrice(item.getPrice());
+        output.setQuantity(item.getQuantity());
+        output.setTotalAmount(item.getTotalAmount());
 
         return output;
     }

@@ -56,6 +56,7 @@ public class OrderPersistenceEntity
             @AttributeOverride(name = "firstName", column = @Column(name = "billing_first_name")),
             @AttributeOverride(name = "lastName", column = @Column(name = "billing_last_name")),
             @AttributeOverride(name = "document", column = @Column(name = "billing_document")),
+            @AttributeOverride(name = "email", column = @Column(name = "billing_email")),
             @AttributeOverride(name = "phone", column = @Column(name = "billing_phone")),
             @AttributeOverride(name = "address.street", column = @Column(name = "billing_address_street")),
             @AttributeOverride(name = "address.number", column = @Column(name = "billing_address_number")),

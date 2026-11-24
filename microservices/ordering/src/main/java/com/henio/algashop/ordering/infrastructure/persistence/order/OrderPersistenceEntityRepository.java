@@ -35,15 +35,16 @@ public interface OrderPersistenceEntityRepository extends JpaRepository<OrderPer
                                        @Param("year") Integer year);
 
 
-@Query("""
+    @Query("""
    SELECT COALESCE(SUM(o.totalAmount), 0)
    FROM OrderPersistenceEntity o
    WHERE o.customer.id = :customerId
    AND o.status = 'PAID'
 """)
-BigDecimal totalSoldForCustomer(@Param("customerId") UUID customerId);
+    BigDecimal totalSoldForCustomer(@Param("customerId") UUID customerId);
 
-@Override
-@EntityGraph(attributePaths = {"customer", "items"})
-Optional<OrderPersistenceEntity> findById(Long id);
+    @Override
+    @EntityGraph(attributePaths = {"customer", "items"})
+    Optional<OrderPersistenceEntity> findById(Long id);
+
 }

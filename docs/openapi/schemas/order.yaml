@@ -179,6 +179,7 @@ Billing:
   - firstName
   - lastName
   - document
+  - email
   - phone
   - address
   properties:
@@ -193,6 +194,10 @@ Billing:
     document:
       type: string
       example: '12345'
+      nullable: false
+    email:
+      type: string
+      example: 'johndoe@email.com'
       nullable: false
     phone:
       type: string
