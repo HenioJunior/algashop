@@ -25,3 +25,7 @@ springdoc:
   swagger-ui:
     url: /openapi-bundled.yaml
     disable-swagger-default-url: true
+
+logging:
+  level:
+    com.henio.algashop.ordering.presentation.ApiExceptionHandler: DEBUG

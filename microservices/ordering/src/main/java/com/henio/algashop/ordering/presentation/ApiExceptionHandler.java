@@ -4,7 +4,6 @@ import com.henio.algashop.ordering.domain.model.customer.exception.CustomerEmail
 import com.henio.algashop.ordering.domain.model.shared.DomainEntityNotFoundException;
 import com.henio.algashop.ordering.domain.model.shared.DomainException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.context.MessageSource;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestControllerAdvice
-@Slf4j
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final MessageSource messageSource;
@@ -82,7 +80,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleException(Exception ex) {
-        log.error(ex.getMessage(), ex);
+        logger.debug("Internal Server Error: " + ex.getMessage());
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         problemDetail.setTitle("Internal Server Error");
         problemDetail.setDetail("An unexpected internal error ocurred.");
@@ -93,7 +91,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(GatewayTimeoutException.class)
     public ProblemDetail handleGatewayTimeoutException(GatewayTimeoutException e) {
-        log.error(e.getMessage(), e);
+        logger.debug("Gateway Timeout: " + e.getMessage());
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.GATEWAY_TIMEOUT, e.getMessage());
         problemDetail.setTitle("Gateway Timeout");
         problemDetail.setType(URI.create("/errors/gateway-timeout"));
@@ -102,7 +100,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BadGatewayException.class)
     public ProblemDetail handleBadGatewayException(BadGatewayException e) {
-        log.error(e.getMessage(), e);
+        logger.debug("Bad Gateway: " + e.getMessage());
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_GATEWAY, e.getMessage());
         problemDetail.setTitle("Bad Gateway");
         problemDetail.setType(URI.create("/errors/bad-gateway"));
@@ -111,12 +109,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(
-            HttpMessageNotReadableException ex,
-            HttpHeaders headers,
-            HttpStatusCode status,
-            WebRequest request) {
+            @NonNull HttpMessageNotReadableException ex,
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatusCode status,
+            @NonNull WebRequest request) {
 
-        ex.printStackTrace();
+        logger.debug("Failed to read request: " + ex.getMostSpecificCause().getMessage());
 
         ProblemDetail problemDetail = ProblemDetail.forStatus(status);
         problemDetail.setTitle("Bad Request");
