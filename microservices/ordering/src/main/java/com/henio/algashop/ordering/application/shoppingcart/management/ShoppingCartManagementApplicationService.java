@@ -30,7 +30,9 @@ public class ShoppingCartManagementApplicationService {
     @Transactional
     public void addItem(ShoppingCartItemInput input) {
         Objects.requireNonNull(input, "Input cannot be null");
+
         ShoppingCartId shoppingCartId = new ShoppingCartId(input.getShoppingCartId());
+
         ProductId productId = new ProductId(input.getProductId());
 
         ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId)

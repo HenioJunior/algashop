@@ -10,6 +10,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.*;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -54,9 +55,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(DomainEntityNotFoundException.class)
     public ProblemDetail handleDomainEntityNotFoundException(DomainEntityNotFoundException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         problemDetail.setTitle("Not found");
-        problemDetail.setDetail(ex.getMessage());
         problemDetail.setType(URI.create("/errors/not-found"));
 
         return problemDetail;
@@ -64,20 +64,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({DomainException.class, UnprocessableContentException.class})
     public ProblemDetail handleUnprocessableContentException(Exception ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNPROCESSABLE_CONTENT);
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_CONTENT, ex.getMessage());
         problemDetail.setTitle("Unprocessable content");
-        problemDetail.setDetail(ex.getMessage());
         problemDetail.setType(URI.create("/errors/unprocessable-content"));
-
 
         return problemDetail;
     }
 
     @ExceptionHandler(CustomerEmailIsInUseException.class)
     public ProblemDetail handleCustomerEmailIsInUseException(CustomerEmailIsInUseException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
         problemDetail.setTitle("Conflict");
-        problemDetail.setDetail(ex.getMessage());
         problemDetail.setType(URI.create("/errors/conflict"));
 
         return problemDetail;
@@ -97,9 +94,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(GatewayTimeoutException.class)
     public ProblemDetail handleGatewayTimeoutException(GatewayTimeoutException e) {
         log.error(e.getMessage(), e);
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.GATEWAY_TIMEOUT);
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.GATEWAY_TIMEOUT, e.getMessage());
         problemDetail.setTitle("Gateway Timeout");
-        problemDetail.setDetail(e.getMessage());
         problemDetail.setType(URI.create("/errors/gateway-timeout"));
         return problemDetail;
     }
@@ -107,10 +103,26 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BadGatewayException.class)
     public ProblemDetail handleBadGatewayException(BadGatewayException e) {
         log.error(e.getMessage(), e);
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_GATEWAY);
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_GATEWAY, e.getMessage());
         problemDetail.setTitle("Bad Gateway");
-        problemDetail.setDetail(e.getMessage());
         problemDetail.setType(URI.create("/errors/bad-gateway"));
         return problemDetail;
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(
+            HttpMessageNotReadableException ex,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request) {
+
+        ex.printStackTrace();
+
+        ProblemDetail problemDetail = ProblemDetail.forStatus(status);
+        problemDetail.setTitle("Bad Request");
+        problemDetail.setDetail(ex.getMostSpecificCause().getMessage());
+
+        return handleExceptionInternal(
+                ex, problemDetail, headers, status, request);
     }
 }

@@ -8,14 +8,12 @@ import com.henio.algashop.ordering.domain.model.product.ProductName;
 import com.henio.algashop.ordering.presentation.BadGatewayException;
 import com.henio.algashop.ordering.presentation.GatewayTimeoutException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.util.Optional;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ProductCatalogServiceHttpImpl implements ProductCatalogService {
@@ -27,23 +25,16 @@ public class ProductCatalogServiceHttpImpl implements ProductCatalogService {
         ProductResponse productResponse;
 
         try {
-            productResponse = productCatalogAPIClient.getById(
-                    productId.value().toString()
-            );
+            productResponse = productCatalogAPIClient.getById(productId.value().toString());
 
         } catch (ResourceAccessException e) {
-            log.error("RESOURCE ACCESS EXCEPTION", e);
+            throw new GatewayTimeoutException("Product Catalog API Timeout", e);
 
-            throw new GatewayTimeoutException(
-                    "Product Catalog API Timeout", e
-            );
+        } catch(HttpClientErrorException.NotFound e) {
+            return Optional.empty();
 
         } catch (HttpClientErrorException e) {
-            log.error("BAD GATEWAY EXCEPTION: {}", e.getClass().getName(), e);
-
-            throw new BadGatewayException(
-                    "Product Catalog API Bad Gateway", e
-            );
+            throw new BadGatewayException("Product Catalog API Bad Gateway", e);
         }
 
         return Optional.of(

@@ -4,7 +4,10 @@ import com.henio.algashop.ordering.application.shoppingcart.management.ShoppingC
 import com.henio.algashop.ordering.application.shoppingcart.management.ShoppingCartManagementApplicationService;
 import com.henio.algashop.ordering.application.shoppingcart.query.ShoppingCartOutput;
 import com.henio.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
+import com.henio.algashop.ordering.domain.model.customer.exception.CustomerNotFoundException;
+import com.henio.algashop.ordering.domain.model.product.ProductNotFoundException;
 import com.henio.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
+import com.henio.algashop.ordering.presentation.UnprocessableContentException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +26,13 @@ public class ShoppingCartController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ShoppingCartOutput create(@RequestBody @Valid ShoppingCartInput input) {
-        ShoppingCartId shoppingCartId = managementService.createNew(input.getCustomerId());
+        ShoppingCartId shoppingCartId;
+        try {
+            shoppingCartId = managementService.createNew(input.getCustomerId());
+
+        } catch (CustomerNotFoundException e) {
+            throw new UnprocessableContentException(e.getMessage(), e);
+        }
         return queryService.findById(shoppingCartId.value());
     }
 
@@ -52,16 +61,18 @@ public class ShoppingCartController {
 
     @PostMapping("/{shoppingCartId}/items")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void addItem(@PathVariable UUID shoppingCartId,
-                        @RequestBody @Valid ShoppingCartItemInput input) {
+    public void addItem(@PathVariable UUID shoppingCartId, @RequestBody @Valid ShoppingCartItemInput input) {
         input.setShoppingCartId(shoppingCartId);
-        managementService.addItem(input);
+        try {
+            managementService.addItem(input);
+        } catch (ProductNotFoundException e) {
+            throw new UnprocessableContentException(e.getMessage(), e);
+        }
     }
 
     @DeleteMapping("/{shoppingCartId}/items/{itemId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeItem(@PathVariable UUID shoppingCartId,
-                           @PathVariable UUID itemId) {
+    public void removeItem(@PathVariable UUID shoppingCartId, @PathVariable UUID itemId) {
         managementService.removeItem(shoppingCartId, itemId);
     }
 }
