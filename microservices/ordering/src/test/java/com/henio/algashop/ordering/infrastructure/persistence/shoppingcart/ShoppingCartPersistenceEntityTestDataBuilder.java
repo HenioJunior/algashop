@@ -32,7 +32,8 @@ public class ShoppingCartPersistenceEntityTestDataBuilder {
                 .quantity(2)
                 .totalAmount(new BigDecimal(1000))
                 .productName("Notebook")
-                .productId(UUID.randomUUID());
+                .productId(UUID.randomUUID())
+                .available(true);
     }
 
     public static ShoppingCartItemPersistenceEntity.ShoppingCartItemPersistenceEntityBuilder existingItemAlt() {
@@ -42,6 +43,8 @@ public class ShoppingCartPersistenceEntityTestDataBuilder {
                 .quantity(1)
                 .totalAmount(new BigDecimal(250))
                 .productName("Mouse pad")
-                .productId(UUID.randomUUID());
+                .productId(UUID.randomUUID())
+                .available(true)
+                ;
     }
 }
