@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @WebMvcTest(controllers = CustomerController.class)
-class CustomerControllerTest {
+class CustomerControllerContractTest {
 
     @Autowired
     private WebApplicationContext context;

@@ -1,0 +1,18 @@
+{
+  "firstName": "",
+  "lastName": "",
+  "email": "alex.silva",
+  "document": "",
+  "phone": "",
+  "birthDate": "",
+  "promotionNotificationsAllowed": null,
+  "address": {
+    "street": "",
+    "number": "",
+    "complement": "",
+    "neighborhood": "",
+    "city": "",
+    "state": "",
+    "zipCode": ""
+  }
+}
