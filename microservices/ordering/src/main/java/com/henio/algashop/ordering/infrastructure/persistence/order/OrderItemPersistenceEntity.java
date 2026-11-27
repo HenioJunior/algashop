@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tb_order_item")
+@Table(name = "order_items")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

@@ -14,7 +14,7 @@ import java.time.OffsetDateTime;
 import java.util.*;
 
 @Entity
-@Table(name = "tb_order")
+@Table(name = "orders")
 @Data
 @NoArgsConstructor
 @ToString(of = "id")

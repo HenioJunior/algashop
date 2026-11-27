@@ -3,10 +3,7 @@ package com.henio.algashop.billing.domain.model.invoice;
 import com.henio.algashop.billing.domain.model.IdGenerator;
 import com.henio.algashop.billing.shared.DomainException;
 import io.micrometer.common.util.StringUtils;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Objects;
@@ -15,6 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name = "payment_settings")
 @Entity
 public class PaymentSettings {
 

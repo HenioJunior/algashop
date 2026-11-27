@@ -15,6 +15,7 @@ import java.util.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@Table(name = "invoices")
 @Entity
 public class Invoice extends AbstractAuditableAggregateRoot<Invoice> {
 
@@ -35,6 +36,7 @@ public class Invoice extends AbstractAuditableAggregateRoot<Invoice> {
     private InvoiceStatus status;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "payment_settings_id", unique = true)
     private PaymentSettings paymentSettings;
 
     @Embedded

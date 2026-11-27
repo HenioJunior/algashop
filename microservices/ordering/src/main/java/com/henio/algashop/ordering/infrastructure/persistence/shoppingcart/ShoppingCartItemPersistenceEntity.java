@@ -13,7 +13,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tb_shopping_cart_item")
+@Table(name = "shopping_cart_items")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tb_customer")
+@Table(name = "customers")
 @Data
 @NoArgsConstructor
 @ToString(of = "id")
